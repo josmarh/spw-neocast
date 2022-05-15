@@ -10,11 +10,11 @@
         <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> start your 14-day free trial </a> -->
       </p>
     </div>
-    <form class="mt-8 space-y-6" action="#" method="POST">
-      <input type="hidden" name="remember" value="true" />
+    <form class="mt-8 space-y-6" @submit="register">
+      <input type="hidden" name="remember" value="true"  />
       <div class="shadow-sm">
           <div class="relative z-0">
-              <input type="text" id="name"
+              <input type="text" id="name" v-model="user.name"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
                   border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 
                   dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
@@ -27,7 +27,7 @@
               </label>
           </div>
           <div class="relative z-0 mt-3">
-              <input type="email" id="email"
+              <input type="email" id="email" v-model="user.email"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
                   border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 
                   dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
@@ -40,7 +40,7 @@
               </label>
           </div>
           <div class="relative z-0 mt-3">
-              <input type="password" id="password"
+              <input type="password" id="password" v-model="user.password"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
                   border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 
                   dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
@@ -53,7 +53,7 @@
               </label>
           </div>
           <div class="relative z-0 mt-3">
-              <input type="password" id="confirm_password"
+              <input type="password" id="confirm_password" v-model="user.password_confirmation"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
                   border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 
                   dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" 
@@ -62,7 +62,7 @@
               <label for="confirm_password" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 
                   transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 
                   peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                  peer-focus:scale-75 peer-focus:-translate-y-6">Confirm Passord
+                  peer-focus:scale-75 peer-focus:-translate-y-6">Confirm Password
               </label>
           </div>
       </div>
@@ -82,5 +82,23 @@
 </template>
 
 <script setup>
+import store from '../../store'
+import { useRouter } from 'vue-router'
 
+const router = useRouter();
+const user = {
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: ''
+};
+
+function register(ev) {
+  ev.preventDefault();
+  store
+    .dispatch('register', user)
+    .then((res) => {
+      router.push({name: 'Dashboard'})
+    })
+}
 </script>
