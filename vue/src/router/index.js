@@ -24,7 +24,7 @@ const routes = [
         children: [
             { path: '/login', name: 'Login', component: Login },
             { path: '/register', name: 'Register', component: Register },
-            { path: '/forget-password', name: 'ForgetPassword', component: ForgetPassword },
+            { path: '/forgot-password', name: 'ForgetPassword', component: ForgetPassword },
         ]
     },
     {
