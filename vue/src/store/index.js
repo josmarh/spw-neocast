@@ -4,12 +4,7 @@ import axiosClient from "../axios";
 const store = createStore({
     state: {
         user: {
-            data: {
-                // name: 'Tom Cook',
-                // email: 'tom@example.com',
-                // imageUrl:
-                //     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-            },
+            data: JSON.parse(sessionStorage.getItem('userInfo')),
             token: sessionStorage.getItem('TOKEN')
         }
     },
@@ -36,9 +31,31 @@ const store = createStore({
                     sessionStorage.clear();
                     return response;
                 })
+        },
+        updatePersonalInfo({ commit }, user){
+            let userId = this.state.user.data.id;
+
+            return axiosClient.put(`/personal-info/${userId}`, user)
+            .then(({data}) => {
+                commit('updatePersonalInfo', data)
+                return data;
+            })
+        },
+        updatePassword({ commit }, userPass){
+            let userId = this.state.user.data.id;
+
+            return axiosClient.put(`/password/update/${userId}`, userPass)
+                .then(({data}) => {
+                    commit('updatePassword')
+                    return data;
+                })
         }
     },
     mutations: {
+        updatePersonalInfo: (state, userInfo) => {
+            state.user.data = userInfo.user;
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo.user));
+        },
         logout: state => {
             state.user.data = {};
             state.user.token = null;
@@ -46,7 +63,8 @@ const store = createStore({
         setUser: (state, userData) => {
             state.user.token = userData.token;
             state.user.data = userData.user;
-            sessionStorage.setItem('TOKEN', userData.token)
+            sessionStorage.setItem('userInfo', JSON.stringify(userData.user));
+            sessionStorage.setItem('TOKEN', userData.token);
         }
     },
     modules: {}

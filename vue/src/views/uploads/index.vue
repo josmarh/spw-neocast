@@ -12,7 +12,7 @@
             </div>
             <input id="dropzone-file" type="file" class="hidden" accept=".mp4,.mov,.m4v,.webm,.ogv,.mp3" />
         </label>
-      </div>
+      </div>  
     </page-component>
   </div>
 </template>

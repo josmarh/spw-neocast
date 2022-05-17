@@ -1,6 +1,6 @@
 
 <template>
-  <div class="min-h-full">
+  <div>
     <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
@@ -90,7 +90,14 @@
         <div class="pt-4 pb-3 border-t border-gray-700">
           <div class="flex items-center px-5">
             <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" :src="user.imageUrl" alt="" />
+              <img v-if="user.imageUrl" class="h-8 w-8 rounded-full" :src="user.imageUrl" alt="" />
+              <div v-else>  
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" 
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" 
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
             </div>
             <div class="ml-3">
               <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>
@@ -118,6 +125,16 @@
     </Disclosure>
 
     <router-view></router-view>
+
+    <div>
+      <footer class="bg-gray-800">
+        <div class="py-6 px-4 bg-gray-700 md:flex md:items-center md:justify-between">
+          <span class="text-sm text-gray-300 sm:text-center">
+            &copy; {{new Date().getFullYear()}} <a href="#" class="hover:underline">Viloud</a>.  All Rights Reserved.
+          </span>
+        </div>
+      </footer>
+    </div>
   </div>
 </template>
 

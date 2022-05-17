@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Rules\MatchOldPassword;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
+
 use Auth;
 
 class AuthController extends Controller
@@ -57,6 +59,44 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token
         ]);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|string|exists:users,email',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email
+        ]);
+
+        return response([
+            'user' => $user,
+            'status' => 'Personal Information Updated.'
+        ]);
+    }
+
+    public function updatePassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        $request->validate([
+            'current_password' => ['required', new MatchOldPassword],
+            'new_password' => ['required'],
+            'confirm_password' => ['same:new_password']
+        ]);
+
+        $user->update(['password' => bcrypt($request->new_password)]);
+
+        return response([
+            'user' => $user,
+            'status' => 'Password Updated.'
+        ]);         
     }
 
     public function logout()
