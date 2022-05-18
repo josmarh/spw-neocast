@@ -4,8 +4,8 @@ import axiosClient from "../axios";
 const store = createStore({
     state: {
         user: {
-            data: JSON.parse(sessionStorage.getItem('userInfo')),
-            token: sessionStorage.getItem('TOKEN')
+            data: JSON.parse(localStorage.getItem('userInfo')),
+            token: localStorage.getItem('TOKEN')
         }
     },
     getters: {},
@@ -28,7 +28,7 @@ const store = createStore({
             return axiosClient.post('/logout')
                 .then(response => {
                     commit('logout')
-                    sessionStorage.clear();
+                    localStorage.clear();
                     return response;
                 })
         },
@@ -54,7 +54,7 @@ const store = createStore({
     mutations: {
         updatePersonalInfo: (state, userInfo) => {
             state.user.data = userInfo.user;
-            sessionStorage.setItem('userInfo', JSON.stringify(userInfo.user));
+            localStorage.setItem('userInfo', JSON.stringify(userInfo.user));
         },
         logout: state => {
             state.user.data = {};
@@ -63,8 +63,8 @@ const store = createStore({
         setUser: (state, userData) => {
             state.user.token = userData.token;
             state.user.data = userData.user;
-            sessionStorage.setItem('userInfo', JSON.stringify(userData.user));
-            sessionStorage.setItem('TOKEN', userData.token);
+            localStorage.setItem('userInfo', JSON.stringify(userData.user));
+            localStorage.setItem('TOKEN', userData.token);
         }
     },
     modules: {}

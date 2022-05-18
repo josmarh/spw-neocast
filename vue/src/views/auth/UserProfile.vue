@@ -40,7 +40,7 @@
 
       <div class="grid xl:grid-cols-2 xl:gap-6">
         <!-- personal info section -->
-        <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 mb-3">
           <h3 class="font-bold">Personal Information</h3>
           <p class="mb-6">Update your account's profile information and email address.</p>
           <form @submit="updatePersonalInfo">
@@ -82,7 +82,7 @@
           </form>
         </div>
         <!-- change password section -->
-        <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 mb-3">
           <h3 class="font-bold">Update Password</h3>
           <p class="mb-6">Ensure your account is using a long, random password to stay secure.</p>
           <form @submit="updatePassword">
