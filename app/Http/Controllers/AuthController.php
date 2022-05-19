@@ -61,9 +61,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateUser(Request $request, $id)
+    public function updateUser(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = $request->user();
 
         $request->validate([
             'name' => 'required|string',
@@ -81,9 +81,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updatePassword(Request $request, $id)
+    public function updatePassword(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = $request->user();
         
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],

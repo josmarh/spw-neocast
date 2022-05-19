@@ -11,7 +11,7 @@
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
                 <router-link v-for="item in navigation" 
-                  :key="item.name" 
+                  :key="item.name"
                   :to="item.to"
                   active-class="bg-gray-900 text-white"
                   :class="[this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 

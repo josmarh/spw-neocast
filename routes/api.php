@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UploadsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +21,9 @@ Route::middleware('auth:sanctum')->group(function(){
         return $request->user();
     });
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/personal-info/{id}', [AuthController::class, 'updateUser']);
-    Route::put('/password/update/{id}', [AuthController::class, 'updatePassword']);
+    Route::put('/personal-info', [AuthController::class, 'updateUser']);
+    Route::put('/password/update', [AuthController::class, 'updatePassword']);
+    Route::post('/uploads', [UploadsController::class, 'fileUpload']);
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

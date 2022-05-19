@@ -6,7 +6,8 @@ const store = createStore({
         user: {
             data: JSON.parse(localStorage.getItem('userInfo')),
             token: localStorage.getItem('TOKEN')
-        }
+        },
+        uploads: [],
     },
     getters: {},
     actions: {
@@ -33,20 +34,23 @@ const store = createStore({
                 })
         },
         updatePersonalInfo({ commit }, user){
-            let userId = this.state.user.data.id;
-
-            return axiosClient.put(`/personal-info/${userId}`, user)
+            return axiosClient.put(`/personal-info`, user)
             .then(({data}) => {
                 commit('updatePersonalInfo', data)
                 return data;
             })
         },
         updatePassword({ commit }, userPass){
-            let userId = this.state.user.data.id;
-
-            return axiosClient.put(`/password/update/${userId}`, userPass)
+            return axiosClient.put(`/password/update`, userPass)
                 .then(({data}) => {
                     commit('updatePassword')
+                    return data;
+                })
+        },
+        uploadFiles({ commit }, files){
+            return axiosClient.post(`/uploads`, files)
+                .then(({data}) => {
+                    // commit('uploadFiles')
                     return data;
                 })
         }

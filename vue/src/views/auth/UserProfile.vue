@@ -142,8 +142,7 @@ import { ref } from 'vue'
 
 const user = ref({
   name: null,
-  email: null,
-  id: null
+  email: null
 });
 
 if (user){
@@ -163,7 +162,6 @@ function updatePersonalInfo(ev) {
   ev.preventDefault();
   store
     .dispatch('updatePersonalInfo', {
-      id: user.value.id,
       name: user.value.name,
       email: user.value.email
     })
