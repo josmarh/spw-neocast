@@ -50,7 +50,6 @@ const store = createStore({
         uploadFiles({ commit }, files){
             return axiosClient.post(`/uploads`, files)
                 .then(({data}) => {
-                    // commit('uploadFiles')
                     return data;
                 })
         }

@@ -50,7 +50,7 @@
                 accept=".mp4,.mov,.m4v,.webm,.ogv,.mp3" multiple />
           </label>
         </div>
-        <!-- display upload items in loop -->
+        <!-- display upload items -->
         <div v-for="vid in upload.files" :key="vid.name" class="flex justify-center items-center w-full mt-3">
           <div id="toast-default" class="flex items-center w-full w-96 p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
@@ -77,11 +77,27 @@
           <button type="submit" 
             class="group relative w-96 flex justify-center py-2 px-4 border 
             border-transparent text-sm font-medium text-white 
-            bg-indigo-600 hover:bg-indigo-700 focus:outline-none">
+            bg-indigo-600 hover:bg-indigo-700 focus:outline-none" :disabled="isDisabled">
             Upload {{upload.files.length == 1 ? upload.files.length +' file' : upload.files.length +' files'}} 
           </button>
         </div>
       </form>
+      <!-- view content on success  -->
+      <div v-if="upload.files.length == 0" class="flex justify-center items-center w-full mt-3 mb-5">
+        <router-link :to="{name: 'Videos'}">
+        <div class="flex items-center w-full w-96 p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+          <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </div>
+          <div class="ml-3 text-sm font-normal">
+            View uploaded contents
+          </div>
+        </div>
+        </router-link>
+      </div>
     </page-component>
   </div>
 </template>
@@ -89,14 +105,16 @@
 <script setup>
 import PageComponent from '../../components/PageComponent.vue'
 import store from '../../store'
-import { ref } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 
+const internalInstance = getCurrentInstance();
 const upload = ref({
   files: [],
 });
 
 let errorMsg = ref('');
 let successMsg = ref('');
+let isDisabled = ref(false);
 
 function onFileChoose(ev) {
   const file = ev.target.files; 
@@ -152,13 +170,21 @@ const removeFile = (fname) => {
 const uploadFiles = (ev) => {
   ev.preventDefault();
   let f = {file: upload.value.files};
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  isDisabled.value = true;
+
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
       upload.value.files = [];
       successMsg.value = res.status;
+      isDisabled.value = false;
     })
     .catch(err => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      isDisabled.value = false;
+
       if(err.response.data) {
         if (err.response.data.hasOwnProperty('message')){
           errorMsg.value = err.response.data.message

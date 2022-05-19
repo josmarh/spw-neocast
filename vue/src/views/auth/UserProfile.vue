@@ -77,7 +77,7 @@
             </div>
             <button type="submit" class="group relative flex justify-center py-2 px-4 
               border border-transparent text-sm font-medium text-white float-right
-              bg-indigo-600 hover:bg-indigo-700 focus:outline-none">Submit
+              bg-indigo-600 hover:bg-indigo-700 focus:outline-none" :disabled="isDisabled">Submit
             </button>
           </form>
         </div>
@@ -121,10 +121,10 @@
                 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 
                 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm New password</label>
             </div>
-            <button type="submit"
+            <button type="submit" id="update-pass-btn"
               class="group relative flex justify-center py-2 px-4 
               border border-transparent text-sm font-medium text-white float-right
-              bg-indigo-600 hover:bg-indigo-700 focus:outline-none">Submit
+              bg-indigo-600 hover:bg-indigo-700 focus:outline-none" :disabled="isDisabled">Submit
             </button>
           </form>
         </div>
@@ -135,40 +135,50 @@
 
 <script setup>
 import PageComponent from '../../components/PageComponent.vue'
-import SuccessNotification from '../../components/SuccessNotification.vue'
-import ErrorNotification from '../../components/ErrorNotification.vue'
 import store from '../../store'
-import { ref } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 
+const internalInstance = getCurrentInstance();
 const user = ref({
   name: null,
   email: null
 });
-
-if (user){
-  user.value = store.state.user.data
-}
-
 const userPass = {
   current_password: '',
   new_password: '',
   confirm_password: '',
 }
 
+if (user){
+  user.value = store.state.user.data
+}
+
 let errorMsg = ref('');
 let successMsg = ref('');
+let isDisabled = ref(false);
 
 function updatePersonalInfo(ev) {
   ev.preventDefault();
+  // progress bar start
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  isDisabled.value = true;
+
   store
     .dispatch('updatePersonalInfo', {
       name: user.value.name,
       email: user.value.email
     })
     .then((res) => {
+      // progress bar start
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      isDisabled.value = false;
       successMsg.value = res.status;
     })
     .catch(err => {
+      // progress bar start
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      isDisabled.value = false;
+
       if(err.response.data){
         if (err.response.data.hasOwnProperty('message')){
           errorMsg.value = err.response.data.message
@@ -185,15 +195,24 @@ function updatePassword(ev) {
     errorMsg.value = 'Password does not match';
     return false;
   }else{
+    // progress bar start
+    internalInstance.appContext.config.globalProperties.$Progress.start();
+    isDisabled.value = true;
+
     store
       .dispatch('updatePassword', userPass)
       .then((res) => {
+        internalInstance.appContext.config.globalProperties.$Progress.finish();
         successMsg.value = res.status;
         userPass.current_password = '';
         userPass.new_password = '';
         userPass.confirm_password = '';
+        isDisabled.value = false;
       })
       .catch(err => {
+        internalInstance.appContext.config.globalProperties.$Progress.fail();
+        isDisabled.value = false;
+
         if(err.response.data) {
           if (err.response.data.hasOwnProperty('message')){
             errorMsg.value = err.response.data.message

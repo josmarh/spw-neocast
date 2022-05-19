@@ -123,7 +123,8 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
-
+    <!-- set progressbar -->
+    <vue-progress-bar></vue-progress-bar>
     <router-view></router-view>
 
     <div>

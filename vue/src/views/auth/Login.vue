@@ -72,9 +72,10 @@
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import store from '../../store';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 
 const router = useRouter();
+const internalInstance = getCurrentInstance();
 const user = {
   email: '',
   password: '',
@@ -85,12 +86,15 @@ let errorMsg = ref('')
 
 function login(ev) {
   ev.preventDefault();
+  internalInstance.appContext.config.globalProperties.$Progress.start()
   store
     .dispatch('login', user)
     .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.finish()
       router.push({name: 'Dashboard'})
     })
     .catch(err => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail()
       if (err.response.data.hasOwnProperty('message')){
         errorMsg.value = err.response.data.message
       }else {
