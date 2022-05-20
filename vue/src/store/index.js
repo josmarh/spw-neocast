@@ -7,7 +7,6 @@ const store = createStore({
             data: JSON.parse(localStorage.getItem('userInfo')),
             token: localStorage.getItem('TOKEN')
         },
-        uploads: [],
     },
     getters: {},
     actions: {

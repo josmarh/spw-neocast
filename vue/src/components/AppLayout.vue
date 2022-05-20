@@ -123,9 +123,10 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
+
+    <router-view></router-view>
     <!-- set progressbar -->
     <vue-progress-bar></vue-progress-bar>
-    <router-view></router-view>
 
     <div>
       <footer class="bg-gray-800">
