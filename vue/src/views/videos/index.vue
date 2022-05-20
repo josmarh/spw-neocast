@@ -119,13 +119,65 @@
           </div>
         </div>
       </div>
+      <!-- main content display -->
+      <div class="mt-12">
+        
+        <div class="grid xl:grid-cols-4 xl:grid-gap-3 place-content-center">
+          <div v-for="cont in contents.contents" :key="cont.id">
+          <div class="w-64 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 mb-3">
+            <a href="#">
+              <img class="rounded-t-lg" :src="`http://localhost:8000/${cont.file_hash}`" alt="">
+            </a>
+            <div class="p-5">
+              <!-- <a href="#">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Noteworthy technology acquisitions 2021</h5>
+              </a> -->
+              <p class="mb-3 font-normal text-sm text-gray-700 dark:text-gray-400">
+                {{cont.file_name}}
+              </p>
+            </div>
+          </div>  
+          </div>        
+        </div>
+        {{contents.contents}}
+      </div>
     </page-component>
   </div>
 </template>
 
 <script setup>
 import PageComponent from '../../components/PageComponent.vue';
+import store from '../../store';
+import { ref, onMounted, getCurrentInstance, computed } from 'vue'
 
+const internalInstance = getCurrentInstance();
+const contents = computed(() => store.state.contents)
+
+let errorMsg = ref('');
+
+const getContents = () => {
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  store
+    .dispatch('getContents')
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+    })
+    .catch(err => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+
+      if(err.response.data) {
+        if (err.response.data.hasOwnProperty('message')){
+          errorMsg.value = err.response.data.message
+        }else {
+          errorMsg.value = err.response.data.error
+        }
+      }
+    })
+}
+
+onMounted(() => {
+  getContents()
+})
 </script>
 
 <style>

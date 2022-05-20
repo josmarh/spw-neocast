@@ -7,6 +7,7 @@ const store = createStore({
             data: JSON.parse(localStorage.getItem('userInfo')),
             token: localStorage.getItem('TOKEN')
         },
+        contents: []
     },
     getters: {},
     actions: {
@@ -51,9 +52,19 @@ const store = createStore({
                 .then(({data}) => {
                     return data;
                 })
+        },
+        getContents({ commit }){
+            return axiosClient.get(`/video`)
+                .then(({data}) => {
+                    commit('getContents', data)
+                    return data;
+                })
         }
     },
     mutations: {
+        getContents: (state, data) => {
+            state.contents = data;
+        },
         updatePersonalInfo: (state, userInfo) => {
             state.user.data = userInfo.user;
             localStorage.setItem('userInfo', JSON.stringify(userInfo.user));
