@@ -83,7 +83,7 @@
         </div>
       </form>
       <!-- view content button -->
-      <div v-if="upload.files.length == 0" class="flex justify-center items-center w-full mt-3 mb-4">
+      <div v-if="upload.files.length == 0" class="flex justify-center items-center w-full mt-3 mb-5">
         <router-link :to="{name: 'Videos'}">
         <div class="flex items-center w-full w-96 p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
           <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
@@ -176,8 +176,8 @@ const uploadFiles = (ev) => {
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
+      upload.value.files = [];  
       internalInstance.appContext.config.globalProperties.$Progress.finish();
-      upload.value.files = [];
       successMsg.value = res.status;
       isDisabled.value = false;
     })

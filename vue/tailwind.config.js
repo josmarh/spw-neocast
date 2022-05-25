@@ -1,7 +1,7 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{html,vue,js}",
+    "./src/**/*.{html,vue,js,ts,jsx,tsx}",
     "./node_modules/flowbite/**/*.js"
   ],
   theme: {

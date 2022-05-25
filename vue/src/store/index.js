@@ -59,9 +59,19 @@ const store = createStore({
                     commit('getContents', data)
                     return data;
                 })
+        },
+        updateContent({ commit }, videoUpdate){
+            return axiosClient.put(`/video/update`, videoUpdate)
+                .then(({data}) => {
+                    commit('updateContent', data)
+                    return data;
+                })
         }
     },
     mutations: {
+        updateContent: (state, data) => {
+            state.contents = state.contents.contents.map(item => data.contents.id === item.id || item);
+        },
         getContents: (state, data) => {
             state.contents = data;
         },

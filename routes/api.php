@@ -25,7 +25,10 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/personal-info', [AuthController::class, 'updateUser']);
     Route::put('/password/update', [AuthController::class, 'updatePassword']);
     Route::post('/uploads', [UploadsController::class, 'fileUpload']);
+
     Route::get('/video', [VideoController::class, 'index']);
+    Route::put('/video/update', [VideoController::class, 'update']);
 });
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
