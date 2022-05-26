@@ -28,7 +28,9 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/video', [VideoController::class, 'index']);
     Route::put('/video/update', [VideoController::class, 'update']);
+    
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/video/show/{str}', [VideoController::class, 'show']);

@@ -8,6 +8,8 @@ import Dashboard from '../views/Dashboard.vue'
 import Profile from '../views/auth/UserProfile.vue'
 import Channels from '../views/channels/index.vue'
 import Videos from '../views/videos/index.vue'
+import ShareVideo from '../views/videos/external-video.vue'
+import EmbedVideo from '../views/videos/embeded-video.vue'
 import Uploads from '../views/uploads/index.vue'
 import LiveStream from '../views/livestream/index.vue'
 import Website from '../views/websites/index.vue'
@@ -42,7 +44,9 @@ const routes = [
             {path: '/website', name: 'Website', component: Website},
             {path: '/analytics', name: 'Analytics', component: Analytics},
         ] 
-    }
+    },
+    { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },
+    { path: '/embed/video/:str', name: 'EmbedVideo', component: EmbedVideo },
 ];
 
 const router = createRouter({

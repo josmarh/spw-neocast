@@ -382,7 +382,7 @@
               <span v-else class="flex">
                 <a href="#" class="item-center">
                   <video
-                    :src="`http://localhost:8000/${cont.file_hash}`"
+                    :src="cont.file_hash"
                     class="rounded-t-lg"
                     style="height: 170px;"
                   ></video>
@@ -471,20 +471,6 @@
                   {{ cont.file_name.replace(/(.{27})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'+cont.media_length}}
                 </p>
                 <!-- tags section -->
-                <!-- <div class="flex mt-2" v-if="cont.file_name == videoUpdate.contentName">
-                  <div v-if="videoUpdate.videoTag.length">
-                    <div class="grid xl:grid-cols-3 xl:gap-1">
-                      <div v-for="vTag in videoUpdate.videoTag" :key="vTag">
-                        <div class="">
-                          <span class="flex bg-blue-100 text-blue-800 text-sm font-medium 
-                            mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
-                            {{vTag}}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
                 <div class="flex mt-2">
                   <div v-if="cont.tags">
                     <div class="grid xl:grid-cols-2 xl:gap-1">
@@ -513,12 +499,12 @@
             <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
                 <DialogPanel class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
-                  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div class="bg-white px-4 pt-5 pb-4 sm:p-4 sm:pb-4">
                     <div class="sm:flex sm:items-start">
-                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5"
+                          class="h-4 w-4"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -536,7 +522,159 @@
                         
                           <!-- <form> -->
                             <div class="mt-6 w-96">
-                              <div class="relative z-0 w-full mb-6 group mt-3">
+                              <div class="share-overlay-container">
+                                <!-- audio element -->
+                                <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
+                                  <audio controls playsinline >
+                                    <source
+                                      :src="videoUpdate.contentUrl"
+                                      type="audio/mp3"
+                                      class="pt-20"
+                                    />
+                                  </audio>
+                                </vue-plyr>
+                                <!-- video element -->
+                                <vue-plyr v-else :options="options">
+                                  <video
+                                    controls
+                                    playsinline
+                                    data-poster=""
+                                    class="video-lay"
+                                  >
+                                    <source
+                                      size="720"
+                                      :src="videoUpdate.contentUrl"
+                                      type="video/mp4"
+                                    />
+                                    <source
+                                      size="1080"
+                                      :src="videoUpdate.contentUrl"
+                                      type="video/mp4"
+                                    />
+                                  </video>
+                                </vue-plyr>
+                                <!-- share / embed element -->
+                                <div class="mt-3" v-show="sEmbed">
+                                  <div class="px-4  sm:px-0 sm:flex sm:flex-row-reverse">
+                                    <span @click="sEmbed = false"
+                                      class="w-4 h-4 flex items-center justify-center rounded-full
+                                      transition-color cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                      </svg>
+                                    </span>
+                                  </div>
+                                  <div class="bg-gray-200 p-4 place-content-center transition duration-700 ease-in-out">
+                                    <div class="grid xl:grid-cols-4 gap-4">
+                                      <div></div>
+                                      <div>
+                                        <button type="button" 
+                                          class="text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:outline-none 
+                                          focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                          inline-flex items-center dark:focus:ring-[#3b5998]/55 mr-2 mb-2"
+                                          @click="socialShare(videoUpdate.externalUrl,videoUpdate.contentName,'facebook')">
+                                          <svg class="w-4 h-4" 
+                                            aria-hidden="true" 
+                                            focusable="false" 
+                                            data-prefix="fab" 
+                                            data-icon="facebook-f" 
+                                            role="img" 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            viewBox="0 0 320 512"
+                                          >
+                                            <path fill="currentColor"
+                                              d="M279.1 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.4 0 225.4 0c-73.22 0-121.1 44.38-121.1 124.7v70.62H22.89V288h81.39v224h100.2V288z"
+                                            ></path>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div>
+                                        <button type="button" 
+                                          class="text-white bg-[#1da1f2] hover:bg-[#1da1f2]/90 focus:ring-4 focus:outline-none 
+                                          focus:ring-[#1da1f2]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center 
+                                          inline-flex items-center dark:focus:ring-[#1da1f2]/55 mr-2 mb-2"
+                                          @click="socialShare(videoUpdate.externalUrl,videoUpdate.contentName,'twitter')">
+                                          <svg class="w-4 h-4" 
+                                            aria-hidden="true" 
+                                            focusable="false" 
+                                            data-prefix="fab" 
+                                            data-icon="twitter" 
+                                            role="img" 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            viewBox="0 0 512 512"
+                                          >
+                                            <path fill="currentColor" 
+                                              d="M459.4 151.7c.325 4.548 .325 9.097 .325 13.65 0 138.7-105.6 298.6-298.6 298.6-59.45 0-114.7-17.22-161.1-47.11 8.447 .974 16.57 1.299 25.34 1.299 49.06 0 94.21-16.57 130.3-44.83-46.13-.975-84.79-31.19-98.11-72.77 6.498 .974 12.99 1.624 19.82 1.624 9.421 0 18.84-1.3 27.61-3.573-48.08-9.747-84.14-51.98-84.14-102.1v-1.299c13.97 7.797 30.21 12.67 47.43 13.32-28.26-18.84-46.78-51.01-46.78-87.39 0-19.49 5.197-37.36 14.29-52.95 51.65 63.67 129.3 105.3 216.4 109.8-1.624-7.797-2.599-15.92-2.599-24.04 0-57.83 46.78-104.9 104.9-104.9 30.21 0 57.5 12.67 76.67 33.14 23.72-4.548 46.46-13.32 66.6-25.34-7.798 24.37-24.37 44.83-46.13 57.83 21.12-2.273 41.58-8.122 60.43-16.24-14.29 20.79-32.16 39.31-52.63 54.25z"
+                                            ></path>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div></div>
+                                    </div>
+                                    <!-- share link items -->
+                                    <div class="flex">
+                                      <span 
+                                        class="inline-flex items-center px-3 text-sm text-gray-900 
+                                        bg-gray-200 border border-r-0 border-gray-300 rounded-l-md 
+                                        dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
+                                      >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" 
+                                          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                          <path stroke-linecap="round" stroke-linejoin="round" 
+                                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                        </svg>
+                                      </span>
+                                      <input type="text" id="share-url" 
+                                        class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 
+                                        text-gray-900 text-xs focus:ring-blue-500 focus:border-blue-500 block flex-1 
+                                        min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 
+                                        dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+                                        dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-pointer" 
+                                        placeholder="" :value="videoUpdate.externalUrl"
+                                        @click="copyData(videoUpdate.externalUrl, 'share-url')" readonly
+                                      >
+                                    </div>
+                                    <!-- embed content  -->
+                                    <div class="flex mt-3">
+                                      <span 
+                                        class="inline-flex items-center px-3 text-sm text-gray-900 
+                                        bg-gray-200 border border-r-0 border-gray-300 rounded-l-md 
+                                        dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
+                                      >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" 
+                                          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                        </svg>
+                                      </span>
+                                      <textarea name="embed-content" id="embed-content"
+                                        class="block p-2.5 w-full text-sm text-gray-900 
+                                        bg-gray-50 rounded-lg border border-gray-300 
+                                        focus:ring-blue-500 focus:border-blue-500 
+                                        dark:bg-gray-700 dark:border-gray-600 
+                                        dark:placeholder-gray-400 dark:text-white 
+                                        dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                        cursor-pointer" :value="videoUpdate.embededFrame" 
+                                        @click="copyData(videoUpdate.embededFrame, 'embed-content')" readonly 
+                                      ></textarea>
+                                    </div>
+                                  <div>
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="px-4 py-3 sm:px-0 sm:flex sm:flex-row-reverse">
+                                <button type="button" 
+                                  class="mt-6 w-full inline-flex justify-center  
+                                  border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                  font-medium text-gray-700 hover:bg-gray-50 focus:outline-none 
+                                  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 
+                                  sm:ml-3 sm:w-auto sm:text-sm" 
+                                  @click="sEmbed = true" ref="shareButtonRef"
+                                >Share / Embed</button>
+                              </div>
+                              
+                              <div class="relative z-0 w-full mb-6 group mt-6">
                                 <input type="text" name="video-name" id="video-name" v-model="videoUpdate.contentName"
                                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent 
                                   border-0 border-b-2 border-gray-300 appearance-none dark:text-white 
@@ -569,7 +707,7 @@
                               <input type="hidden" name="tags" id="tags" v-model="videoUpdate.videoTag">
                             </div>
                             <div v-if="videoUpdate.videoTag.length">
-                              <div class="grid xl:grid-col-3 xl:gap-1">
+                              <div class="grid xl:grid-col-2 xl:gap-1">
                                 <div v-for="vTag in videoUpdate.videoTag" :key="vTag">
                                   <div class="flex">
                                     <span class="flex bg-blue-100 text-blue-800 text-sm font-medium 
@@ -604,11 +742,9 @@
                               >Cancel</button>
                             </div>
                           <!-- </form> -->
-                        
                       </div>
                     </div>
                   </div>
-                  
                 </DialogPanel>
               </TransitionChild>
             </div>
@@ -623,20 +759,28 @@
 import PageComponent from "../../components/PageComponent.vue";
 import store from "../../store";
 import { ref, onMounted, getCurrentInstance, computed } from "vue";
+import { useRouter, useRoute } from 'vue-router';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationIcon } from '@heroicons/vue/outline'
 
 const internalInstance = getCurrentInstance();
 const contents = computed(() => store.state.contents.contents);
-const open = ref(false)
+const router = useRouter();
+const route = useRoute();
 
-let errorMsg = ref("");
+const open = ref(false)
+const sEmbed = ref(false)
+
+let errorMsg = ref('');
 let successMsg = ref('');
 let videoUpdate = ref({
   contentName: null,
   contentId: null,
+  contentUrl: '',
+  externalUrl: '',
+  embededFrame: '',
   videoTag: []
-})
+}) 
 
 // Get all contents 
 const getContents = async () => {
@@ -661,9 +805,20 @@ const getContents = async () => {
 
 // Handles edit video click 
 const editVideo = (cont) => {
+  const shareUrl = router.resolve({
+    name: 'ShareVideo',
+    params: { str: cont.external_link}
+  });
+  const embedUrl = router.resolve({
+    name: 'EmbedVideo',
+    params: { str: cont.external_link}
+  });
   videoUpdate.value.contentName = cont.file_name
   videoUpdate.value.contentId = cont.id
-  let vidName = document.getElementById('video-name')
+  videoUpdate.value.contentUrl = cont.file_hash // image and player
+  videoUpdate.value.externalUrl = window.location.host+shareUrl.href // external sharing
+  videoUpdate.value.embededFrame = `<iframe src='${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+  sEmbed.value = false
 
   if(cont.tags == null) {
     videoUpdate.value.videoTag = []
@@ -721,7 +876,25 @@ const updateContent = async (ev) => {
         }
       }
     })
-  
+}
+
+// copy to clipboard
+const copyData = (data, elmId) => {
+  document.getElementById(elmId).select()
+  navigator.clipboard.writeText(data);
+  alert("Copied to clipboard!");
+}
+
+const socialShare = (shareLink, contentName, platform) => {
+  let url, encodeUrl;
+
+  if(platform === 'twitter') {
+    url = `https://twitter.com/intent/tweet?url=${shareLink}&text=Watch "${contentName}" `;
+    encodeUrl = encodeURI(url);
+    window.open(encodeUrl, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+  }else {
+    
+  }
 }
 
 onMounted(() => {
@@ -730,4 +903,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 </style>
