@@ -26,9 +26,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/password/update', [AuthController::class, 'updatePassword']);
     Route::post('/uploads', [UploadsController::class, 'fileUpload']);
 
-    Route::get('/video', [VideoController::class, 'index']);
-    Route::put('/video/update', [VideoController::class, 'update']);
-    
+    Route::get('/videos', [VideoController::class, 'index']);
+    Route::group(['prefix' => 'video'], function () {
+        Route::put('update', [VideoController::class, 'update']);
+        Route::get('download/{id}', [VideoController::class, 'download']);
+        Route::delete('delete/{id}', [VideoController::class, 'delete']);
+    });
 });
 
 Route::post('/register', [AuthController::class, 'register']);

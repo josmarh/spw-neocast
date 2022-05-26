@@ -1,7 +1,18 @@
 <template>
     <div>
         <div v-if="data.fileurl !== null" class="h-screen">
-            <vue-plyr :options="options">
+            <!-- audio element -->
+            <vue-plyr v-if="data.filename.includes('.mp3')">
+                <audio controls playsinline >
+                <source
+                    :src="data.fileurl"
+                    type="audio/mp3"
+                    class="pt-20"
+                />
+                </audio>
+            </vue-plyr>
+            <!-- video element -->
+            <vue-plyr v-else :options="options">
                 <video
                 controls
                 playsinline

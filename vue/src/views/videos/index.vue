@@ -373,14 +373,15 @@
               "
             >
               <span v-if="cont.file_name.includes('.mp3')" style="height: 170px; background-color:gray">
-                <a href="#">
+                <a class="cursor-pointer" @click="playContent(cont)">
                   <div class="rounded-t-lg bg-gray-900"
                     style="height: 170px;">
                   </div>
                 </a>
               </span>
               <span v-else class="flex">
-                <a href="#" class="item-center">
+                <a :href="cont.file_hash"
+                  class="item-center cursor-pointer" data-fancybox>
                   <video
                     :src="cont.file_hash"
                     class="rounded-t-lg"
@@ -389,8 +390,12 @@
                 </a>
               </span>
               <div class="p-5">
+                <!-- Content Title -->
+                <p class="font-normal mb-3 text-sm text-gray-700 dark:text-gray-400" :title="cont.file_name">
+                  {{ cont.file_name.replace(/(.{27})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'+cont.media_length}}
+                </p>
                 <div class="flex mb-2 justify-center">
-                  <!-- Edit video -->
+                  <!-- Edit video btn -->
                   <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip-default">
                     <span class="w-1/6 text-white" @click="editVideo(cont)">
                       <svg
@@ -409,7 +414,7 @@
                       </svg>
                     </span>
                   </div>
-                  <!-- Embed video -->
+                  <!-- Embed video btn -->
                   <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
                     <span class="w-1/6 text-white">
                       <svg
@@ -428,9 +433,9 @@
                       </svg>
                     </span>
                   </div>
-                  <!-- Download video -->
+                  <!-- Download video btn -->
                   <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
-                    <span class="w-1/6 text-white">
+                    <span class="w-1/6 text-white" @click.prevent="downloadContent(cont)">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-6 w-5"
@@ -447,9 +452,9 @@
                       </svg>
                     </span>
                   </div>
-                  <!-- Delete video -->
+                  <!-- Delete video btn -->
                   <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1">
-                    <span class="w-1/6 text-white">
+                    <span class="w-1/6 text-white" @click.prevent="confirmDelete(cont)">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-6 w-5"
@@ -467,28 +472,33 @@
                     </span>
                   </div>
                 </div>
-                <p class="font-normal text-sm text-gray-700 dark:text-gray-400" :title="cont.file_name">
-                  {{ cont.file_name.replace(/(.{27})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'+cont.media_length}}
-                </p>
                 <!-- tags section -->
                 <div class="flex mt-2">
                   <div v-if="cont.tags">
-                    <div class="grid xl:grid-cols-2 xl:gap-1">
+                    <div class="grid xl:grid-flow-col auto-cols-max">
                       <div v-for="vTag in cont.tags.split(',')" :key="vTag">
-                        <span class="flex bg-blue-100 text-blue-800 text-sm font-medium 
+                        <span class="flex bg-blue-100 text-blue-800 text-xs font-medium 
                           mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
-                          {{vTag}}
+                          {{vTag}} 
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="flex justify-center items-center mt-3" v-if="!contents">
+        <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+          <h5 class="text-2xl text-gray-900 dark:text-white">No content found</h5>
+          <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+            <img src="../../assets/no_content.png" class="xl:w-82 xl:h-82" />
+          </div>
+        </div>
+      </div>
+      <!-- Edit content modal -->
       <TransitionRoot as="template" :show="open">
         <Dialog as="div" class="relative z-10" @close="open = false">
           <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
@@ -522,7 +532,7 @@
                         
                           <!-- <form> -->
                             <div class="mt-6 w-96">
-                              <div class="share-overlay-container">
+                              <div v-if="videoUpdate.contentName !== null" class="share-overlay-container">
                                 <!-- audio element -->
                                 <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
                                   <audio controls playsinline >
@@ -751,6 +761,133 @@
           </div>
         </Dialog>
       </TransitionRoot>
+      <!-- play content modal -->
+      <TransitionRoot as="template" :show="play">
+        <Dialog as="div" class="relative z-10" @close="play = false">
+          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+            <div class="fixed inset-0 bg-zinc-900 bg-opacity-80 transition-opacity" />
+          </TransitionChild>
+
+          <div class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <TransitionChild as="template" enter="ease-out duration-300" 
+                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                enter-to="opacity-100 translate-y-0 sm:scale-100" 
+                leave="ease-in duration-200" 
+                leave-from="opacity-100 translate-y-0 sm:scale-100" 
+                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <DialogPanel class="relative  text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-xl sm:w-full ">
+                  <div class=" p-0">
+                    <div class="sm:flex sm:items-start">
+                      <!-- px-4 pt-5 pb-4 sm:p-6 sm:pb-4
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <ExclamationIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
+                      </div> -->
+                      <div class="mt-3 text-center sm:mt-0 sm:ml-0 sm:mr-0 sm:text-left">
+                        <!-- <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> {{videoUpdate.contentName}} </DialogTitle> -->
+                        <div v-if="videoUpdate.contentUrl !== null" >
+                          <!-- audio element -->
+                          <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
+                            <audio controls playsinline >
+                              <source
+                                :src="videoUpdate.contentUrl"
+                                type="audio/mp3"
+                                class="pt-20"
+                                autoplay=0
+                              />
+                            </audio>
+                          </vue-plyr>
+                          <!-- video element -->
+                          <vue-plyr v-else >
+                            <video
+                              controls
+                              playsinline
+                              data-poster=""
+                              autoplay=1
+                            >
+                              <source
+                                size="720"
+                                :src="videoUpdate.contentUrl"
+                                type="video/mp4"
+                              />
+                              <source
+                                size="1080"
+                                :src="videoUpdate.contentUrl"
+                                type="video/mp4"
+                              />
+                            </video>
+                          </vue-plyr>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
+      <!-- delete content modal -->
+      <TransitionRoot as="template" :show="openDelete">
+        <Dialog as="div" class="relative z-10" @close="openDelete = false">
+          <TransitionChild as="template" 
+            enter="ease-out duration-300" 
+            enter-from="opacity-0" 
+            enter-to="opacity-100" 
+            leave="ease-in duration-200" 
+            leave-from="opacity-100" 
+            leave-to="opacity-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+
+          <div class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <TransitionChild as="template" 
+                enter="ease-out duration-300" 
+                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                enter-to="opacity-100 translate-y-0 sm:scale-100" 
+                leave="ease-in duration-200" 
+                leave-from="opacity-100 translate-y-0 sm:scale-100" 
+                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <DialogPanel class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <ExclamationIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
+                      </div>
+                      <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> 
+                          Delete {{videoUpdate.contentName}} 
+                        </DialogTitle>
+                        <div class="mt-2">
+                          <p class="text-sm text-gray-500">Are you sure you want to delete this content? This action cannot be undone.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" 
+                        class="w-full inline-flex justify-center border border-transparent 
+                        shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white 
+                        hover:bg-red-700 focus:outline-none focus:ring-offset-2 
+                        focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" 
+                        @click="deleteContent(videoUpdate.contentId)" :disabled="isDisabled"
+                    >Delete</button>
+                    <button type="button" 
+                        class="mt-3 w-full inline-flex justify-center border border-gray-300 
+                        shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
+                        hover:bg-gray-50 focus:outline-none focus:ring-offset-2 
+                        focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                        @click="openDelete = false" ref="cancelButtonRef"
+                    >Cancel</button>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
+
     </page-component>
   </div>
 </template>
@@ -762,15 +899,20 @@ import { ref, onMounted, getCurrentInstance, computed } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationIcon } from '@heroicons/vue/outline'
+import { Fancybox, Carousel, Panzoom } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox.css";
 
 const internalInstance = getCurrentInstance();
 const contents = computed(() => store.state.contents.contents);
 const router = useRouter();
 const route = useRoute();
 
+const openDelete = ref(false)
 const open = ref(false)
+const play = ref(false)
 const sEmbed = ref(false)
 
+let isDisabled = ref(false)
 let errorMsg = ref('');
 let successMsg = ref('');
 let videoUpdate = ref({
@@ -788,6 +930,7 @@ const getContents = async () => {
   await store
     .dispatch("getContents")
     .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
     })
     .catch((err) => {
@@ -803,56 +946,11 @@ const getContents = async () => {
     });
 };
 
-// Handles edit video click 
-const editVideo = (cont) => {
-  const shareUrl = router.resolve({
-    name: 'ShareVideo',
-    params: { str: cont.external_link}
-  });
-  const embedUrl = router.resolve({
-    name: 'EmbedVideo',
-    params: { str: cont.external_link}
-  });
-  videoUpdate.value.contentName = cont.file_name
-  videoUpdate.value.contentId = cont.id
-  videoUpdate.value.contentUrl = cont.file_hash // image and player
-  videoUpdate.value.externalUrl = window.location.host+shareUrl.href // external sharing
-  videoUpdate.value.embededFrame = `<iframe src='${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
-  sEmbed.value = false
-
-  if(cont.tags == null) {
-    videoUpdate.value.videoTag = []
-  }else {
-    videoUpdate.value.videoTag = []
-    for (let t of  cont.tags.split(',')) {
-      videoUpdate.value.videoTag.push(t)
-    }
-  }
-  open.value = true
-}
-
-// Handles tag passing to array 
-const passTag = () => {
-  let tag = document.getElementById('video-tag');
-  videoUpdate.value.videoTag.push(tag.value);
-  tag.value = '';
-}
-
-const removeTag = (vTag) => {
-  let filtered = videoUpdate['_rawValue'].videoTag.filter(data => data != vTag)
-
-  videoUpdate.value.videoTag = [];
-
-  for (let f of filtered) {
-    videoUpdate.value.videoTag.push(f)
-  }
-}
-
 // Update content
 const updateContent = async (ev) => {
   ev.preventDefault();
   internalInstance.appContext.config.globalProperties.$Progress.start();
-  store
+  await store
     .dispatch('updateContent', {
       contentName: videoUpdate.value.contentName,
       contentId: videoUpdate.value.contentId,
@@ -878,6 +976,115 @@ const updateContent = async (ev) => {
     })
 }
 
+// download content 
+const downloadContent = async (cont) => {
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  await store
+    .dispatch("downloadContent", cont.id)
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      forceFileDownload(res, cont.file_name)
+    })
+    .catch((err) => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+
+      if (err.response.data) {
+        if (err.response.data.hasOwnProperty("message")) {
+          errorMsg.value = err.response.data.message;
+        } else {
+          errorMsg.value = err.response.data.error;
+        }
+      }
+    });
+}
+
+// delete content
+const deleteContent = async (id) => { 
+  isDisabled.value = true ;
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  await store
+    .dispatch("deleteContent", id)
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      successMsg.value = res.message
+      isDisabled.value = false 
+      openDelete.value = false
+      getContents();
+    })
+    .catch((err) => {
+      isDisabled.value = false 
+      openDelete.value = false
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+
+      if (err.response.data) {
+        if (err.response.data.hasOwnProperty("message")) {
+          errorMsg.value = err.response.data.message;
+        } else {
+          errorMsg.value = err.response.data.error;
+        }
+      }
+    });
+}
+
+const confirmDelete = (cont) => {
+  openDelete.value = true;
+  videoUpdate.value.contentId = cont.id
+  videoUpdate.value.contentName = cont.file_name
+}
+
+// Handles edit video click 
+const editVideo = (cont) => {
+  const shareUrl = router.resolve({
+    name: 'ShareVideo',
+    params: { str: cont.external_link}
+  });
+  const embedUrl = router.resolve({
+    name: 'EmbedVideo',
+    params: { str: cont.external_link}
+  });
+  videoUpdate.value.contentName = cont.file_name
+  videoUpdate.value.contentId = cont.id
+  videoUpdate.value.contentUrl = cont.file_hash // image and player
+  videoUpdate.value.externalUrl = `https://${window.location.host+shareUrl.href}` // external sharing
+  videoUpdate.value.embededFrame = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+  sEmbed.value = false
+
+  if(cont.tags == null) {
+    videoUpdate.value.videoTag = []
+  }else {
+    videoUpdate.value.videoTag = []
+    for (let t of  cont.tags.split(',')) {
+      videoUpdate.value.videoTag.push(t)
+    }
+  }
+  open.value = true;
+}
+
+// Watch video/Audio on click 
+const playContent = (cont) => {
+  videoUpdate.value.contentName = cont.file_name
+  videoUpdate.value.contentUrl = cont.file_hash
+  if (videoUpdate.value.contentUrl !== null)
+    play.value = true;
+}
+
+// Handles tag passing to array 
+const passTag = () => {
+  let tag = document.getElementById('video-tag');
+  videoUpdate.value.videoTag.push(tag.value);
+  tag.value = '';
+}
+
+const removeTag = (vTag) => {
+  let filtered = videoUpdate['_rawValue'].videoTag.filter(data => data != vTag)
+
+  videoUpdate.value.videoTag = [];
+
+  for (let f of filtered) {
+    videoUpdate.value.videoTag.push(f)
+  }
+}
+
 // copy to clipboard
 const copyData = (data, elmId) => {
   document.getElementById(elmId).select()
@@ -886,16 +1093,30 @@ const copyData = (data, elmId) => {
 }
 
 const socialShare = (shareLink, contentName, platform) => {
-  let url, encodeUrl;
+  let url, encodeUrl, start;
 
   if(platform === 'twitter') {
-    url = `https://twitter.com/intent/tweet?url=${shareLink}&text=Watch "${contentName}" `;
+    start = contentName.includes('.mp3') ? 'Listen to' : 'Watch';
+    url = `https://twitter.com/intent/tweet?url=${shareLink}&text=${start} "${contentName}" `;
     encodeUrl = encodeURI(url);
     window.open(encodeUrl, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
   }else {
     
   }
 }
+
+const forceFileDownload = (response, filename) => {
+  const url = window.URL.createObjectURL(new Blob([response]))
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', filename) //or any other extension
+  document.body.appendChild(link)
+  link.click()
+}
+
+
+
+
 
 onMounted(() => {
   getContents();

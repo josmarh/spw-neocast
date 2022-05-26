@@ -176,10 +176,11 @@ const uploadFiles = (ev) => {
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
-      upload.value.files = [];  
-      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(10);
+      upload.value.files = []; 
       successMsg.value = res.status;
       isDisabled.value = false;
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();

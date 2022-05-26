@@ -27,6 +27,7 @@ class UploadsController extends Controller
                     'file_size' => $f['size'],
                     'file_type' => $f['type'],
                     'media_length' => $f['duration'],
+                    'upload_types' => 'hosted video',
                     'user_id' => $user->id
                 ]);
             }else {

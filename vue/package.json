@@ -11,6 +11,7 @@
     "@aacassandra/vue3-progressbar": "^1.0.3",
     "@coreui/coreui": "^4.1.5",
     "@coreui/vue": "^4.3.0",
+    "@fancyapps/ui": "^4.0.27",
     "@headlessui/vue": "^1.6.1",
     "@heroicons/vue": "^1.0.6",
     "@mdi/font": "5.9.55",

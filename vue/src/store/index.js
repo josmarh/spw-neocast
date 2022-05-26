@@ -55,7 +55,7 @@ const store = createStore({
                 })
         },
         getContents({ commit }){
-            return axiosClient.get(`/video`)
+            return axiosClient.get(`/videos`)
                 .then(({data}) => {
                     commit('getContents', data)
                     return data;
@@ -74,7 +74,19 @@ const store = createStore({
                     commit('getExternalContent', data)
                     return data;
                 })
-        }
+        },
+        downloadContent({ commit }, id) {
+            return axiosClient.get(`/video/download/${id}`, {responseType: 'blob'})
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteContent({ commit }, id){
+            return axiosClient.delete(`/video/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         getExternalContent: (state, data) => {

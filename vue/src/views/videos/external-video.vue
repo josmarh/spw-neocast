@@ -4,12 +4,23 @@
         <div class="py-6 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="lg:text-center">
-                    <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                    <p class="mt-2 xl:text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                         {{data.filename}}
                     </p>
                 </div>
-                <div v-if="data.fileurl !== null" class="mt-10  h-[40rem] ">
-                    <vue-plyr :options="options">
+                <div v-if="data.fileurl !== null" class="mt-10  xl:h-[40rem]">
+                    <!-- audio element -->
+                    <vue-plyr v-if="data.filename.includes('.mp3')">
+                        <audio controls playsinline >
+                        <source
+                            :src="data.fileurl"
+                            type="audio/mp3"
+                            class="pt-20"
+                        />
+                        </audio>
+                    </vue-plyr>
+                    <!-- video element -->
+                    <vue-plyr v-else :options="options">
                         <video
                         controls
                         playsinline

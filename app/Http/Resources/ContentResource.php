@@ -19,6 +19,7 @@ class ContentResource extends JsonResource
         $externalLink = explode('.', $splitLink[1]);
 
         return [
+            'id'            => $this->id,
             'file_name'     => $this->file_name,
             'file_hash'     => $this->file_hash ? URL::to($this->file_hash) : null,
             'file_size'     => $this->file_size,
