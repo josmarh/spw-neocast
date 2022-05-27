@@ -57,7 +57,7 @@ const store = createStore({
         getContents({ commit }){
             return axiosClient.get(`/videos`)
                 .then(({data}) => {
-                    commit('getContents', data)
+                    commit('setContents', data)
                     return data;
                 })
         },
@@ -87,6 +87,18 @@ const store = createStore({
                     return data;
                 })
         },
+        searchContent({ commit }, searchParam){
+            return axiosClient.get(`/videos`, { 
+                    params: { 
+                        name: searchParam.name,
+                        tags: searchParam.tag
+                    } 
+                })
+                .then(({data}) => {
+                    commit('setContents', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         getExternalContent: (state, data) => {
@@ -95,7 +107,7 @@ const store = createStore({
         updateContent: (state, data) => {
             state.contents = state.contents.contents.map(item => data.contents.id === item.id || item);
         },
-        getContents: (state, data) => {
+        setContents: (state, data) => {
             state.contents = data;
         },
         updatePersonalInfo: (state, userInfo) => {

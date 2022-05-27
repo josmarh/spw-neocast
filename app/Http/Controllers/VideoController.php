@@ -12,15 +12,47 @@ class VideoController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $contents = FileUploads::where('user_id', $user->id)
+        $contentName = request()->query('name');
+        $contentTags = request()->query('tags');
+        $matchTags = request()->query('match');
+        $mediaTypes = request()->query('type');
+
+        if( $contentName || $contentTags || $matchTags || $mediaTypes ) {
+            
+            $content = new FileUploads;
+
+            if(isset($contentName)) {
+                $contents = $content->where('user_id', $user->id)
+                    ->where('file_name', 'like', '%'.$contentName.'%')
+                    ->orderBy('created_at', 'desc');
+            }
+            if(isset($contentTags)) {
+                $contents = $content->where('user_id', $user->id)
+                    ->where('tags', 'like', '%'.$contentTags.'%')
+                    ->orderBy('created_at', 'desc');
+            }
+            // if(isset($matchTags)){
+            //     $books = $book->where('publisher', $matchTags);
+            // }
+            if(isset($mediaTypes)) {
+                $contents = $content->where('user_id', $user->id)
+                    ->where('upload_types', 'like', '%'.$mediaTypes.'%')
+                    ->orderBy('created_at', 'desc');
+            }
+
+            $contents = $contents->paginate(12);
+        }else {
+            $contents = FileUploads::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(12);
+        }       
 
         return response([
             'contents' => ContentResource::collection($contents),
-            'status' => 'success',
-            'status_code' => 200
+            'status' => $contents->count() > 0 ? 'success' : 'no content found',
+            'status_code' => $contents->count() > 0 ? 200 : 404
         ]);
+        // return ContentResource::collection($contents);
     }
 
     public function update(Request $request)
@@ -47,7 +79,7 @@ class VideoController extends Controller
         return response([
             'content' => new ContentResource($content),
             'message' => $content ? 'Content available' : 'Content unavailable',
-            'status_code' => $content ? 200 : 401
+            'status_code' => $content ? 200 : 404
         ]);
     }
 

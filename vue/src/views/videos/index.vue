@@ -147,6 +147,7 @@
       </div>
       <!-- filter contents section -->
       <div class="flex justify-center items-center w-full">
+        <form>
         <div
           class="
             grid
@@ -207,6 +208,7 @@
                   peer
                 "
                 placeholder=" "
+                v-model="searchParam.name"
               />
               <label
                 for="name-search"
@@ -281,6 +283,7 @@
                   peer
                 "
                 placeholder=" "
+                v-model="searchParam.tag"
               />
               <label
                 for="tag-search"
@@ -356,6 +359,7 @@
             </select>
           </div>
         </div>
+        </form>
       </div>
       <!-- main content display -->
       <div class="mt-12">
@@ -895,7 +899,7 @@
 <script setup>
 import PageComponent from "../../components/PageComponent.vue";
 import store from "../../store";
-import { ref, onMounted, getCurrentInstance, computed } from "vue";
+import { ref, onMounted, getCurrentInstance, computed, watch } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationIcon } from '@heroicons/vue/outline'
@@ -922,7 +926,37 @@ let videoUpdate = ref({
   externalUrl: '',
   embededFrame: '',
   videoTag: []
-}) 
+})
+
+const searchParam = ref({
+  name: null,
+  tag: null
+})
+
+const filterWatch = watch([searchParam.value.name, searchParam.value.tag], (after, before) => { 
+  searchContent()
+})
+
+const searchContent = async () => {
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  await store
+    .dispatch("searchContent", searchParam)
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+    })
+    .catch((err) => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+
+      if (err.response.data) {
+        if (err.response.data.hasOwnProperty("message")) {
+          errorMsg.value = err.response.data.message;
+        } else {
+          errorMsg.value = err.response.data.error;
+        }
+      }
+    });
+}
 
 // Get all contents 
 const getContents = async () => {
@@ -1113,10 +1147,6 @@ const forceFileDownload = (response, filename) => {
   document.body.appendChild(link)
   link.click()
 }
-
-
-
-
 
 onMounted(() => {
   getContents();

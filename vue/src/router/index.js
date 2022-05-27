@@ -39,6 +39,7 @@ const routes = [
             {path: '/user/profile', name: 'Profile', component: Profile},
             {path: '/channels', name: 'Channels', component: Channels},
             {path: '/contents', name: 'Videos', component: Videos},
+            // {path: '/contents?', name: 'Videos', component: Videos},
             {path: '/uploads', name: 'Uploads', component: Uploads},
             {path: '/livestream', name: 'LiveStream', component: LiveStream},
             {path: '/website', name: 'Website', component: Website},
