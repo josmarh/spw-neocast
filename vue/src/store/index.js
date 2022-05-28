@@ -7,7 +7,11 @@ const store = createStore({
             data: JSON.parse(localStorage.getItem('userInfo')),
             token: localStorage.getItem('TOKEN')
         },
-        contents: [],
+        contents: {
+            data: [],
+            links: [],
+            meta: {}
+        },
         externalContent: {}
     },
     getters: {},
@@ -54,8 +58,9 @@ const store = createStore({
                     return data;
                 })
         },
-        getContents({ commit }){
-            return axiosClient.get(`/videos`)
+        getContents({ commit }, {url = null} = {}){
+            url = url || '/videos'
+            return axiosClient.get(url)
                 .then(({data}) => {
                     commit('setContents', data)
                     return data;
@@ -91,7 +96,9 @@ const store = createStore({
             return axiosClient.get(`/videos`, { 
                     params: { 
                         name: searchParam.name,
-                        tags: searchParam.tag
+                        tags: searchParam.tag,
+                        match: searchParam.tagMatch,
+                        type: searchParam.mediaType
                     } 
                 })
                 .then(({data}) => {
@@ -105,7 +112,7 @@ const store = createStore({
             state.externalContent = data;
         },
         updateContent: (state, data) => {
-            state.contents = state.contents.contents.map(item => data.contents.id === item.id || item);
+            // state.contents = state.contents.data.map(item => data.contents.id === item.id || item);
         },
         setContents: (state, data) => {
             state.contents = data;

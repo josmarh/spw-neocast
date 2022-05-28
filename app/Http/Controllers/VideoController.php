@@ -27,13 +27,16 @@ class VideoController extends Controller
                     ->orderBy('created_at', 'desc');
             }
             if(isset($contentTags)) {
-                $contents = $content->where('user_id', $user->id)
-                    ->where('tags', 'like', '%'.$contentTags.'%')
-                    ->orderBy('created_at', 'desc');
+                if($matchTags == 'all_tag'){
+                    $contents = $content->where('user_id', $user->id)
+                        ->where('tags', $contentTags)
+                        ->orderBy('created_at', 'desc');
+                }else{
+                    $contents = $content->where('user_id', $user->id)
+                        ->where('tags', 'like', '%'.$contentTags.'%')
+                        ->orderBy('created_at', 'desc');
+                }
             }
-            // if(isset($matchTags)){
-            //     $books = $book->where('publisher', $matchTags);
-            // }
             if(isset($mediaTypes)) {
                 $contents = $content->where('user_id', $user->id)
                     ->where('upload_types', 'like', '%'.$mediaTypes.'%')
@@ -45,14 +48,9 @@ class VideoController extends Controller
             $contents = FileUploads::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(12);
-        }       
+        }     
 
-        return response([
-            'contents' => ContentResource::collection($contents),
-            'status' => $contents->count() > 0 ? 'success' : 'no content found',
-            'status_code' => $contents->count() > 0 ? 200 : 404
-        ]);
-        // return ContentResource::collection($contents);
+        return ContentResource::collection($contents);
     }
 
     public function update(Request $request)

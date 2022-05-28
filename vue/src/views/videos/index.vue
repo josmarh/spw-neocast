@@ -147,7 +147,6 @@
       </div>
       <!-- filter contents section -->
       <div class="flex justify-center items-center w-full">
-        <form>
         <div
           class="
             grid
@@ -313,6 +312,7 @@
           <div>
             <label for="select_tag" class="sr-only">Select Tags</label>
             <select
+              v-model="searchParam.tagMatch"
               id="select_tag"
               class="
                 block
@@ -328,16 +328,16 @@
                 peer
               "
             >
-              <option disabled selected hidden>Match any tag</option>
-              <option value="any_tag">Match any tag</option>
+              <option selected value="any_tag">Match any tag</option>
               <option value="all_tags">Match all tags</option>
             </select>
           </div>
           <div>
-            <label for="select_media_types" class="sr-only"
-              >All Media types</label
-            >
-            <select
+            <label for="select_media_types" class="sr-only">
+              All Media types
+            </label>
+            <select 
+              v-model="searchParam.mediaType"
               id="select_media_types"
               class="
                 block
@@ -353,138 +353,141 @@
                 peer
               "
             >
-              <option disabled selected hidden>All Media types</option>
-              <option value="hosted_videos">Hosted Videos</option>
-              <option value="external_links">External Links</option>
+              <option selected value="">All Media types</option>
+              <option value="hosted video">Hosted Videos</option>
+              <option value="external links">External Links</option>
             </select>
           </div>
         </div>
-        </form>
       </div>
-      <!-- main content display -->
-      <div class="mt-12">
-        <div class="grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
-          <div v-for="cont in contents" :key="cont.id">
-            <div
-              class="
-                w-72
-                bg-white
-                rounded-lg
-                border border-gray-200
-                shadow-md
-                dark:bg-gray-800 dark:border-gray-700
-                mb-3
-              "
-            >
-              <span v-if="cont.file_name.includes('.mp3')" style="height: 170px; background-color:gray">
-                <a class="cursor-pointer" @click="playContent(cont)">
-                  <div class="rounded-t-lg bg-gray-900"
-                    style="height: 170px;">
+      
+      <div v-if="contents.data.length" class="mt-12">
+        <!-- pagination -->
+        <div>
+          <!-- main content display -->
+          <div class="grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
+            <div v-for="cont in contents.data" :key="cont.id">
+              <div
+                class="
+                  w-72
+                  bg-white
+                  rounded-lg
+                  border border-gray-200
+                  shadow-md
+                  dark:bg-gray-800 dark:border-gray-700
+                  mb-3
+                "
+              >
+                <span v-if="cont.file_name.includes('.mp3')" style="height: 170px; background-color:gray">
+                  <a class="cursor-pointer" @click="playContent(cont)">
+                    <div class="rounded-t-lg bg-gray-900"
+                      style="height: 170px;">
+                    </div>
+                  </a>
+                </span>
+                <span v-else class="flex">
+                  <a :href="cont.file_hash"
+                    class="item-center cursor-pointer" data-fancybox>
+                    <video
+                      :src="cont.file_hash"
+                      class="rounded-t-lg"
+                      style="height: 170px;"
+                    ></video>
+                  </a>
+                </span>
+                <div class="p-5">
+                  <!-- Content Title -->
+                  <p class="font-normal mb-3 text-sm text-gray-700 dark:text-gray-400" :title="cont.file_name">
+                    {{ cont.file_name.replace(/(.{27})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'+cont.media_length}}
+                  </p>
+                  <div class="flex mb-2 justify-center">
+                    <!-- Edit video btn -->
+                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip-default">
+                      <span class="w-1/6 text-white" @click="editVideo(cont)">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <!-- Embed video btn -->
+                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
+                      <span class="w-1/6 text-white">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <!-- Download video btn -->
+                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
+                      <span class="w-1/6 text-white" @click.prevent="downloadContent(cont)">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <!-- Delete video btn -->
+                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1">
+                      <span class="w-1/6 text-white" @click.prevent="confirmDelete(cont)">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                </a>
-              </span>
-              <span v-else class="flex">
-                <a :href="cont.file_hash"
-                  class="item-center cursor-pointer" data-fancybox>
-                  <video
-                    :src="cont.file_hash"
-                    class="rounded-t-lg"
-                    style="height: 170px;"
-                  ></video>
-                </a>
-              </span>
-              <div class="p-5">
-                <!-- Content Title -->
-                <p class="font-normal mb-3 text-sm text-gray-700 dark:text-gray-400" :title="cont.file_name">
-                  {{ cont.file_name.replace(/(.{27})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'+cont.media_length}}
-                </p>
-                <div class="flex mb-2 justify-center">
-                  <!-- Edit video btn -->
-                  <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip-default">
-                    <span class="w-1/6 text-white" @click="editVideo(cont)">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <!-- Embed video btn -->
-                  <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
-                    <span class="w-1/6 text-white">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <!-- Download video btn -->
-                  <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
-                    <span class="w-1/6 text-white" @click.prevent="downloadContent(cont)">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <!-- Delete video btn -->
-                  <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1">
-                    <span class="w-1/6 text-white" @click.prevent="confirmDelete(cont)">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-                <!-- tags section -->
-                <div class="flex mt-2">
-                  <div v-if="cont.tags">
-                    <div class="grid xl:grid-flow-col auto-cols-max">
-                      <div v-for="vTag in cont.tags.split(',')" :key="vTag">
-                        <span class="flex bg-blue-100 text-blue-800 text-xs font-medium 
-                          mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
-                          {{vTag}} 
-                        </span>
+                  <!-- tags section -->
+                  <div class="flex mt-2">
+                    <div v-if="cont.tags">
+                      <div class="grid xl:grid-flow-col auto-cols-max">
+                        <div v-for="vTag in cont.tags.split(',')" :key="vTag">
+                          <span class="flex bg-blue-100 text-blue-800 text-xs font-medium 
+                            mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">
+                            {{vTag}} 
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -492,9 +495,34 @@
               </div>
             </div>
           </div>
+          <div class="flex justify-center mt-5">
+            <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm "
+              aria-label="Pagination"
+            >
+            <a 
+              v-for="(link, i) of contents.meta.links" 
+              :key="i"
+              :disabled="!link.url"
+              href="#"
+              @click="getForPage($event,link)"
+              aria-current="page"
+              class="relative inline-flex items-center px-4 py-2 border text-sm
+              font-medium whitespace-nowrap"
+              :class="[
+                link.active 
+                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' 
+                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+                i === 0 ? 'rounded-l-md' : '',
+                i === contents.meta.links.length - 1 ? 'rounded-r-md' : '',
+              ]"
+              v-html="link.label"
+            >
+            </a>
+            </nav>
+          </div>
         </div>
       </div>
-      <div class="flex justify-center items-center mt-3" v-if="!contents">
+      <div v-else class="flex justify-center items-center" >
         <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
           <h5 class="text-2xl text-gray-900 dark:text-white">No content found</h5>
           <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
@@ -907,7 +935,7 @@ import { Fancybox, Carousel, Panzoom } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox.css";
 
 const internalInstance = getCurrentInstance();
-const contents = computed(() => store.state.contents.contents);
+const contents = computed(() => store.state.contents);
 const router = useRouter();
 const route = useRoute();
 
@@ -930,17 +958,21 @@ let videoUpdate = ref({
 
 const searchParam = ref({
   name: null,
-  tag: null
+  tag: null,
+  tagMatch: null,
+  mediaType: null
 })
 
-const filterWatch = watch([searchParam.value.name, searchParam.value.tag], (after, before) => { 
-  searchContent()
-})
+watch(searchParam, (after, before) => {
+  setTimeout(function(){
+    searchContent(after)
+  }, 2000)
+}, {deep: true})
 
-const searchContent = async () => {
+const searchContent = async (item) => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
   await store
-    .dispatch("searchContent", searchParam)
+    .dispatch("searchContent", item)
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
@@ -994,7 +1026,7 @@ const updateContent = async (ev) => {
       internalInstance.appContext.config.globalProperties.$Progress.finish();
       open.value = false;
       successMsg.value = res.status;
-      getContents();
+      store.dispatch("getContents")
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -1043,7 +1075,7 @@ const deleteContent = async (id) => {
       successMsg.value = res.message
       isDisabled.value = false 
       openDelete.value = false
-      getContents();
+      store.dispatch("getContents")
     })
     .catch((err) => {
       isDisabled.value = false 
@@ -1146,6 +1178,15 @@ const forceFileDownload = (response, filename) => {
   link.setAttribute('download', filename) //or any other extension
   document.body.appendChild(link)
   link.click()
+}
+
+const getForPage = (ev,link) => {
+  ev.preventDefault();
+  if(!link.url || link.active) {
+    return;
+  }
+
+  store.dispatch("getContents", {url: link.url})
 }
 
 onMounted(() => {
