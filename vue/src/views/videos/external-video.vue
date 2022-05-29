@@ -39,6 +39,14 @@
                         </video>
                     </vue-plyr>
                 </div>
+                <div v-if="contentCheck == true" class="flex justify-center items-center mt-12">
+                    <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                    <h5 class="text-2xl text-gray-900 dark:text-white">No content found</h5>
+                    <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                        <img src="../../assets/no_content.png" class="xl:w-82 xl:h-82" />
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -54,6 +62,7 @@ const content = computed(() => store.state.externalContent);
 const router = useRouter();
 const route = useRoute();
 
+let contentCheck = ref(false)
 let errorMsg = ref("");
 let data = ref({
     filename: null,
@@ -69,9 +78,13 @@ const getExternalContent = async () => {
         internalInstance.appContext.config.globalProperties.$Progress.finish();
         data.value.filename = res.content.file_name
         data.value.fileurl = res.content.file_hash
+        if (data.value.fileurl == null){
+            contentCheck.value = true
+        }
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
+      contentCheck.value = true
 
       if (err.response.data) {
         if (err.response.data.hasOwnProperty("message")) {

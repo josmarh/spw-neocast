@@ -176,7 +176,7 @@ const uploadFiles = (ev) => {
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
-      internalInstance.appContext.config.globalProperties.$Progress.decrease(10);
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       upload.value.files = []; 
       successMsg.value = res.status;
       isDisabled.value = false;

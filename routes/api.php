@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::put('update', [VideoController::class, 'update']);
         Route::get('download/{id}', [VideoController::class, 'download']);
         Route::delete('delete/{id}', [VideoController::class, 'delete']);
+        Route::post('external', [VideoController::class, 'upload']);
     });
 });
 

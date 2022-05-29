@@ -102,6 +102,27 @@ class VideoController extends Controller
         return response()->download(public_path().'/'.$content->file_hash, $content->file_name, $headers );
     }
 
+    public function upload(Request $request)
+    {
+        $user = $request->user();
+        $data = $request->validate([
+            'link' => 'required|url'
+        ]);
+
+        FileUploads::create([
+            'file_hash' => $data['link'],
+            'external_video_link' => $data['link'],
+            'upload_types' => 'external links',
+            'user_id' => $user->id
+        ]);
+
+        return response([
+            'message' => 'Content added successfully.',
+            'status' => 'success',
+            'status_code' => 201
+        ]);
+    }
+
     public function delete($id)
     {
         $content = FileUploads::findOrFail($id);

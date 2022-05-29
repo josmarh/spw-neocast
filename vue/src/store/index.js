@@ -69,7 +69,6 @@ const store = createStore({
         updateContent({ commit }, videoUpdate){
             return axiosClient.put(`/video/update`, videoUpdate)
                 .then(({data}) => {
-                    commit('updateContent', data)
                     return data;
                 })
         },
@@ -86,7 +85,7 @@ const store = createStore({
                     return data;
                 })
         },
-        deleteContent({ commit }, id){
+        deleteContent({ }, id){
             return axiosClient.delete(`/video/delete/${id}`)
                 .then(({data}) => {
                     return data;
@@ -106,13 +105,22 @@ const store = createStore({
                     return data;
                 })
         },
+        addExternalContent({ commit }, externalLink){
+            return axiosClient.post('/video/external', externalLink)
+            .then(({data}) => {
+                return data;
+            })
+        },
+        queryContentLink({ commit }, externalLink){
+            return axiosClient.get(externalLink)
+            .then(({data}) => {
+                return data;
+            })
+        }
     },
     mutations: {
         getExternalContent: (state, data) => {
             state.externalContent = data;
-        },
-        updateContent: (state, data) => {
-            // state.contents = state.contents.data.map(item => data.contents.id === item.id || item);
         },
         setContents: (state, data) => {
             state.contents = data;
