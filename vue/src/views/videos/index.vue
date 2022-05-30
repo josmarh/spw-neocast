@@ -981,24 +981,202 @@
                         <div class="grid grid-cols-3 gap-3 mt-4">
                           <div>
                             <h3 class="font-bold text-lg text-gray-900">Size</h3>
+                            <div class="flex mt-3">
+                              <div class="flex items-center mr-4">
+                                <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                <input
+                                  type="radio"
+                                  v-model="embedFilters.isPicked"
+                                  value="responsive" 
+                                  name="inline-radio-group" 
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 
+                                  dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 
+                                  dark:border-gray-600"
+                                >
+                                Responsive</label>
+                              </div>
+                              <div class="flex items-center mr-4">
+                                <label class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                <input 
+                                  type="radio" 
+                                  v-model="embedFilters.isPicked"
+                                  value="fixed" 
+                                  name="inline-radio-group"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 
+                                  dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 
+                                  dark:border-gray-600"
+                                >
+                                Fixed</label>
+                              </div>
+                            </div>
+                            <div v-if="embedFilters.isPicked == 'responsive'" class="mt-5">
+                              <select
+                                v-model="embedFilters.ratio"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                                focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+                                dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+                                dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                              >
+                                <option value="56.25%">16:9</option>
+                                <option value="75%">4:3</option>
+                                <option value="100%">1:1</option>
+                              </select>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+                                Aspect Ratio
+                              </label>
+                            </div>
+                            <div v-else class="mt-5">
+                              <div class="grid grid-cols-3 gap-1">
+                                <div>
+                                  <div class="">
+                                    <input type="text" id="width" v-model="embedFilters.pixelWid"
+                                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+                                      rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 
+                                      p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                                      dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    >
+                                  </div>
+                                </div>
+                                <div class="py-2 px-7">x</div>
+                                <div>
+                                  <div class="">
+                                    <input type="text" id="length" v-model="embedFilters.pixelLen"
+                                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+                                      rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 
+                                      p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                                      dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    >
+                                  </div>
+                                </div>
+                              </div>
+                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Pixels</label>
+                            </div>
                           </div>
                           <div>
                             <h3 class="font-bold text-lg text-gray-900">Playback options</h3>
+                            <div class="mt-3">
+                              <div class="flex items-center mb-4">
+                                <input 
+                                  v-model="embedFilters.isAutoPlay" 
+                                  id="autoplay" 
+                                  type="checkbox"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
+                                  focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                  focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label 
+                                  for="autoplay" 
+                                  class="ml-2 text-sm font-medium text-gray-900 
+                                  dark:text-gray-300">Autoplay (if possible)</label>
+                              </div>
+                            </div>
+                            <div class="mt-3">
+                              <div class="flex items-center mb-4">
+                                <input 
+                                  v-model="embedFilters.isVolume"
+                                  id="volume"
+                                  type="checkbox"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
+                                  focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                  focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label 
+                                  for="volume" 
+                                  class="ml-2 text-sm font-medium text-gray-900 
+                                  dark:text-gray-300">Volume</label>
+                              </div>
+                            </div>
                           </div>
                           <div>
                             <h3 class="font-bold text-lg text-gray-900">Display options</h3>
+                            <div class="mt-3">
+                              <div class="flex items-center mb-4">
+                                <input 
+                                  v-model="embedFilters.sControls"
+                                  id="controls"
+                                  type="checkbox"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
+                                  focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                  focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label 
+                                  for="controls" 
+                                  class="ml-2 text-sm font-medium text-gray-900 
+                                  dark:text-gray-300">Show controls</label>
+                              </div>
+                            </div>
+                            <div class="mt-3">
+                              <div class="flex items-center mb-4">
+                                <input 
+                                  v-model="embedFilters.sContentTitle"
+                                  id="content-title"
+                                  type="checkbox"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
+                                  focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                  focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label 
+                                  for="content-title" 
+                                  class="ml-2 text-sm font-medium text-gray-900 
+                                  dark:text-gray-300">Show content title</label>
+                              </div>
+                            </div>
+                            <div class="mt-3">
+                              <div class="flex items-center mb-4">
+                                <input 
+                                  v-model="embedFilters.sShare"
+                                  id="share-button"
+                                  type="checkbox"
+                                  class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
+                                  focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
+                                  focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label
+                                  for="share-button"
+                                  class="ml-2 text-sm font-medium text-gray-900 
+                                  dark:text-gray-300">Show share buttons</label>
+                              </div>
+                            </div>
                           </div>
+                        </div>
+                        <!-- embed code field -->
+                        <div class="mt-10">
+                          <label 
+                            for="code" 
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+                          >
+                          Code
+                          </label>
+                          <textarea 
+                            id="code" 
+                            rows="4" 
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg 
+                            border border-gray-300 focus:ring-blue-500 focus:border-blue-500 
+                            dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                            dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="Emebeded Code"
+                            v-model="code"
+                          ></textarea>
+                        </div>
+                        <div class="mt-5">
+                          <button type="submit" 
+                            class="group relative flex justify-center py-2 px-4 border 
+                            border-transparent text-sm font-medium text-white 
+                            bg-indigo-600 hover:bg-indigo-700 focus:outline-none
+                            sm:w-auto sm:text-sm"
+                            @click="copyData(code, 'code')"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                            </svg>&nbsp;
+                            Copy embed code
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" 
-                        class="mt-3 w-full inline-flex justify-center border border-gray-300 
-                        shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
-                        hover:bg-gray-50 focus:outline-none focus:ring-offset-2 
-                        focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
-                        @click="openEmbed = false" ref="cancelButtonRef"
+                      class="mt-3 w-full inline-flex justify-center border border-gray-300 
+                      shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
+                      hover:bg-gray-50 focus:outline-none focus:ring-offset-2 
+                      focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                      @click="openEmbed = false" ref="cancelButtonRef"
                     >Cancel</button>
                   </div>
                 </DialogPanel>
@@ -1049,15 +1227,41 @@ let videoUpdate = ref({
 const searchParam = ref({
   name: null,
   tag: null,
-  tagMatch: null,
-  mediaType: null
+  tagMatch: 'any_tag',
+  mediaType: ''
 })
+
+const embedFilters = ref({
+  isPicked: 'responsive',
+  ratio: '56.25%',
+  pixelWid: '640',
+  pixelLen: '360',
+  isAutoPlay: false,
+  isVolume: true,
+  sControls: true,
+  sContentTitle: true,
+  sShare: true
+})
+const code = ref(`<div style='position: relative; padding-bottom: ${embedFilters.value.ratio}; height: 0;'><iframe src='https://player.viloud.tv/embed/video/311c6d3890a9ecebb200f8d2eb473367?autoplay=0&volume=1&controls=1&title=1&share=1&open_playlist=0' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' frameborder='0' allow='autoplay' allowfullscreen></iframe></div>`)
+
+watch(embedFilters, (after, before) => {
+  embedCode(after)
+}, {deep: true})
 
 watch(searchParam, (after, before) => {
   setTimeout(function(){
     searchContent(after)
   }, 2000)
 }, {deep: true})
+
+const embedCode = (item) => {
+
+  if(item.isPicked == 'responsive') {
+    code.value = `<div style='position: relative; padding-bottom: ${item.ratio}; height: 0;'><iframe src='https://player.viloud.tv/embed/video/311c6d3890a9ecebb200f8d2eb473367?autoplay=${item.isAutoPlay == true ? 1 : 0}&volume=${item.isVolume == true ? 1 : 0}&controls=${item.sControls == true ? 1 : 0}&title=${item.sContentTitle == true ? 1 : 0}&share=${item.sShare == true ? 1 : 0}' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' frameborder='0' allow='autoplay' allowfullscreen></iframe></div>`
+  }else {
+    code.value = `<iframe src='https://player.viloud.tv/embed/video/311c6d3890a9ecebb200f8d2eb473367?autoplay=${item.isAutoPlay == true ? 1 : 0}&volume=${item.isVolume == true ? 1 : 0}&controls=${item.sControls == true ? 1 : 0}&title=${item.sContentTitle == true ? 1 : 0}&share=${item.sShare == true ? 1 : 0}' width='${item.pixelWid}' height='${item.pixelLen}' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+  }
+}
 
 // embed content  
 const embedContent = (cont) => {
