@@ -4,7 +4,6 @@ import router from './router';
 import store from './store';
 import VueProgressBar from "@aacassandra/vue3-progressbar";
 import VuePlyr from 'vue-plyr';
-import VueClipboard from 'vue-clipboard';
 import './index.css';
 import 'flowbite';
 import 'vue-plyr/dist/vue-plyr.css';
@@ -30,7 +29,6 @@ createApp(App)
   .use(VuePlyr, {
     plyr: {}
   })
-  .use(VueClipboard)
   .use(VueProgressBar, options)
   .use(router)
   .use(store)

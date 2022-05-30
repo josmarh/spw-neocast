@@ -17,7 +17,7 @@ class VideoController extends Controller
         $matchTags = request()->query('match');
         $mediaTypes = request()->query('type');
 
-        if( $contentName || $contentTags || $matchTags || $mediaTypes ) {
+        if( $contentName || $contentTags || $mediaTypes ) {
             
             $content = new FileUploads;
 
@@ -31,7 +31,7 @@ class VideoController extends Controller
                     $contents = $content->where('user_id', $user->id)
                         ->where('tags', $contentTags)
                         ->orderBy('created_at', 'desc');
-                }else{
+                }elseif($matchTags == 'any_tag'){
                     $contents = $content->where('user_id', $user->id)
                         ->where('tags', 'like', '%'.$contentTags.'%')
                         ->orderBy('created_at', 'desc');
@@ -43,14 +43,14 @@ class VideoController extends Controller
                     ->orderBy('created_at', 'desc');
             }
 
-            $contents = $contents->paginate(12);
+            $getContents = $contents->paginate(12);
         }else {
-            $contents = FileUploads::where('user_id', $user->id)
+            $getContents = FileUploads::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(12);
         }     
 
-        return ContentResource::collection($contents);
+        return ContentResource::collection($getContents);
     }
 
     public function update(Request $request)
