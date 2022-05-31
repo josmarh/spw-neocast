@@ -24,6 +24,7 @@
     "vue-plyr": "^7.0.0",
     "vue-progressbar": "^0.7.5",
     "vue-router": "^4.0.13",
+    "vue3-colorpicker": "^2.0.4",
     "vuetify": "^3.0.0-beta.0",
     "vuex": "^4.0.2",
     "webfontloader": "^1.0.0"

@@ -7,8 +7,8 @@ import VuePlyr from 'vue-plyr';
 import './index.css';
 import 'flowbite';
 import 'vue-plyr/dist/vue-plyr.css';
-// import vuetify from './plugins/vuetify'
-// import { loadFonts } from './plugins/webfontloader'
+import Vue3ColorPicker from "vue3-colorpicker";
+import "vue3-colorpicker/style.css";
 
 const options = {
   color: "#0E9F6E",
@@ -32,5 +32,5 @@ createApp(App)
   .use(VueProgressBar, options)
   .use(router)
   .use(store)
-  // .use(vuetify)
+  .use(Vue3ColorPicker)
   .mount('#app')
