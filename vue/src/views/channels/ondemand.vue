@@ -43,10 +43,10 @@
                                     <h3 class="flex items-center mb-1 text-md font-semibold text-gray-900 dark:text-white">
                                         Player Customization
                                     </h3>
-                                    <div class="grid grid-cols-3 gap-2 mt-5">
+                                    <div class="grid grid-cols-3 gap-4 mt-5">
                                         <div class="">
                                             <label for="default-toggle" class="relative inline-flex items-center mb-4 cursor-pointer">
-                                                <input type="checkbox" value="" id="default-toggle" class="sr-only peer">
+                                                <input type="checkbox" id="default-toggle" class="sr-only peer" v-model="channelModel.logo">
                                                 <div 
                                                     class="w-11 h-6 bg-gray-200 rounded-full peer 
                                                     peer-focus:ring-blue-300 
@@ -63,20 +63,30 @@
                                             </label>
                                             <!-- channel logo -->
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700"> </label>
                                                 <div class="mt-1 flex items-center">
-                                                    <span class="inline-block h-20 w-[4.5rem]  overflow-hidden bg-gray-100">
+                                                    <img v-if="channelModel.imageUrl" 
+                                                        :src="channelModel.imageUrl" 
+                                                        class="w-64 h-44 object-cover"
+                                                    />
+                                                    <span v-else class="inline-block h-20 w-[4.5rem]  overflow-hidden bg-gray-100">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                                                         </svg>
                                                     </span>
                                                 </div>
                                                 <button type="button" 
-                                                    class=" bg-white py-2 px-3 border border-gray-300 
-                                                    rounded-md shadow-sm text-sm leading-4 font-medium 
-                                                    text-gray-700 hover:bg-gray-50 focus:outline-none 
-                                                    focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                                >Change</button>
+                                                    class="relative overflow-hidden bg-white py-2 px-3 border border-gray-300
+                                                    shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 
+                                                    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                                >
+                                                    <input 
+                                                        type="file" 
+                                                        class="absolute left-0 top-0 right-0 bottom-0 opacity-0 cursor-pointer"
+                                                        :disabled="channelModel.logo == false ? true : false"
+                                                        @change="onLogoChoose"
+                                                    >
+                                                    Change
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="col-span-2">
@@ -90,6 +100,8 @@
                                                     dark:focus:border-blue-500 focus:outline-none 
                                                     focus:ring-0 focus:border-blue-600 peer" 
                                                     placeholder=" " 
+                                                    :readonly="channelModel.logo == false ? true : false"
+                                                    v-model="channelModel.logoLink"
                                                 />
                                                 <label 
                                                     for="logo_link" 
@@ -108,11 +120,13 @@
                                                         <input 
                                                             id="inline-radio" 
                                                             type="radio" 
-                                                            value="" 
+                                                            value="left" 
                                                             name="inline-radio-group" 
                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 
                                                             dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 
                                                             dark:border-gray-600"
+                                                            :disabled="channelModel.logo == false ? true : false"
+                                                            v-model="channelModel.logoPosition"
                                                         >
                                                         <label 
                                                             for="inline-radio" 
@@ -120,14 +134,16 @@
                                                         >Left</label>
                                                     </div>
                                                     <div class="flex items-center mr-4">
-                                                        <input checked 
+                                                        <input 
                                                             id="inline-2-radio" 
                                                             type="radio" 
-                                                            value="" 
+                                                            value="right" 
                                                             name="inline-radio-group" 
                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
                                                             focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 
                                                             focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                            :disabled="channelModel.logo == false ? true : false"
+                                                            v-model="channelModel.logoPosition"
                                                         >
                                                         <label 
                                                             for="inline-2-radio" 
@@ -135,9 +151,6 @@
                                                         >Right</label>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="mt-3">
-
                                             </div>
                                         </div>
                                     </div>
@@ -167,6 +180,7 @@
                                                     dark:border-gray-600 dark:focus:border-blue-500
                                                     focus:outline-none focus:ring-0 focus:border-blue-600
                                                     peer" placeholder=" "
+                                                    v-model="channelModel.twitter"
                                                 />
                                                 <label
                                                     for="twitter_id"
@@ -190,13 +204,23 @@
                                             Where can this channel be embedded?
                                         </span>
                                         <div class="flex items-center mb-4 mt-2">
-                                            <input id="default-radio-1" type="radio" value="" name="default-radio" 
-                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="default-radio-1" type="radio" value="anywhere" name="default-radio" 
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                                focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 
+                                                dark:border-gray-600"
+                                                v-model="channelModel.privacy"
+                                            >
                                             <label for="default-radio-1" class="ml-4 text-sm text-gray-900 dark:text-gray-300">Anywhere</label>
                                         </div>
                                         <div class="flex items-center">
-                                            <input checked="" id="default-radio-2" type="radio" value="" name="default-radio" 
-                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="default-radio-2" type="radio" value="domain" name="default-radio" 
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                                focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 
+                                                dark:border-gray-600"
+                                                v-model="channelModel.privacy"
+                                            >
                                             <label for="default-radio-2" class="ml-4 text-sm text-gray-900 dark:text-gray-300">Only on domains I choose</label>
                                         </div>
                                     </div>
@@ -232,7 +256,11 @@
 
                                 </div>
                                 <div class="col-span-8">
-
+                                    <video-player 
+                                        :options="videoOptions" 
+                                        :playlistOptions="playlist" 
+                                        :shareOptions="share"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -262,11 +290,109 @@
 import NewChannelComponent from '../../components/NewChannelComponent.vue';
 import { ref } from 'vue';
 import { ColorInputWithoutInstance } from "tinycolor2";
+import PageComponent from '../../components/PageComponent.vue'
+import VideoPlayer from '../../components/VideoPlayer.vue';
 
-const channelModel = ref({
-    name: 'Untitled Channel'
-})
 const pureColor = ref<ColorInputWithoutInstance>("red");
 const gradientColor = ref("linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%)");
+
+const channelModel = ref({
+    name: 'Untitled Channel',
+    logo: false,
+    logoLink: '',
+    logoPosition: 'right',
+    image: null,
+    twitter: '',
+    colorPicked: '',
+    privacy: 'anywhere',
+    monetization: '',
+    imageUrl: null,
+})
+
+const onLogoChoose = (ev) => {
+    const file = ev.target.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => {
+        channelModel.value.image = reader.result;
+        channelModel.value.imageUrl = reader.result;
+    }
+    reader.readAsDataURL(file)
+}
+
+const videoOptions = {
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+  playbackRates: [0.5, 1, 1.5, 2],
+  sources: [
+    {
+      src: 'https://muxed.s3.amazonaws.com/ink.mp4',
+      type: 'video/mp4',
+    }
+  ],
+}
+
+const playlist = [
+    {
+        name: 'Sintel',
+        sources: [{
+            src: 'http://media.w3.org/2010/05/sintel/trailer.mp4',
+            type: 'video/mp4',
+        }],
+        poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+        thumbnail: [
+            {
+                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                type: 'image/jpeg',
+                media: '(min-width: 400px;)'
+            },
+            {
+                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+            }
+        ],
+        duration: 90,
+    },
+    {
+        name: 'Ocean',
+        sources: [{
+            src: 'https://muxed.s3.amazonaws.com/ink.mp4',
+            type: 'video/mp4'
+        }],
+        poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+        thumbnail: [
+            {
+                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                type: 'image/jpeg',
+                media: '(min-width: 400px;)'
+            },
+            {
+                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+            }
+        ],
+        duration: 90,
+    }
+];
+
+const share = {
+  socials: ['fb', 'tw'],
+
+  url: window.location.href,
+  title: 'videojs-share',
+  description: 'video.js share plugin',
+  image: 'https://dummyimage.com/1200x630',
+
+  // required for Facebook and Messenger
+  fbAppId: '74883939828939939900',
+  // optional for Facebook
+  redirectUri: window.location.href + '#close',
+
+  // optional for VK
+  isVkParse: true,
+  
+  // optinal embed code
+  embedCode : '<iframe src="' + window.location.href + '" width="560" height="315" frameborder="0" allowfullscreen></iframe>'
+}
 
 </script>
