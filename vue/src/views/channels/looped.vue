@@ -1,12 +1,10 @@
 <template>
   <div>
-    <new-channel-component title="Looped (Linear)">
-
-    </new-channel-component>
+    <new-channel title="Looped (Linear)" />
   </div>
 </template>
 
 <script setup>
-import NewChannelComponent from '../../components/NewChannelComponent.vue';
+import NewChannel from '../../components/NewChannel.vue';
 
 </script>
