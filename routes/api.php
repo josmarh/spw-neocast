@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\ChannelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,11 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('download/{id}', [VideoController::class, 'download']);
         Route::delete('delete/{id}', [VideoController::class, 'delete']);
         Route::post('external', [VideoController::class, 'upload']);
+    });
+
+    Route::get('/channels', [ChannelController::class, 'index']);
+    Route::group(['prefix' => 'channel'], function () {
+        Route::post('store', [ChannelController::class, 'store']);
     });
 });
 

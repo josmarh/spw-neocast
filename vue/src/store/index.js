@@ -7,12 +7,19 @@ const store = createStore({
             data: JSON.parse(localStorage.getItem('userInfo')),
             token: localStorage.getItem('TOKEN')
         },
+        notifyError: '',
+        notifySuccess: '',
         contents: {
             data: [],
             links: [],
             meta: {}
         },
-        externalContent: {}
+        externalContent: {},
+        channels: {
+            data: [],
+            links: [],
+            meta: {}
+        }
     },
     getters: {},
     actions: {
@@ -116,14 +123,30 @@ const store = createStore({
             .then(({data}) => {
                 return data;
             })
+        },
+        storeChannel({ commit }, model){
+            return axiosClient.post('/channel/store', model)
+            .then(({data}) => {
+                commit('setChannel', data)
+                return data;
+            })
         }
     },
     mutations: {
+        setChannel: (state, data) => {
+            state.channels = data;
+        },
         getExternalContent: (state, data) => {
             state.externalContent = data;
         },
         setContents: (state, data) => {
             state.contents = data;
+        },
+        setSuccessNotification: (state, info) => {
+            state.notifySuccess = info
+        },
+        setErrorNotification: (state, info) => {
+            state.notifyError = info
         },
         updatePersonalInfo: (state, userInfo) => {
             state.user.data = userInfo.user;

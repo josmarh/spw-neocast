@@ -1,8 +1,8 @@
 <template>
   <div>
     <page-component title="Profile Settings">
-      <div v-if="successMsg">
-        <!-- <success-notification :message="successMsg"></success-notification> -->
+      <notification />
+      <!-- <div v-if="successMsg">
         <div id="toast-success" class="absolute flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 divide-x divide-gray-200 right-5 top-10" role="alert">
           <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -20,7 +20,6 @@
         </div>
       </div>
       <div v-else-if="errorMsg">
-        <!-- <error-notification :message="errorMsg"></error-notification> -->
         <div id="toast-error" class="absolute flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 divide-x divide-gray-200 right-5 top-10" role="alert">
           <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
               <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
@@ -36,7 +35,7 @@
               <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
           </button>
         </div>
-      </div>
+      </div> -->
 
       <div class="grid xl:grid-cols-2 xl:gap-6">
         <!-- personal info section -->
@@ -136,6 +135,7 @@
 
 <script setup>
 import PageComponent from '../../components/PageComponent.vue'
+import Notification from '../../components/Notification.vue';
 import store from '../../store'
 import { ref, getCurrentInstance } from 'vue'
 
@@ -173,7 +173,7 @@ function updatePersonalInfo(ev) {
       // progress bar start
       internalInstance.appContext.config.globalProperties.$Progress.finish();
       isDisabled.value = false;
-      successMsg.value = res.status;
+      // successMsg.value = res.status;
     })
     .catch(err => {
       // progress bar start
@@ -182,9 +182,11 @@ function updatePersonalInfo(ev) {
 
       if(err.response.data){
         if (err.response.data.hasOwnProperty('message')){
-          errorMsg.value = err.response.data.message
+          // errorMsg.value = err.response.data.message
+          store.dispatch("setErrorNotification", err.response.data.message);
         }else {
-          errorMsg.value = err.response.data.error
+          // errorMsg.value = err.response.data.error
+          store.dispatch("setErrorNotification", err.response.data.error);
         }
       }
     })
@@ -193,7 +195,8 @@ function updatePersonalInfo(ev) {
 function updatePassword(ev) {
   ev.preventDefault();
   if (userPass.new_password !==  userPass.confirm_password) {
-    errorMsg.value = 'Password does not match';
+    // errorMsg.value = 'Password does not match';
+    store.dispatch("setErrorNotification", 'Password does not match');
     return false;
   }else{
     // progress bar start
@@ -216,9 +219,11 @@ function updatePassword(ev) {
 
         if(err.response.data) {
           if (err.response.data.hasOwnProperty('message')){
-            errorMsg.value = err.response.data.message
+            // errorMsg.value = err.response.data.message
+            store.dispatch("setErrorNotification", err.response.data.message);
           }else {
-            errorMsg.value = err.response.data.error
+            // errorMsg.value = err.response.data.error
+            store.dispatch("setErrorNotification", err.response.data.error);
           }
         }
       })

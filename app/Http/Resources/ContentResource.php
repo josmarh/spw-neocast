@@ -28,7 +28,6 @@ class ContentResource extends JsonResource
             'tags'          => $this->tags,
             'external_video_link'  => $this->external_video_link,
             'upload_types'         => $this->upload_types,
-            'user_id'              => $this->user_id,
             'external_link'        => $this->file_hash ? $externalLink[0] : null,
         ];
     }

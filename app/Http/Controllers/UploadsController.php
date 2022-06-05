@@ -36,7 +36,8 @@ class UploadsController extends Controller
         }
 
         return response([
-            'status' => 'File uploaded successfully'
+            'status' => 'File uploaded successfully',
+            'status_code' => 201
         ]);
     }
 

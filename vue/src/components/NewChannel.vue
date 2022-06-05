@@ -1,6 +1,7 @@
 <template>
   <div>
     <page-component title="Channels">
+        <notification />
         <div class="bg-white shadow overflow-hidden sm:rounded-lg">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Create channel</h3>
@@ -133,7 +134,7 @@
                                                 </select>
                                             </div>
                                             <div class="ml-2">
-                                                Your current timezone is Africa/Lagos
+                                                With current timezone Africa/Lagos
                                             </div>
                                         </div>
                                     </div>
@@ -436,7 +437,7 @@
                                 focus:ring-4 focus:outline-none focus:ring-blue-300 
                                 font-medium text-sm w-full sm:w-auto px-5 py-2.5 
                                 text-center dark:bg-blue-600 dark:hover:bg-blue-700 
-                                dark:focus:ring-blue-800"
+                                dark:focus:ring-blue-800" :disabled="isDisabled"
                             >Accept</button>
                             <router-link :to="{name: 'Channels'}"
                                 class="ml-4 text-white bg-gray-400 hover:bg-gray-800 
@@ -457,9 +458,14 @@
 <script setup>
 import PageComponent from './PageComponent.vue';
 import VideoPlayer from './VideoPlayer.vue';
-import { ref, watch } from 'vue';
+import store from '../store';
+import Notification from './Notification.vue';
+import { ref, watch, getCurrentInstance } from 'vue';
 import { ColorInputWithoutInstance } from "tinycolor2";
+import { useRouter, useRoute } from 'vue-router';
 
+const router = useRouter();
+const internalInstance = getCurrentInstance();
 const pureColor = ref<ColorInputWithoutInstance>("red");
 const gradientColor = ref("linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%)");
 
@@ -474,14 +480,15 @@ const channelModel = ref({
     logoPosition: 'right',
     image: null,
     twitter: '',
-    colorPicked: '',
     privacy: 'anywhere',
     monetization: '',
-    imageUrl: null,
+    imageUrl: null, // for upload display
     domains: [],
     schedule: 'weekly',
     looptimeH: '00',
     looptimeM: '00',
+    channelType: props.title,
+    timezone: null
 })
 
 const lhours = ref([]);
@@ -498,13 +505,14 @@ for (let h=0; h<24; h++){
 
 let m = 0;
 while (m <= 45){
-    if (m < 10){
+    if (m < 10)
         lmins.value.push('0'+m)
-    }else{
+    else
         lmins.value.push(m.toString())
-    }
     m = m + 15
 }
+
+let isDisabled = ref(false);
 
 watch(channelModel, (after, before) => {
   channelModel.value.domains = channelModel.value.privacy == 'anywhere' ? [] : channelModel.value.domains
@@ -597,27 +605,65 @@ const playlist = [
 ];
 
 const share = {
-  socials: ['fb', 'tw'],
+    socials: ['fb', 'tw'],
 
-  url: window.location.href,
-  title: 'videojs-share',
-  description: 'video.js share plugin',
-  image: 'https://dummyimage.com/1200x630',
+    url: window.location.href,
+    title: 'videojs-share',
+    description: 'video.js share plugin',
+    image: 'https://dummyimage.com/1200x630',
 
-  // required for Facebook and Messenger
-  fbAppId: '74883939828939939900',
-  // optional for Facebook
-  redirectUri: window.location.href + '#close',
+    // required for Facebook and Messenger
+    fbAppId: '74883939828939939900',
+    // optional for Facebook
+    redirectUri: window.location.href + '#close',
 
-  // optional for VK
-  isVkParse: true,
-  
-  // optinal embed code
-  embedCode : '<iframe src="' + window.location.href + '" width="560" height="315" frameborder="0" allowfullscreen></iframe>'
+    // optional for VK
+    isVkParse: true,
+
+    // optinal embed code
+    embedCode : '<iframe src="' + window.location.href + '" width="560" height="315" frameborder="0" allowfullscreen></iframe>'
 }
 
 const postChannel = async () => {
-    
+    internalInstance.appContext.config.globalProperties.$Progress.start();
+    isDisabled.value = true;
+    let colorPicker = document.querySelector('.current-color').style.background;
+
+    await store
+        .dispatch('storeChannel', {
+            title: channelModel.value.name,
+            schedule: channelModel.value.schedule,
+            starttime: `${channelModel.value.looptimeH}:${channelModel.value.looptimeM}`,
+            timezone: channelModel.value.timezone,
+            logo: channelModel.value.logo == true ? channelModel.value.image : null,
+            logolink: channelModel.value.logoLink,
+            logoposition: channelModel.value.logoPosition,
+            color: colorPicker,
+            twitter: channelModel.value.twitter,
+            privacy: channelModel.value.privacy,
+            privacydomain: channelModel.value.privacy == 'anywhere' ? null : channelModel.value.domains.toString(),
+            adtagurl: channelModel.value.monetization,  
+            channeltype: channelModel.value.channelType
+        })
+        .then((res) => {
+            internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+            // store.state.notifySuccess = res.status;
+            isDisabled.value = false;
+            internalInstance.appContext.config.globalProperties.$Progress.finish();
+            router.push({name: 'Channels'})
+        })
+        .catch(err => {
+            internalInstance.appContext.config.globalProperties.$Progress.fail();
+            isDisabled.value = false;
+
+            if(err.response.data) {
+                if (err.response.data.hasOwnProperty('message')){
+                    // store.state.notifyError  = err.response.data.message
+                }else {
+                    // store.state.notifyError = err.response.data.error
+                }
+            }
+        })
 }
 
 </script>

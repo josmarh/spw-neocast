@@ -46,8 +46,8 @@ class VideoController extends Controller
             $getContents = $contents->paginate(12);
         }else {
             $getContents = FileUploads::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
         }     
 
         return ContentResource::collection($getContents);
