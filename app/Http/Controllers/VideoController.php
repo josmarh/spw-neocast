@@ -102,7 +102,7 @@ class VideoController extends Controller
         return response()->download(public_path().'/'.$content->file_hash, $content->file_name, $headers );
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request) // work in progress
     {
         $user = $request->user();
         $data = $request->validate([

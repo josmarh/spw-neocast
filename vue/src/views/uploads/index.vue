@@ -1,41 +1,7 @@
 <template>
   <div>
     <page-component title="Uploads">
-      <div v-if="successMsg">
-        <div id="toast-success" class="absolute flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 divide-x divide-gray-200 right-5 top-10" role="alert">
-          <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-              </svg>
-          </div>
-          <div class="ml-3 text-sm font-normal">{{successMsg}}</div>
-          <button type="button" @click="successMsg=''"
-              class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" 
-              data-dismiss-target="#toast-success" 
-              aria-label="Close">
-              <span class="sr-only">Close</span>
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-          </button>
-        </div>
-      </div>
-      <div v-else-if="errorMsg">
-        <!-- <error-notification :message="errorMsg"></error-notification> -->
-        <div id="toast-error" class="absolute flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 divide-x divide-gray-200 right-5 top-10" role="alert">
-          <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
-              <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-              </div>
-          </div>
-          <div class="ml-3 text-sm font-normal">{{errorMsg}}</div>
-          <button type="button" @click="errorMsg=''"
-              class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" 
-              data-dismiss-target="#toast-error" 
-              aria-label="Close">
-              <span class="sr-only">Close</span>
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-          </button>
-        </div>
-      </div>
+      <notification />
       <form @submit="uploadFiles" enctype="multipart/form-data">
         <div class="flex justify-center items-center w-full">
           <label for="dropzone-file" class="flex flex-col justify-center items-center w-96 h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -104,6 +70,7 @@
 
 <script setup>
 import PageComponent from '../../components/PageComponent.vue'
+import Notification from '../../components/Notification.vue';
 import store from '../../store'
 import { ref, getCurrentInstance } from 'vue'
 
@@ -112,8 +79,6 @@ const upload = ref({
   files: [],
 });
 
-let errorMsg = ref('');
-let successMsg = ref('');
 let isDisabled = ref(false);
 
 function onFileChoose(ev) {
@@ -178,9 +143,9 @@ const uploadFiles = (ev) => {
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       upload.value.files = []; 
-      successMsg.value = res.status;
       isDisabled.value = false;
       internalInstance.appContext.config.globalProperties.$Progress.finish();
+      store.dispatch("setSuccessNotification", res.status);
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -188,9 +153,9 @@ const uploadFiles = (ev) => {
 
       if(err.response.data) {
         if (err.response.data.hasOwnProperty('message')){
-          errorMsg.value = err.response.data.message
+          store.dispatch("setErrorNotification", err.response.data.message);
         }else {
-          errorMsg.value = err.response.data.error
+          store.dispatch("setErrorNotification", err.response.data.error);
         }
       }
     })

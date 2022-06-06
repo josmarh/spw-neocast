@@ -14,9 +14,18 @@ class ChannelController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $channels = Channels::where('user_id', $user->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(12);
+        $queryName = request()->query('name');
+
+        if(isset($queryName)) {
+            $channels = Channels::where('user_id', $user->id)
+                ->where('title', 'like', '%'.$queryName.'%')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        }else {
+            $channels = Channels::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        }
 
         return ChannelResource::collection($channels);
     }
@@ -55,9 +64,29 @@ class ChannelController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function edit($hash)
+    {
+        $channel = Channels::where('channel_hash', $hash)->first();
+
+        return new ChannelResource($channel);
+    }
+
+    public function update(Request $request, $hash)
+    {
+        $channel = Channels::where('channel_hash', $hash)->first();
+    }
+
+    public function delete($id)
     {
         $channel = Channels::findOrFail($id);
+
+        $channel->delete();
+
+        return response([
+            'message' => 'Channel deleted successfully.',
+            'status' => 'success',
+            'status_code' => 204
+        ]);
     }
 
     private function extractUrl($file)

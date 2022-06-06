@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use URL;
 
 class ChannelResource extends JsonResource
 {
@@ -15,6 +16,7 @@ class ChannelResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'schedule_duration' => $this->schedule_duration,
             'start_time' => $this->start_time,

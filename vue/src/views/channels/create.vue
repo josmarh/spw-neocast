@@ -194,5 +194,4 @@ const setUpChannel = () => {
         router.push({name: 'Ondemand'})
     }
 }
-
 </script>

@@ -647,9 +647,9 @@ const postChannel = async () => {
         })
         .then((res) => {
             internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
-            // store.state.notifySuccess = res.status;
             isDisabled.value = false;
             internalInstance.appContext.config.globalProperties.$Progress.finish();
+            store.dispatch("setSuccessNotification", res.status);
             router.push({name: 'Channels'})
         })
         .catch(err => {
@@ -658,9 +658,9 @@ const postChannel = async () => {
 
             if(err.response.data) {
                 if (err.response.data.hasOwnProperty('message')){
-                    // store.state.notifyError  = err.response.data.message
+                    store.dispatch("setErrorNotification", err.response.data.message);
                 }else {
-                    // store.state.notifyError = err.response.data.error
+                    store.dispatch("setErrorNotification", err.response.data.error);
                 }
             }
         })

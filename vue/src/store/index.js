@@ -11,18 +11,24 @@ const store = createStore({
         notifySuccess: '',
         contents: {
             data: [],
-            links: [],
+            links: {},
             meta: {}
         },
         externalContent: {},
         channels: {
             data: [],
-            links: [],
+            links: {},
             meta: {}
         }
     },
     getters: {},
     actions: {
+        setSuccessNotification({commit}, message){
+            commit('setSuccessNotification', message)
+        },
+        setErrorNotification({commit}, message){
+            commit('setErrorNotification', message)
+        },
         register({ commit }, user){
             return axiosClient.post('/register', user)
                 .then(({data}) => {
@@ -64,7 +70,7 @@ const store = createStore({
                 .then(({data}) => {
                     return data;
                 })
-        },
+        }, // video content actions
         getContents({ commit }, {url = null} = {}){
             url = url || '/videos'
             return axiosClient.get(url)
@@ -123,17 +129,39 @@ const store = createStore({
             .then(({data}) => {
                 return data;
             })
+        },  // channels section actions
+        getChannelList({ commit } , {url = null} = {}){
+            url = url || '/channels'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setChannels', data)
+                    return data;
+                })
         },
-        storeChannel({ commit }, model){
+        storeChannel({ }, model){
             return axiosClient.post('/channel/store', model)
             .then(({data}) => {
-                commit('setChannel', data)
                 return data;
             })
+        },
+        filterChannel({ commit }, name){
+            return axiosClient.get(`/channels`, { 
+                params: {name: name}
+            })
+            .then(({data}) => {
+                commit('setChannels', data)
+                return data;
+            })
+        },
+        deleteChannel({}, id){
+            return axiosClient.delete(`/channel/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
         }
     },
     mutations: {
-        setChannel: (state, data) => {
+        setChannels: (state, data) => {
             state.channels = data;
         },
         getExternalContent: (state, data) => {
