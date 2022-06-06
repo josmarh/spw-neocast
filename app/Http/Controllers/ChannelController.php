@@ -71,9 +71,42 @@ class ChannelController extends Controller
         return new ChannelResource($channel);
     }
 
-    public function update(Request $request, $hash)
+    public function update(Request $request, $id)
     {
-        $channel = Channels::where('channel_hash', $hash)->first();
+        $channel = Channels::findOrFail($id);
+        $relativePath = $request->logo;
+
+        if (isset($request->logo)) {
+            // check content type
+            $host = $request->getSchemeAndHttpHost();
+            if(strpos($request->logo, $host) !== false) {
+                $relativePath = str_ireplace($host.'/', '', $request->logo);
+            }else {
+                $relativePath = $this->extractUrl($request->logo);
+            }
+        }
+
+        $channel->update([
+            'title' => $request->title,
+            'schedule_duration' => $request->schedule,
+            'start_time' => $request->starttime,
+            'timezone' => $request->timezone,
+            'logo' => $relativePath,
+            'logo_link' => $request->logolink,
+            'logo_position' => $request->logoposition,
+            'color' => $request->color,
+            'twitter' => $request->twitter,
+            'privacy' => $request->privacy,
+            'privacy_domain' => $request->privacydomain,
+            'ad_tag_url' => $request->adtagurl,
+            'channel_type' => $request->channeltype,
+        ]);
+
+        return response([
+            'contents' => new ChannelResource($channel),
+            'status' => 'Channel updated successfully',
+            'status_code' => 200,
+        ]);
     }
 
     public function delete($id)

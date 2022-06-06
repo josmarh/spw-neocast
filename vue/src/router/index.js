@@ -11,6 +11,7 @@ import Channel from '../views/channels/create.vue'
 import Looped from '../views/channels/looped.vue'
 import Scheduled from '../views/channels/scheduled.vue'
 import Ondemand from '../views/channels/ondemand.vue'
+import EditChannel from '../views/channels/edit.vue'
 import Videos from '../views/videos/index.vue'
 import ShareVideo from '../views/videos/external-video.vue'
 import EmbedVideo from '../views/videos/embeded-video.vue'
@@ -46,6 +47,7 @@ const routes = [
             {path: '/create-channel/looped', name: 'Looped', component: Looped},
             {path: '/create-channel/scheduled', name: 'Scheduled', component: Scheduled},
             {path: '/create-channel/ondemand', name: 'Ondemand', component: Ondemand},
+            {path: '/edit-channel/:hash', name: 'EditChannel', component: EditChannel},
             {path: '/contents', name: 'Videos', component: Videos},
             {path: '/uploads', name: 'Uploads', component: Uploads},
             {path: '/livestream', name: 'LiveStream', component: LiveStream},

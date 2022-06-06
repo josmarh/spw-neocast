@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::group(['prefix' => 'channel'], function () {
         Route::post('store', [ChannelController::class, 'store']);
         Route::get('edit/{hash}', [ChannelController::class, 'edit']);
-        Route::put('update/{hash}', [ChannelController::class, 'update']);
+        Route::put('update/{id}', [ChannelController::class, 'update']);
         Route::delete('delete/{id}', [ChannelController::class, 'delete']);
     });
 });

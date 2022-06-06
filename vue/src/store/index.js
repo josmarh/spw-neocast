@@ -153,6 +153,18 @@ const store = createStore({
                 return data;
             })
         },
+        editChannel({ commit }, hash){
+            return axiosClient.get(`/channel/edit/${hash}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateChannel({}, data){
+            return axiosClient.put(`/channel/update/${data.id}`, data)
+                .then(({data}) => {
+                    return data;
+                })
+        },
         deleteChannel({}, id){
             return axiosClient.delete(`/channel/delete/${id}`)
                 .then(({data}) => {

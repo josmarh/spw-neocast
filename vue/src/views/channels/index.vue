@@ -37,8 +37,53 @@
       <div v-else>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           <div class="p-4">
+            <div class="inline-flex rounded-md shadow-sm" role="group">
+              <router-link
+                :to="{ name: 'CreateChannel' }"
+                class="group relative flex justify-center
+                py-2 px-3 border border-transparent
+                text-sm font-medium text-white
+                bg-indigo-600 hover:bg-indigo-700
+                focus:outline-none"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Create Channel
+              </router-link>
+              <router-link
+                class="group relative flex justify-center
+                py-2 px-3 border border-transparent
+                text-sm font-medium text-white
+                bg-indigo-600 hover:bg-indigo-700
+                focus:outline-none"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </router-link>
+              <Menu as="div" class="ml-3 ">
+                <div>
+                  <MenuButton class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <span class="sr-only">Open user menu</span>
+                    
+                  </MenuButton>
+                </div>
+                <transition enter-active-class="transition ease-out duration-100" 
+                  enter-from-class="transform opacity-0 scale-95" 
+                  enter-to-class="transform opacity-100 scale-100" 
+                  leave-active-class="transition ease-in duration-75" 
+                  leave-from-class="transform opacity-100 scale-100" 
+                  leave-to-class="transform opacity-0 scale-95">
+                  <MenuItems class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    
+                  </MenuItems>
+                </transition>
+              </Menu>
+
+            </div>
             <!-- filters  -->
-            <div class="relative z-0">
+            <div class="relative z-0 ">
               <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none"
               >
                 <svg
@@ -55,23 +100,13 @@
                 type="text"
                 id="name-search"
                 v-model="nameFilter"
-                class="
-                  block
-                  pl-10
-                  py-2
-                  px-0
-                  xl:w-1/4
-                  sm:w-1/3
-                  text-sm text-gray-900
-                  bg-transparent
+                class="block pl-10 py-2 px-0 xl:w-1/4 sm:w-1/3
+                  text-sm text-gray-900 bg-transparent
                   border-0 border-b-2 border-gray-300
-                  appearance-none
-                  dark:text-white
-                  dark:border-gray-600
-                  dark:focus:border-blue-500
+                  appearance-none dark:text-white
+                  dark:border-gray-600 dark:focus:border-blue-500
                   focus:outline-none focus:ring-0 focus:border-blue-600
-                  peer
-                "
+                  peer"
                 placeholder=" "
               />
               <label
@@ -180,7 +215,7 @@
                         </button>
                       </div>
                       <div class="">
-                        <button type="button"
+                        <button type="button" @click="editChannel(c.channel_hash)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
@@ -211,7 +246,7 @@
               </tbody>
             </table>
             <!-- pagination -->
-            <div class="flex justify-center mt-5">
+            <div class="flex justify-center mt-5 mb-5">
               <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm "
                 aria-label="Pagination"
               >
@@ -272,7 +307,7 @@
                           Delete {{channelModel.title}} 
                         </DialogTitle>
                         <div class="mt-2">
-                          <p class="text-sm text-gray-500">Are you sure you want to delete this content? This action cannot be undone.</p>
+                          <p class="text-sm text-gray-500">Are you sure you want to delete this channel? This action cannot be undone.</p>
                         </div>
                       </div>
                     </div>
@@ -299,19 +334,24 @@
           </div>
         </Dialog>
       </TransitionRoot>
-      {{channels}}
+      <!-- {{channels}} -->
     </page-component>
   </div>
 </template>
 
 <script setup>
-import PageComponent from '../../components/PageComponent.vue'
+import PageComponent from '../../components/PageComponent.vue';
 import Notification from '../../components/Notification.vue';
-import store from '../../store'
-import { ref, computed, onMounted, watch, getCurrentInstance } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { ExclamationIcon } from '@heroicons/vue/outline'
+import store from '../../store';
+import { ref, computed, onMounted, watch, getCurrentInstance } from 'vue';
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, 
+  Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems
+} from '@headlessui/vue';
+import { ExclamationIcon } from '@heroicons/vue/outline';
+import { useRouter, useRoute } from 'vue-router';
 
+const router = useRouter();
+const route = useRoute();
 const internalInstance = getCurrentInstance();
 const channels = computed(() => store.state.channels);
 const nameFilter = ref('')
@@ -369,6 +409,13 @@ const filterChannel = async (name) => {
     });
 }
 
+const editChannel = (hash) => {
+  router.push({
+    name: 'EditChannel',
+    params: { hash: hash}
+  })
+}
+
 const deleteChannel = async (id) => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
   await store
@@ -378,9 +425,11 @@ const deleteChannel = async (id) => {
       store.dispatch('setSuccessNotification', res.message);
       store.dispatch('getChannelList');
       internalInstance.appContext.config.globalProperties.$Progress.finish();
+      openDelete.value = false
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
+      openDelete.value = false
 
       if (err.response.data) {
         if (err.response.data.hasOwnProperty("message")) {
