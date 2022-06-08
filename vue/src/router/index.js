@@ -12,6 +12,7 @@ import Looped from '../views/channels/looped.vue'
 import Scheduled from '../views/channels/scheduled.vue'
 import Ondemand from '../views/channels/ondemand.vue'
 import EditChannel from '../views/channels/edit.vue'
+import EmbedChannel from '../views/channels/embed-channel.vue'
 import Videos from '../views/videos/index.vue'
 import ShareVideo from '../views/videos/external-video.vue'
 import EmbedVideo from '../views/videos/embeded-video.vue'
@@ -19,6 +20,7 @@ import Uploads from '../views/uploads/index.vue'
 import LiveStream from '../views/livestream/index.vue'
 import Website from '../views/websites/index.vue'
 import Analytics from '../views/analytics/index.vue'
+import Welcome from '../views/Welcome.vue'
 import store from "../store"
 
 const routes = [
@@ -36,11 +38,10 @@ const routes = [
     },
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/welcome',
         component: AppLayout,
         meta: {requiresAuth: true},
         children: [
-            {path: '/dashboard', name: 'Dashboard', component: Dashboard},
             {path: '/user/profile', name: 'Profile', component: Profile},
             {path: '/channels', name: 'Channels', component: Channels},
             {path: '/create-channel', name: 'CreateChannel', component: Channel},
@@ -53,10 +54,12 @@ const routes = [
             {path: '/livestream', name: 'LiveStream', component: LiveStream},
             {path: '/website', name: 'Website', component: Website},
             {path: '/analytics', name: 'Analytics', component: Analytics},
+            {path: '/welcome', name: 'Welcome', component: Welcome},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },
     { path: '/embed/video/:str', name: 'EmbedVideo', component: EmbedVideo },
+    { path: '/embed/channel/:str', name: 'EmbedChannel', component: EmbedChannel },
 ];
 
 const router = createRouter({
@@ -69,7 +72,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !store.state.user.token) {
         next({name: 'Login'})
     } else if (store.state.user.token && to.meta.isGuest) {
-        next({name: 'Dashboard'})
+        next({name: 'Welcome'})
     }else {
         next();
     }

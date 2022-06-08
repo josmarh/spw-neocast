@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\ChannelPlaylistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,10 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('edit/{hash}', [ChannelController::class, 'edit']);
         Route::put('update/{id}', [ChannelController::class, 'update']);
         Route::delete('delete/{id}', [ChannelController::class, 'delete']);
+
+        Route::get('videos', [ChannelPlaylistController::class, 'videos']);
+        Route::get('playlist', [ChannelPlaylistController::class, 'playlistVidoes']);
+        Route::post('videos', [ChannelPlaylistController::class, 'videoStore']);
     });
 });
 

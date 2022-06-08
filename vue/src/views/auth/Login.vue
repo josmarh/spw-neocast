@@ -91,7 +91,7 @@ function login(ev) {
     .dispatch('login', user)
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.finish()
-      router.push({name: 'Dashboard'})
+      channel();
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail()
@@ -101,5 +101,20 @@ function login(ev) {
         errorMsg.value = err.response.data.error
       }
     })
+}
+
+function channel() {
+  store
+    .dispatch('getChannelList')
+    .then((res) => {
+      if(res.data.length) {
+        router.push({name: 'Channels'})
+      }else {
+        router.push({name: 'Welcome'})
+      }
+    })
+    .catch((err) => {
+      
+    });
 }
 </script>

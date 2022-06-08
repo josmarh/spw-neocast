@@ -130,7 +130,7 @@ const store = createStore({
                 return data;
             })
         },  // channels section actions
-        getChannelList({ commit } , {url = null} = {}){
+        getChannelList({ commit }, {url = null} = {}){
             url = url || '/channels'
             return axiosClient.get(url)
                 .then(({data}) => {
@@ -170,6 +170,23 @@ const store = createStore({
                 .then(({data}) => {
                     return data;
                 })
+        },
+        getVideos({ commit }, chash){
+            return axiosClient.get(`/channel/videos?chash=${chash.chash}`)
+            .then(({data}) => {
+                commit('setChannels', data)
+                return data;
+            })
+        },
+        addToPlaylist({ commit }, videos){
+            return axiosClient.post(`/channel/videos`, videos)
+            .then(({data}) => {
+                commit('setChannels', data)
+                return data;
+            })
+        },
+        getPlaylist({ }, channelId){
+            
         }
     },
     mutations: {

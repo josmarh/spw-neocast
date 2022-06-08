@@ -531,11 +531,13 @@ const editChannel = () => {
             dataPlacement(res.data)
         })
         .catch((err) => {
-            if (err.response.data) {
-                if (err.response.data.hasOwnProperty('message')){
-                store.dispatch("setErrorNotification", err.response.data.message);
-                }else {
-                store.dispatch("setErrorNotification", err.response.data.error);
+            if (err.response){
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty('message')){
+                    store.dispatch("setErrorNotification", err.response.data.message);
+                    }else {
+                    store.dispatch("setErrorNotification", err.response.data.error);
+                    }
                 }
             }
         });

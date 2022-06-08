@@ -19,5 +19,6 @@ class FileUploads extends Model
         'external_video_link',
         'upload_types',
         'user_id',
+        'vhash',
     ];
 }

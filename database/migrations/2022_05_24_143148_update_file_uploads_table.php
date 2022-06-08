@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::table('file_uploads', function (Blueprint $table) {
             $table->text('tags')->after('media_length')->nullable();
-            $table->text('external_video_link')->nullable();
-            $table->enum('upload_types', ['hosted video', 'external links'])->nullable();
+            $table->text('external_video_link')->after('tags')->nullable();
+            $table->string('vhash', 50)->after('external_video_link')->nullable();
+            $table->enum('upload_types', ['hosted video', 'external links'])->after('vhash')->nullable();
         });
     }
 

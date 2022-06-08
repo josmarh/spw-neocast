@@ -28,6 +28,7 @@ class UploadsController extends Controller
                     'file_type' => $f['type'],
                     'media_length' => $f['duration'],
                     'upload_types' => 'hosted video',
+                    'vhash' => strtolower(Str::random(26)),
                     'user_id' => $user->id
                 ]);
             }else {

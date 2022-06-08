@@ -148,7 +148,6 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const navigation = [
-  { name: 'Dashboard', to: {name: 'Dashboard'} },
   { name: 'Channels', to: {name: 'Channels'} },
   { name: 'Videos', to: {name: 'Videos'} },
   { name: 'Uploads', to: {name: 'Uploads'} },

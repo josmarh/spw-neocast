@@ -477,7 +477,7 @@
       </div>
       <div v-else class="flex justify-center items-center" >
         <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <h5 class="text-2xl text-gray-900 dark:text-white">No content found</h5>
+          <h5 class="text-2xl text-gray-900 dark:text-white">No content available</h5>
           <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
             <img src="../../assets/no_content.png" class="xl:w-82 xl:h-82" />
           </div>
@@ -880,7 +880,7 @@
           <div class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <DialogPanel class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] sm:w-full">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] sm:w-full">
                   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                       <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
@@ -1103,7 +1103,7 @@
                           ></textarea>
                         </div>
                         <div class="mt-5">
-                          <button type="submit" 
+                          <button type="button" 
                             class="group relative flex justify-center py-2 px-4 border 
                             border-transparent text-sm font-medium text-white 
                             bg-indigo-600 hover:bg-indigo-700 focus:outline-none

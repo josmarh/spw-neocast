@@ -26,9 +26,10 @@ class ContentResource extends JsonResource
             'file_type'     => $this->file_type,
             'media_length'  => $this->media_length,
             'tags'          => $this->tags,
-            'external_video_link'  => $this->external_video_link,
-            'upload_types'         => $this->upload_types,
-            'external_link'        => $this->file_hash ? $externalLink[0] : null,
+            'external_video_link' => $this->external_video_link,
+            'upload_types'        => $this->upload_types,
+            'external_link'       => $this->file_hash ? $externalLink[0] : null,
+            'vhash'               => $this->vhash,
         ];
     }
 }
