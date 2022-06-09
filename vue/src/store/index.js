@@ -19,6 +19,11 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        playlist: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -174,7 +179,7 @@ const store = createStore({
         getVideos({ commit }, chash){
             return axiosClient.get(`/channel/videos?chash=${chash.chash}`)
             .then(({data}) => {
-                commit('setChannels', data)
+                commit('setContents', data)
                 return data;
             })
         },
@@ -185,11 +190,30 @@ const store = createStore({
                 return data;
             })
         },
-        getPlaylist({ }, channelId){
-            
+        getPlaylist({ commit }, channelId){
+            return axiosClient.get(`/channel/playlist/${channelId}`)
+            .then(({data}) => {
+                commit('setPlaylist', data)
+                return data;
+            })
+        },
+        deletePlistVideo({ }, vId){
+            return axiosClient.delete(`/channel/playlist/delete/${vId}`)
+            .then(({data}) => {
+                return data;
+            })
+        },
+        duplicateChannel({ }, payload){
+            return axiosClient.post(`/channel/duplicate`, payload)
+            .then(({data}) => {
+                return data;
+            })
         }
     },
     mutations: {
+        setPlaylist: (state, data) => {
+            state.playlist = data;
+        },
         setChannels: (state, data) => {
             state.channels = data;
         },

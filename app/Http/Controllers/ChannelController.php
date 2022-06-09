@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\Channels;
+use App\Models\ChannelPlaylist;
 use App\Http\Resources\ChannelResource;
 use App\Http\Controllers\UploadsController;
+use DB;
 
 class ChannelController extends Controller
 {
@@ -22,8 +24,12 @@ class ChannelController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
         }else {
-            $channels = Channels::where('user_id', $user->id)
-                ->orderBy('created_at', 'desc')
+
+            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes'))
+                ->join('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
+                ->where('channels.user_id', $user->id)
+                ->groupBy('channels.id')
+                ->orderBy('channels.created_at', 'desc')
                 ->paginate(10);
         }
 
@@ -58,7 +64,7 @@ class ChannelController extends Controller
         ]);
 
         return response([
-            'message' => 'File uploaded successfully',
+            'message' => 'Channel created successfully',
             'status' => 'success',
             'status_code' => 201
         ]);
@@ -106,6 +112,44 @@ class ChannelController extends Controller
             'contents' => new ChannelResource($channel),
             'status' => 'Channel updated successfully',
             'status_code' => 200,
+        ]);
+    }
+
+    public function duplicateChannel(Request $request)
+    {
+        $user = $request->user();
+        $channel = Channels::where('channel_hash', $request->chash)->first();
+        $channelVideo = ChannelPlaylist::where('channel_hash', $request->chash)->get();
+
+        $newChannel = Channels::create([
+            'title' => $request->title,
+            'schedule_duration' => $channel->schedule_duration,
+            'start_time' => $channel->start_time,
+            'timezone' => $channel->timezone,
+            'logo' => $channel->logo,
+            'logo_link' => $channel->logo_link,
+            'logo_position' => $channel->logo_position,
+            'color' => $channel->color,
+            'twitter' => $channel->twitter,
+            'privacy' => $channel->privacy,
+            'privacy_domain' => $channel->privacy_domain,
+            'ad_tag_url' => $channel->ad_tag_url,
+            'channel_type' => $channel->channel_type,
+            'channel_hash' => strtolower(Str::random(26)),
+            'user_id' => $user->id,
+        ]);
+
+        foreach($channelVideo as $vId){
+            ChannelPlaylist::create([
+                'channel_hash' => $newChannel->channel_hash,
+                'video_id' => $vId->video_id
+            ]);
+        }
+
+        return response([
+            'message' => 'Channel created successfully',
+            'status' => 'success',
+            'status_code' => 201
         ]);
     }
 

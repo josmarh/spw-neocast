@@ -42,10 +42,12 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('edit/{hash}', [ChannelController::class, 'edit']);
         Route::put('update/{id}', [ChannelController::class, 'update']);
         Route::delete('delete/{id}', [ChannelController::class, 'delete']);
+        Route::post('duplicate', [ChannelController::class, 'duplicateChannel']);
 
         Route::get('videos', [ChannelPlaylistController::class, 'videos']);
-        Route::get('playlist', [ChannelPlaylistController::class, 'playlistVidoes']);
+        Route::get('playlist/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
         Route::post('videos', [ChannelPlaylistController::class, 'videoStore']);
+        Route::delete('playlist/delete/{cpId}', [ChannelPlaylistController::class, 'deleteVideo']);
     });
 });
 

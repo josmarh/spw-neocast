@@ -158,12 +158,12 @@
                     0
                   </td>
                   <td class="px-6 py-4">
-                    0
+                    {{c.total_vidoes}}
                   </td>
                   <td class="px-6 py-4">
                     <div class="flex">
                       <div class="">
-                        <button type="button" @click="addVideo(c.channel_hash)"
+                        <button type="button" @click="addVideo(c.channel_hash, c.title)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
@@ -190,7 +190,7 @@
                         </button>
                       </div>
                       <div class="">
-                        <button type="button"
+                        <button type="button" @click="duplicateModal(c.channel_hash, c.title)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
@@ -222,7 +222,7 @@
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
-                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
@@ -292,7 +292,7 @@
                       </div>
                       <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> 
-                          Delete {{channelModel.title}} 
+                          Delete - {{channelModel.title}} 
                         </DialogTitle>
                         <div class="mt-2">
                           <p class="text-sm text-gray-500">Are you sure you want to delete this channel? This action cannot be undone.</p>
@@ -597,7 +597,7 @@
                         </svg>
                       </div>
                       <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Add video </DialogTitle>
+                        <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Add video - {{channelModel.title}} </DialogTitle>
                       </div>
                     </div>
                     <!-- display video list content  -->
@@ -629,7 +629,7 @@
                               ]"
                               id="dashboard-tab" data-tabs-target="#dashboard" 
                               type="button" role="tab" aria-controls="dashboard" 
-                              aria-selected="false">Add Videos
+                              aria-selected="false">Added Videos
                             </button>
                           </li>
                         </ul>
@@ -718,11 +718,68 @@
                             </div>
                           </div>
                         </div>
+                        <!-- channel playlist videos -->
                         <div v-else class="p-4 bg-gray-50 rounded-lg dark:bg-gray-800"
                           :class="[selectedVideos==false ? 'hidden' : '']"
                           id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                          <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
-                          
+                          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <tbody>
+                              <tr v-for="v in ChannelPlaylist.data" :key="v.id"
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                  <div class="w-10 h-10">
+                                    <video
+                                    :src="v.file_hash"
+                                    class="rounded-t-lg">
+                                    </video>
+                                  </div>
+                                </th>
+                                <td class="" :title="v.file_name">
+                                  {{v.file_name.replace(/(.{40})..+/, "$1…")}}
+                                </td>
+                                <td class="px-6 py-4">
+                                  {{v.media_length}}
+                                </td>
+                                <td>
+                                  <div class="flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                      <path stroke-linecap="round" stroke-linejoin="round" 
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    {{v.views}}
+                                  </div>
+                                </td>
+                                <td>
+                                  <div class="flex">
+                                    <!-- video embed button  -->
+                                    <button type="button" @click="embedPlistVideo()"
+                                      class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                                      focus:outline-none focus:ring-gray-100 
+                                      font-medium text-sm px-5 py-2.5 text-center 
+                                      inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                      <svg xmlns="http://www.w3.org/2000/svg" 
+                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                      </svg>
+                                    </button>
+                                    <!-- delete from channel playlist -->
+                                    <button type="button" @click="deletePlistVideo(v.cpid)"
+                                      class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                                      focus:outline-none focus:ring-gray-100 
+                                      font-medium text-sm px-5 py-2.5 text-center 
+                                      inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" 
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                     </div>
@@ -744,6 +801,77 @@
                       dark:focus:ring-blue-800" :disabled="isDisabled"
                       @click="addVideoAction"
                     >Accept</button>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
+      <!-- duplicate channel modal -->
+      <TransitionRoot as="template" :show="openDup">
+        <Dialog as="div" class="relative z-10" @close="openDup = false">
+          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+
+          <div class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" 
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                        </svg>
+                      </div>
+                      <div class=" text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <DialogTitle as="h3" class="text-lg mt-2 leading-6 font-medium text-gray-900"> Duplicate Channel </DialogTitle>
+                      </div>
+                    </div>
+                    <div class="mt-8">
+                      <!--  -->
+                      <div class="relative z-0">
+                        <input type="text" id="floating_standard" 
+                          class="block py-2.5 px-0 w-full text-sm 
+                          text-gray-900 bg-transparent border-0 
+                          border-b-2 border-gray-300 appearance-none 
+                          dark:text-white dark:border-gray-600 
+                          dark:focus:border-blue-500 focus:outline-none 
+                          focus:ring-0 focus:border-blue-600 peer" 
+                          placeholder=" " 
+                          v-model="channelModel.title"
+                        />
+                        <label for="floating_standard" 
+                          class="absolute text-sm text-gray-500 
+                          dark:text-gray-400 duration-300 
+                          transform -translate-y-6 scale-75 
+                          top-3 -z-10 origin-[0] peer-focus:left-0 
+                          peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
+                          peer-placeholder-shown:scale-100 
+                          peer-placeholder-shown:translate-y-0 peer-focus:scale-75 
+                          peer-focus:-translate-y-6">Channel name
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" 
+                      class="mt-3 w-full inline-flex justify-center border border-gray-300 
+                      shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
+                      hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                      @click="openDup = false" ref="cancelButtonRef">Cancel
+                    </button>
+                    <button type="button" 
+                      class="text-white bg-blue-700 hover:bg-blue-800 
+                      focus:outline-none focus:ring-blue-300 
+                      font-medium text-sm w-full sm:w-auto px-5 py-2.5 
+                      text-center dark:bg-blue-600 dark:hover:bg-blue-700 
+                      dark:focus:ring-blue-800" :disabled="isDisabled"
+                      @click="duplicateChannel">Accept
+                    </button>
                   </div>
                 </DialogPanel>
               </TransitionChild>
@@ -773,10 +901,12 @@ const route = useRoute();
 const internalInstance = getCurrentInstance();
 const channels = computed(() => store.state.channels);
 const videoContent = computed(() => store.state.contents);
+const ChannelPlaylist = computed(() => store.state.playlist)
 const nameFilter = ref('')
 const openDelete = ref(false)
 const openEmbed = ref(false)
 const openAddVideo = ref(false)
+const openDup = ref(false)
 const allVideos = ref(true)
 const selectedVideos = ref(false)
 const isDisabled = ref(false)
@@ -893,11 +1023,51 @@ const deleteChannel = async (id) => {
     });
 }
 
+const duplicateChannel = async () => {
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  isDisabled.value = true;
+  store
+    .dispatch('duplicateChannel',{
+      title: channelModel['_rawValue'].title,
+      chash: videoToAddChecks['_rawValue'].channelId
+    })
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+      store.dispatch('setSuccessNotification', res.message);
+      store.dispatch('getChannelList');
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      openDup.value = false
+      isDisabled.value = false;
+    })
+    .catch((err) => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      openDup.value = false
+      isDisabled.value = false;
+
+      if(err.response){
+        if (err.response.data) {
+          if (err.response.data.hasOwnProperty("message")) {
+            store.dispatch("setErrorNotification", err.response.data.message);
+          } else {
+            store.dispatch("setErrorNotification", err.response.data.error);
+          }
+        }
+      }
+    });
+}
+
+const duplicateModal = (chash, title) => {
+  channelModel.value.title = `Copy of ${title}`;
+  videoToAddChecks.value.channelId = chash;
+  openDup.value = true;
+}
+
 // get video list to add to channel
-const addVideo = async (chash) => {
+const addVideo = async (chash, title) => {
   openAddVideo.value = true;
   await store.dispatch('getVideos', {chash: chash});
   videoToAddChecks.value.channelId = chash
+  channelModel.value.title = title
 }
 
 // submit selected video to add to channel playlist
@@ -906,6 +1076,8 @@ const addVideoAction = async () => {
   if(!videoToAddChecks.value.videoToAdd.length){
     return false;
   }
+
+  let channelHash = videoToAddChecks.value.channelId;
   internalInstance.appContext.config.globalProperties.$Progress.start();
   await store
     .dispatch('addToPlaylist', {
@@ -915,7 +1087,7 @@ const addVideoAction = async () => {
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       store.dispatch('setSuccessNotification', res.message);
-      store.dispatch('getChannelList');
+      store.dispatch('getVideos', {chash: channelHash});
       internalInstance.appContext.config.globalProperties.$Progress.finish();
       openAddVideo.value = false
       videoToAddChecks.value.videoToAdd = []
@@ -935,6 +1107,7 @@ const addVideoAction = async () => {
     });
 }
 
+// get added list videos
 const getSelectedVideos = async () => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
   let channelId = videoToAddChecks['_rawValue'].channelId;
@@ -945,7 +1118,6 @@ const getSelectedVideos = async () => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
       // pass playlist content
-
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -960,6 +1132,34 @@ const getSelectedVideos = async () => {
         }
       }
     });
+}
+
+// delete video from channel playlist
+const deletePlistVideo = async (playlistVideoId) => {
+  let channelId = videoToAddChecks['_rawValue'].channelId;
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+
+  store
+    .dispatch('deletePlistVideo', playlistVideoId)
+    .then((res) => {
+      store.dispatch('setSuccessNotification', res.message);
+      store.dispatch('getPlaylist', channelId);
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+    })
+    .catch((err) => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      openAddVideo.value = false
+      if(err.response) {
+        if (err.response.data) {
+          if (err.response.data.hasOwnProperty("message")) {
+            store.dispatch("setErrorNotification", err.response.data.message);
+          } else {
+            store.dispatch("setErrorNotification", err.response.data.error);
+          }
+        }
+      }
+    });
+
 }
 
 const copyData = (data, elmId) => {
@@ -1013,6 +1213,8 @@ const tabSwitch = (type) => {
   if(type=='allVideos'){
     allVideos.value=true;
     selectedVideos.value=false;
+    let channelId = videoToAddChecks['_rawValue'].channelId;
+    store.dispatch('getVideos', {chash: channelId});
   }else{
     allVideos.value=false;
     selectedVideos.value=true;

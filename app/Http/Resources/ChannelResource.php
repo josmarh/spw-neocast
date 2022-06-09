@@ -30,7 +30,8 @@ class ChannelResource extends JsonResource
             'privacy_domain' => $this->privacy_domain,
             'ad_tag_url' => $this->ad_tag_url,
             'channel_type' => $this->channel_type,
-            'channel_hash' => $this->channel_hash
+            'channel_hash' => $this->channel_hash,
+            'total_vidoes' => $this->total_vidoes
         ];
     }
 }

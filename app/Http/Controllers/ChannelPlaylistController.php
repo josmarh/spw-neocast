@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\FileUploads;
 use App\Models\ChannelPlaylist;
 use App\Http\Resources\ContentResource;
+use App\Http\Resources\PlaylistResource;
 
 class ChannelPlaylistController extends Controller
 {
@@ -26,9 +27,19 @@ class ChannelPlaylistController extends Controller
         return ContentResource::collection($contents);
     }
 
-    public function playlistVidoes()
+    public function playlistVidoes($cId)
     {
-        
+        $playlist = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash','cp.id as cpId')
+            ->join('channel_playlists as cp', 'cp.video_id', '=', 'file_uploads.id')
+            ->whereIn('file_uploads.id', function($query)use($cId){
+                $query->select('video_id')
+                    ->from('channel_playlists');
+            })
+            ->where('cp.channel_hash', $cId)
+            ->orderBy('file_uploads.created_at', 'desc')
+            ->get();
+ 
+        return PlaylistResource::collection($playlist);
     }
 
     public function videoStore(Request $request)
@@ -47,6 +58,19 @@ class ChannelPlaylistController extends Controller
             'message' => 'Videos added successfully',
             'status' => 'success',
             'status_code' => 201
+        ]);
+    }
+
+    public function deleteVideo($cpId)
+    {
+        $content = ChannelPlaylist::findOrFail($cpId);
+
+        $content->delete();
+
+        return response([
+            'message' => 'Video removed from list.',
+            'status' => 'success',
+            'status_code' => 204
         ]);
     }
 }
