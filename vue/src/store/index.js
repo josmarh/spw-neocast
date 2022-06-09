@@ -177,7 +177,14 @@ const store = createStore({
                 })
         },
         getVideos({ commit }, chash){
-            return axiosClient.get(`/channel/videos?chash=${chash.chash}`)
+            return axiosClient.get(`/channel/videos/${chash.chash}`)
+            .then(({data}) => {
+                commit('setContents', data)
+                return data;
+            })
+        },
+        getVideosPage({ commit }, {url = null} = {}){
+            return axiosClient.get(url)
             .then(({data}) => {
                 commit('setContents', data)
                 return data;
@@ -197,6 +204,13 @@ const store = createStore({
                 return data;
             })
         },
+        getPlaylistPage({ commit }, {url = null} = {}){
+            return axiosClient.get(url)
+            .then(({data}) => {
+                commit('setPlaylist', data)
+                return data;
+            })
+        },
         deletePlistVideo({ }, vId){
             return axiosClient.delete(`/channel/playlist/delete/${vId}`)
             .then(({data}) => {
@@ -205,6 +219,20 @@ const store = createStore({
         },
         duplicateChannel({ }, payload){
             return axiosClient.post(`/channel/duplicate`, payload)
+            .then(({data}) => {
+                return data;
+            })
+        },
+        getChannelEmbedPlayerList({ commit }, chash){
+            return axiosClient.get(`/channel/show/${chash}`)
+            .then(({data}) => {
+                return data;
+            })
+        },
+        sendVideoViews({ }, payload){
+            return axiosClient.put(`channel/video/views/${payload.chash}`, {
+                    videoUrl: payload.videoUrl
+                })
             .then(({data}) => {
                 return data;
             })

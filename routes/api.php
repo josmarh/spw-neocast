@@ -39,13 +39,13 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/channels', [ChannelController::class, 'index']);
     Route::group(['prefix' => 'channel'], function () {
         Route::post('store', [ChannelController::class, 'store']);
-        Route::get('edit/{hash}', [ChannelController::class, 'edit']);
+        Route::get('edit/{chash}', [ChannelController::class, 'edit']);
         Route::put('update/{id}', [ChannelController::class, 'update']);
         Route::delete('delete/{id}', [ChannelController::class, 'delete']);
         Route::post('duplicate', [ChannelController::class, 'duplicateChannel']);
 
-        Route::get('videos', [ChannelPlaylistController::class, 'videos']);
-        Route::get('playlist/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
+        Route::get('videos/{chash}', [ChannelPlaylistController::class, 'videos']);
+        Route::get('playlist/{chash}', [ChannelPlaylistController::class, 'playlistVidoes']);
         Route::post('videos', [ChannelPlaylistController::class, 'videoStore']);
         Route::delete('playlist/delete/{cpId}', [ChannelPlaylistController::class, 'deleteVideo']);
     });
@@ -54,3 +54,5 @@ Route::middleware('auth:sanctum')->group(function(){
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/video/show/{str}', [VideoController::class, 'show']);
+Route::get('channel/show/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
+Route::put('channel/video/views/{chash}', [ChannelPlaylistController::class, 'videoPlayAnalysis']);

@@ -112,7 +112,14 @@
               </label>
             </div>
           </div>
-          <div v-if="!channels.data.length">
+          <div v-if="channelListCheck == 1" class="flex justify-center py-20">
+            <!-- spinner state -->
+            <svg role="status" class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+            </svg>
+          </div>
+          <div v-if="channelListCheck == 3">
             <div class="flex justify-center items-center">
               <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <h5 class="text-2xl text-gray-900 dark:text-white">No channel available</h5>
@@ -123,7 +130,7 @@
             </div>
           </div>
           <!-- table data  -->
-          <div v-else>
+          <div v-if="channelListCheck == 2">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -155,7 +162,7 @@
                     {{c.title}}
                   </th>
                   <td class="px-6 py-4">
-                    0
+                    {{c.total_views != null ? c.total_views : 0}}
                   </td>
                   <td class="px-6 py-4">
                     {{c.total_vidoes}}
@@ -353,11 +360,19 @@
                     <div class="sm:items-start">
                       <div class="mt-2">
                         <!-- video display -->
-                        <div>
+                        <div v-if="ChannelPlaylistCheck == 1" class="flex justify-center py-20">
+                          <!-- spinner state -->
+                          <svg role="status" class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                              <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                          </svg>
+                        </div>
+                        <div v-if="ChannelPlaylistCheck == 2">
                           <video-player 
                             :options="videoOptions" 
                             :playlistOptions="playlist" 
                             :shareOptions="share"
+                            @playedVideo="sendPlayEvent"
                           />
                         </div>
                         <!-- embed settings -->
@@ -640,7 +655,14 @@
                           :class="[allVideos==false ? 'hidden' : '']"
                           id="profile" role="tabpanel" aria-labelledby="profile-tab">
                           <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                            <div>
+                            <div v-if="playlistChecks.allVideos == 1" class="flex justify-center py-20">
+                              <!-- spinner state -->
+                              <svg role="status" class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                              </svg>
+                            </div>
+                            <div v-if="playlistChecks.allVideos = 2">
                               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                   <tr>
@@ -694,7 +716,7 @@
                                 <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm "
                                   aria-label="Pagination"
                                 >
-                                <!-- <a 
+                                <a 
                                   v-for="(link, i) of videoContent.meta.links"
                                   :key="i"
                                   :disabled="!link.url"
@@ -712,7 +734,7 @@
                                   ]"
                                   v-html="link.label"
                                 >
-                                </a> -->
+                                </a>
                                 </nav>
                               </div>
                             </div>
@@ -722,64 +744,98 @@
                         <div v-else class="p-4 bg-gray-50 rounded-lg dark:bg-gray-800"
                           :class="[selectedVideos==false ? 'hidden' : '']"
                           id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                            <tbody>
-                              <tr v-for="v in ChannelPlaylist.data" :key="v.id"
-                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                  <div class="w-10 h-10">
-                                    <video
-                                    :src="v.file_hash"
-                                    class="rounded-t-lg">
-                                    </video>
-                                  </div>
-                                </th>
-                                <td class="" :title="v.file_name">
-                                  {{v.file_name.replace(/(.{40})..+/, "$1…")}}
-                                </td>
-                                <td class="px-6 py-4">
-                                  {{v.media_length}}
-                                </td>
-                                <td>
-                                  <div class="flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                      <path stroke-linecap="round" stroke-linejoin="round" 
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                    {{v.views}}
-                                  </div>
-                                </td>
-                                <td>
-                                  <div class="flex">
-                                    <!-- video embed button  -->
-                                    <button type="button" @click="embedPlistVideo()"
-                                      class="text-gray-500 bg-gray-100 hover:bg-gray-200 
-                                      focus:outline-none focus:ring-gray-100 
-                                      font-medium text-sm px-5 py-2.5 text-center 
-                                      inline-flex items-center dark:focus:ring-gray-500 mr-2">
-                                      <svg xmlns="http://www.w3.org/2000/svg" 
-                                        class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                                      </svg>
-                                    </button>
-                                    <!-- delete from channel playlist -->
-                                    <button type="button" @click="deletePlistVideo(v.cpid)"
-                                      class="text-gray-500 bg-gray-100 hover:bg-gray-200 
-                                      focus:outline-none focus:ring-gray-100 
-                                      font-medium text-sm px-5 py-2.5 text-center 
-                                      inline-flex items-center dark:focus:ring-gray-500 mr-2">
-                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <div v-if="playlistChecks.selectedVideos == 1" class="flex justify-center py-20">
+                            <!-- spinner state -->
+                            <svg role="status" class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                              <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                          </div>
+                          <div v-if="playlistChecks.selectedVideos == 2">
+                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                              <tbody>
+                                <tr v-for="v in ChannelPlaylist.data" :key="v.id"
+                                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                    <div class="w-10 h-10">
+                                      <video
+                                      :src="v.file_hash"
+                                      class="rounded-t-lg">
+                                      </video>
+                                    </div>
+                                  </th>
+                                  <td class="" :title="v.file_name">
+                                    {{v.file_name.replace(/(.{40})..+/, "$1…")}}
+                                  </td>
+                                  <td class="px-6 py-4">
+                                    {{v.media_length}}
+                                  </td>
+                                  <td>
+                                    <div class="flex">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" 
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                       </svg>
-                                    </button>
-                                  </div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
+                                      {{v.views}}
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="flex">
+                                      <!-- video embed button  -->
+                                      <button type="button" @click="embedPlistVideo()"
+                                        class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                                        focus:outline-none focus:ring-gray-100 
+                                        font-medium text-sm px-5 py-2.5 text-center 
+                                        inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" 
+                                          class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                        </svg>
+                                      </button>
+                                      <!-- delete from channel playlist -->
+                                      <button type="button" @click="deletePlistVideo(v.cpid)"
+                                        class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                                        focus:outline-none focus:ring-gray-100 
+                                        font-medium text-sm px-5 py-2.5 text-center 
+                                        inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
+                                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                          <path stroke-linecap="round" stroke-linejoin="round" 
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div class="flex justify-center mt-5">
+                                <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm "
+                                  aria-label="Pagination"
+                                >
+                                <a 
+                                  v-for="(link, i) of ChannelPlaylist.meta.links"
+                                  :key="i"
+                                  :disabled="!link.url"
+                                  href="#"
+                                  @click="getForPagePlaylist($event,link)"
+                                  aria-current="page"
+                                  class="relative inline-flex items-center px-4 py-2 border text-sm
+                                  font-medium whitespace-nowrap"
+                                  :class="[
+                                    link.active 
+                                    ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' 
+                                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+                                    i === 0 ? 'rounded-l-md' : '',
+                                    i === ChannelPlaylist.meta.links.length - 1 ? 'rounded-r-md' : '',
+                                  ]"
+                                  v-html="link.label"
+                                >
+                                </a>
+                                </nav>
+                              </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -902,6 +958,8 @@ const internalInstance = getCurrentInstance();
 const channels = computed(() => store.state.channels);
 const videoContent = computed(() => store.state.contents);
 const ChannelPlaylist = computed(() => store.state.playlist)
+const ChannelPlaylistCheck = ref(0)
+const channelListCheck = ref(0)
 const nameFilter = ref('')
 const openDelete = ref(false)
 const openEmbed = ref(false)
@@ -929,6 +987,12 @@ const embedFilters = ref({
   sControls: true,
   sContentTitle: true,
   sShare: true
+});
+
+const playlist = ref([]);
+let playlistChecks = ref({
+  allVideos: null,
+  selectedVideos: null
 })
 
 const code = ref('')
@@ -951,15 +1015,21 @@ watch(embedFilters, (after, before) => {
 
 const getChannelList = async () => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
+  channelListCheck.value = 1;
+
   await store
     .dispatch('getChannelList')
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
+      if(res.data.length)
+        channelListCheck.value = 2
+      else
+        channelListCheck.value = 3
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
-
+      channelListCheck.value = 3
       if (err.response.data) {
         if (err.response.data.hasOwnProperty("message")) {
           store.dispatch("setErrorNotification", err.response.data.message);
@@ -1065,7 +1135,9 @@ const duplicateModal = (chash, title) => {
 // get video list to add to channel
 const addVideo = async (chash, title) => {
   openAddVideo.value = true;
+  playlistChecks.value.allVideos = 1;
   await store.dispatch('getVideos', {chash: chash});
+  playlistChecks.value.allVideos = 2;
   videoToAddChecks.value.channelId = chash
   channelModel.value.title = title
 }
@@ -1111,6 +1183,7 @@ const addVideoAction = async () => {
 const getSelectedVideos = async () => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
   let channelId = videoToAddChecks['_rawValue'].channelId;
+  playlistChecks.value.selectedVideos = 1;
 
   await store
     .dispatch('getPlaylist', channelId)
@@ -1118,10 +1191,13 @@ const getSelectedVideos = async () => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
       // pass playlist content
+      playlistChecks.value.selectedVideos = 2;
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
       openAddVideo.value = false
+      playlistChecks.value.selectedVideos = 2;
+      
       if(err.response) {
         if (err.response.data) {
           if (err.response.data.hasOwnProperty("message")) {
@@ -1168,7 +1244,7 @@ const copyData = (data, elmId) => {
   alert("Copied to clipboard!");
 }
 
-const embedChannel = (hash) => {
+const embedChannel = async (hash) => {
   const embedUrl = router.resolve({
     name: 'EmbedChannel',
     params: { str: hash}
@@ -1176,7 +1252,49 @@ const embedChannel = (hash) => {
 
   embedSrc.value = `https://${window.location.host+embedUrl.href}`
   code.value = `<div style='position: relative; padding-bottom: ${embedFilters.value.ratio}; height: 0;'><iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&controls=1&title=1&share=1' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' frameborder='0' allow='autoplay' allowfullscreen></iframe></div>`;
+  
   openEmbed.value = true;
+  playlist.value = [];
+  ChannelPlaylistCheck.value = 1;
+  videoToAddChecks.value.channelId = hash;
+
+  await store
+    .dispatch('getPlaylist', hash)
+    .then((res) => {
+      // pass playlist content
+      if(res.data.length) {
+        for(let item of res.data){
+          playlist.value.push({
+            name: item.file_name,
+            sources: [{
+              src: `${item.file_hash}#t=0.1`,
+              type: 'video/mp4',
+            }],
+            // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+            thumbnail: [
+              {
+                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                type: 'image/jpeg',
+                media: '(min-width: 400px;)'
+              },
+              {
+                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+              }
+            ]
+          })
+        }
+      }
+      ChannelPlaylistCheck.value = 2;
+    })
+}
+
+const sendPlayEvent = async (data) => {
+  let chash = videoToAddChecks.value.channelId;
+
+  store.dispatch('sendVideoViews', {
+    videoUrl: data,
+    chash: chash
+  })
 }
 
 const embedCode = (item) => {
@@ -1206,7 +1324,15 @@ const getForPageVideo = async (ev,link) => {
   if(!link.url || link.active) {
     return;
   }
-  await store.dispatch('getVideos', {url: link.url})
+  await store.dispatch('getVideosPage', {url: link.url})
+}
+
+const getForPagePlaylist = async (ev,link) => {
+  ev.preventDefault();
+  if(!link.url || link.active) {
+    return;
+  }
+  await store.dispatch('getPlaylistPage', {url: link.url})
 }
 
 const tabSwitch = (type) => {
@@ -1214,16 +1340,20 @@ const tabSwitch = (type) => {
     allVideos.value=true;
     selectedVideos.value=false;
     let channelId = videoToAddChecks['_rawValue'].channelId;
+    playlistChecks.value.allVideos = 1;
     store.dispatch('getVideos', {chash: channelId});
+    playlistChecks.value.allVideos = 2;
+    isDisabled.value = false
   }else{
     allVideos.value=false;
     selectedVideos.value=true;
+    isDisabled.value = true
     getSelectedVideos();
   }
 }
 
 const videoOptions = {
-  autoplay: false,
+  autoplay: true,
   controls: true,
   muted: false,
   loop: false,
@@ -1235,28 +1365,6 @@ const videoOptions = {
     }
   ],
 }
-
-const playlist = [
-  {
-    name: 'Sintel',
-    sources: [{
-      src: 'http://media.w3.org/2010/05/sintel/trailer.mp4',
-      type: 'video/mp4',
-    }],
-    poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-    thumbnail: [
-      {
-        srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
-        type: 'image/jpeg',
-        media: '(min-width: 400px;)'
-      },
-      {
-        src: 'http://media.w3.org/2010/05/sintel/poster.png'
-      }
-    ],
-    duration: 90,
-  },
-];
 
 const share = {
     socials: ['fb', 'tw'],

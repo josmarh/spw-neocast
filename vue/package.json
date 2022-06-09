@@ -19,6 +19,7 @@
     "axios": "^0.27.2",
     "flowbite": "^1.4.7",
     "roboto-fontface": "*",
+    "videojs-event-tracking": "^1.0.3",
     "videojs-playlist": "^5.0.0",
     "videojs-playlist-ui": "^4.0.1",
     "videojs-share": "^3.2.1",

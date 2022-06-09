@@ -19,14 +19,16 @@ class ChannelController extends Controller
         $queryName = request()->query('name');
 
         if(isset($queryName)) {
-            $channels = Channels::where('user_id', $user->id)
-                ->where('title', 'like', '%'.$queryName.'%')
-                ->orderBy('created_at', 'desc')
+            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views'))
+                ->leftJoin('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
+                ->where('channels.user_id', $user->id)
+                ->where('channels.title', 'like', '%'.$queryName.'%')
+                ->groupBy('channels.id')
+                ->orderBy('channels.created_at', 'desc')
                 ->paginate(10);
         }else {
-
-            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes'))
-                ->join('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
+            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views'))
+                ->leftJoin('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
                 ->where('channels.user_id', $user->id)
                 ->groupBy('channels.id')
                 ->orderBy('channels.created_at', 'desc')
