@@ -29,8 +29,9 @@ class ChannelPlaylistController extends Controller
 
     public function playlistVidoes($chash)
     {
-        $playlist = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash','cp.id as cpId')
+        $playlist = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash', 'ch.title', 'cp.id as cpId')
             ->join('channel_playlists as cp', 'cp.video_id', '=', 'file_uploads.id')
+            ->join('channels as ch', 'ch.channel_hash', '=', 'cp.channel_hash')
             ->whereIn('file_uploads.id', function($query)use($chash){
                 $query->select('video_id')
                     ->from('channel_playlists');
@@ -98,4 +99,5 @@ class ChannelPlaylistController extends Controller
             }
         }
     }
+
 }

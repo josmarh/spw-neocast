@@ -184,7 +184,7 @@
                         </button>
                       </div>
                       <div class="">
-                        <button type="button" @click="embedChannel(c.channel_hash)"
+                        <button type="button" @click="embedChannel(c.channel_hash, c.title)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
@@ -372,6 +372,8 @@
                             :options="videoOptions" 
                             :playlistOptions="playlist" 
                             :shareOptions="share"
+                            :showShare="true"
+                            :showTitle="true"
                             @playedVideo="sendPlayEvent"
                           />
                         </div>
@@ -712,7 +714,7 @@
                                   {{videoToAdd}}
                                 </tbody>
                               </table>
-                              <div class="flex justify-center mt-5">
+                              <div class="flex justify-center mt-5" v-if="videoContent.data.length">
                                 <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm "
                                   aria-label="Pagination"
                                 >
@@ -783,7 +785,7 @@
                                   <td>
                                     <div class="flex">
                                       <!-- video embed button  -->
-                                      <button type="button" @click="embedPlistVideo()"
+                                      <!-- <button type="button" @click="embedPlistVideo()"
                                         class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                         focus:outline-none focus:ring-gray-100 
                                         font-medium text-sm px-5 py-2.5 text-center 
@@ -792,7 +794,7 @@
                                           class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                           <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                                         </svg>
-                                      </button>
+                                      </button> -->
                                       <!-- delete from channel playlist -->
                                       <button type="button" @click="deletePlistVideo(v.cpid)"
                                         class="text-gray-500 bg-gray-100 hover:bg-gray-200 
@@ -810,7 +812,7 @@
                                 </tr>
                               </tbody>
                             </table>
-                            <div class="flex justify-center mt-5">
+                            <div class="flex justify-center mt-5" v-if="ChannelPlaylist.data.length">
                                 <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm "
                                   aria-label="Pagination"
                                 >
@@ -990,6 +992,25 @@ const embedFilters = ref({
 });
 
 const playlist = ref([]);
+const share = ref({
+    socials: ['fbFeed', 'tw'],
+
+    url: window.location.href,
+    title: '',
+    description: '',
+    image: 'https://dummyimage.com/1200x630',
+
+    // required for Facebook and Messenger
+    fbAppId: '74883939828939939900',
+    // optional for Facebook
+    redirectUri: window.location.href + '#close',
+
+    // optional for VK
+    isVkParse: true,
+
+    // optinal embed code
+    embedCode : ''
+})
 let playlistChecks = ref({
   allVideos: null,
   selectedVideos: null
@@ -1244,7 +1265,7 @@ const copyData = (data, elmId) => {
   alert("Copied to clipboard!");
 }
 
-const embedChannel = async (hash) => {
+const embedChannel = async (hash, title) => {
   const embedUrl = router.resolve({
     name: 'EmbedChannel',
     params: { str: hash}
@@ -1283,6 +1304,13 @@ const embedChannel = async (hash) => {
             ]
           })
         }
+        share.value.embedCode = code.value
+        share.value.title = `Watch "${title}" on `;
+        const shareUrl = router.resolve({
+          name: 'ShareChannel',
+          params: { str: hash}
+        });
+        share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
       }
       ChannelPlaylistCheck.value = 2;
     })
@@ -1300,8 +1328,10 @@ const sendPlayEvent = async (data) => {
 const embedCode = (item) => {
   if(item.isPicked == 'responsive') {
     code.value = `<div style='position: relative; padding-bottom: ${item.ratio}; height: 0;'><iframe src='${embedSrc.value}?autoplay=${item.isAutoPlay == true ? 1 : 0}&volume=${item.isVolume == true ? 1 : 0}&controls=${item.sControls == true ? 1 : 0}&title=${item.sContentTitle == true ? 1 : 0}&share=${item.sShare == true ? 1 : 0}' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' frameborder='0' allow='autoplay' allowfullscreen></iframe></div>`
+    share.value.embedCode = code.value
   }else {
     code.value = `<iframe src='${embedSrc.value}?autoplay=${item.isAutoPlay == true ? 1 : 0}&volume=${item.isVolume == true ? 1 : 0}&controls=${item.sControls == true ? 1 : 0}&title=${item.sContentTitle == true ? 1 : 0}&share=${item.sShare == true ? 1 : 0}' width='${item.pixelWid}' height='${item.pixelLen}' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+    share.value.embedCode = code.value
   }
 }
 
@@ -1353,38 +1383,20 @@ const tabSwitch = (type) => {
 }
 
 const videoOptions = {
-  autoplay: true,
+  autoplay: false,
   controls: true,
   muted: false,
   loop: false,
-  playbackRates: [0.5, 1, 1.5, 2],
-  sources: [
-    {
-      src: 'https://muxed.s3.amazonaws.com/ink.mp4',
-      type: 'video/mp4',
-    }
-  ],
+  // playbackRates: [0.5, 1, 1.5, 2],
+  // sources: [
+  //   {
+  //     src: '',
+  //     type: 'video/mp4',
+  //   }
+  // ],
 }
 
-const share = {
-    socials: ['fb', 'tw'],
 
-    url: window.location.href,
-    title: 'videojs-share',
-    description: 'video.js share plugin',
-    image: 'https://dummyimage.com/1200x630',
-
-    // required for Facebook and Messenger
-    fbAppId: '74883939828939939900',
-    // optional for Facebook
-    redirectUri: window.location.href + '#close',
-
-    // optional for VK
-    isVkParse: true,
-
-    // optinal embed code
-    embedCode : '<iframe src="' + window.location.href + '" width="560" height="315" frameborder="0" allowfullscreen></iframe>'
-}
 
 onMounted(() => {
   getChannelList();

@@ -32,7 +32,8 @@ class PlaylistResource extends JsonResource
             'vhash'               => $this->vhash,
             'channel_hash'        => $this->channel_hash,
             'views'               => $this->views,
-            'cpid'                => $this->cpId
+            'cpid'                => $this->cpId,
+            'channel_title'       => $this->title
         ];
     }
 }

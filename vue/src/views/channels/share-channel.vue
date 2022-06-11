@@ -8,6 +8,7 @@
             </div>
             </div>
         </div>
+        
         <!-- video display -->
         <div v-if="ChannelPlaylistCheck == 1" class="flex justify-center py-20">
             <!-- spinner state -->
@@ -16,15 +17,22 @@
                 <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
             </svg>
         </div>
-        <div v-if="ChannelPlaylistCheck == 2">
-            <video-player 
-            :options="videoOptions" 
-            :playlistOptions="playlist" 
-            :shareOptions="share"
-            :showShare="videoOptionsCustom.share"
-            :showTitle="videoOptionsCustom.title"
-            @playedVideo="sendPlayEvent"
-            />
+        <div v-if="ChannelPlaylistCheck == 2" class="px-10">
+            <div class="lg:text-left">
+                <p class="mt-4 xl:text-2xl leading-8 font-bold tracking-tight text-gray-900 sm:text-3xl">
+                    {{data.filename}}
+                </p>
+            </div>
+            <div class="mt-4">
+                <video-player 
+                    :options="videoOptions" 
+                    :playlistOptions="playlist" 
+                    :shareOptions="share"
+                    :showShare="true"
+                    :showTitle="true"
+                    @playedVideo="sendPlayEvent"
+                />
+            </div>
         </div>
     </div>
 </template>
@@ -51,18 +59,18 @@ const videoOptions = ref({
   controls: true,
   muted: false,
   loop: false,
-  // playbackRates: [0.5, 1, 1.5, 2],
-  // sources: [
-  //   {
-  //     src: 'https://muxed.s3.amazonaws.com/ink.mp4',
-  //     type: 'video/mp4',
-  //   }
-  // ]
+//   playbackRates: [0.5, 1, 1.5, 2],
+//   sources: [
+//     {
+//       src: 'https://muxed.s3.amazonaws.com/ink.mp4',
+//       type: 'video/mp4',
+//     }
+//   ]
 })
 
 const videoOptionsCustom = ref({
-  title: true,
-  share: true
+    title: 0,
+    share: 0
 })
 
 const playlist = ref([]);
@@ -70,7 +78,7 @@ const playlist = ref([]);
 const share = ref({
     socials: ['fbFeed', 'tw'],
 
-    url: '',
+    url: window.location.href,
     title: '',
     description: '',
     image: 'https://dummyimage.com/1200x630',
@@ -87,27 +95,6 @@ const share = ref({
     embedCode : ''
 })
 
-// Get param contents 
-const getExternalContent = async () => {
-    await store
-    .dispatch('getChannelEmbedPlayerList', route.params.str)
-    .then((res) => {
-        const shareUrl = router.resolve({
-            name: 'ShareVideo',
-            params: { str: route.params.str}
-        });
-
-        data.value.filename = res.content.file_name
-        data.value.fileurl = res.content.file_hash
-        data.value.shareurl = `https://${window.location.host+shareUrl.href}` // external sharing
-
-        if (data.value.fileurl == null){
-            contentCheck.value = true
-        }
-    });
-    
-};
-
 const getPlaylist = async () => {
     playlist.value = [];
     ChannelPlaylistCheck.value = 1;
@@ -116,64 +103,54 @@ const getPlaylist = async () => {
     .dispatch('getChannelEmbedPlayerList', route.params.str)
     .then((res) => {
       // pass playlist content
-      if(res.data.length) {
-        for(let item of res.data){
-          playlist.value.push({
-            name: item.file_name,
-            sources: [{
-              src: `${item.file_hash}#t=0.1`,
-              type: 'video/mp4',
-            }],
-            // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-            thumbnail: [
-              {
-                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
-                type: 'image/jpeg',
-                media: '(min-width: 400px;)'
-              },
-              {
-                src: 'http://media.w3.org/2010/05/sintel/poster.png'
-              }
-            ]
-          })
+        if(res.data.length) {
+            for(let item of res.data){
+                playlist.value.push({
+                    name: item.file_name,
+                    sources: [{
+                    src: `${item.file_hash}#t=0.1`,
+                    type: 'video/mp4',
+                    }],
+                    // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+                    thumbnail: [
+                    {
+                        srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                        type: 'image/jpeg',
+                        media: '(min-width: 400px;)'
+                    },
+                    {
+                        src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                    }
+                    ]
+                })
+            }
+            ChannelPlaylistCheck.value = 2;
+            share.value.title = `Watch "${res.data[0].channel_title}" on `;
+            share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.str}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+            data.value.filename = res.data[0].channel_title;
+        }else {
+            ChannelPlaylistCheck.value = 3;
         }
-        ChannelPlaylistCheck.value = 2;
-        share.value.title = `Watch "${res.data[0].channel_title}" on `;
-        const shareUrl = router.resolve({
-          name: 'ShareChannel',
-          params: { str: route.params.str}
-        });
-        share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
-        share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.str}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
-      }else {
-        ChannelPlaylistCheck.value = 3;
-      }
       
     })
 }
 
 const contentSettings = () => {
     
-  if(route.query.autoplay == 1)
-      videoOptions.value.autoplay = true
+    if(route.query.autoplay == 1)
+        videoOptions.value.autoplay = true
 
-  if(route.query.volume == 0)
-      videoOptions.value.muted = true
-  
-  if(route.query.controls == 0)
-      videoOptions.value.controls = false
+    if(route.query.volume == 0)
+        videoOptions.value.muted = true
+    
+    if(route.query.controls == 0)
+        videoOptions.value.controls = false
 
-  if(route.query.title == 1){
-    videoOptionsCustom.value.title = true
-  } else {
-    videoOptionsCustom.value.title = false
-  }
+    if(route.query.title == 1)
+        videoOptionsCustom.value.title = 1
 
-  if(route.query.share == 1){
-    videoOptionsCustom.value.share = true
-  } else {
-    videoOptionsCustom.value.share = false
-  }
+    if(route.query.share == 1)
+        videoOptionsCustom.value.share = 1
 }
 
 const sendPlayEvent = async (data) => {
@@ -187,6 +164,7 @@ onMounted(() => {
     getPlaylist();
     contentSettings();
 });
+
 </script>
 
 <style>

@@ -455,6 +455,8 @@
                                             :options="videoOptions" 
                                             :playlistOptions="playlist" 
                                             :shareOptions="share"
+                                            :showShare="true"
+                                            :showTitle="true"
                                         />
                                     </div>
                                 </div>
@@ -610,6 +612,40 @@ const onLogoChoose = (ev) => {
     reader.readAsDataURL(file)
 }
 
+const videoOptions = {
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+//   playbackRates: [0.5, 1, 1.5, 2],
+//   sources: [
+//     {
+//       src: 'https://muxed.s3.amazonaws.com/ink.mp4',
+//       type: 'video/mp4',
+//     }
+//   ],
+}
+
+const share = ref({
+    socials: ['fbFeed', 'tw'],
+
+    url: '',
+    title: '',
+    description: '',
+    image: 'https://dummyimage.com/1200x630',
+
+    // required for Facebook and Messenger
+    fbAppId: '74883939828939939900',
+    // optional for Facebook
+    redirectUri: window.location.href + '#close',
+
+    // optional for VK
+    isVkParse: true,
+
+    // optinal embed code
+    embedCode : ''
+})
+
 const dataPlacement = async (data) => {
     channelModel.value.name = data.title
     channelModel.value.logo = data.logo == null && data.logo_link == null ? false : true
@@ -637,65 +673,38 @@ const dataPlacement = async (data) => {
     await store
         .dispatch('getPlaylist', data.channel_hash)
         .then((res) => {
-        // pass playlist content
-        if(res.data.length) {
-            for(let item of res.data){
-            playlist.value.push({
-                name: item.file_name,
-                sources: [{
-                src: `${item.file_hash}#t=0.1`,
-                type: 'video/mp4',
-                }],
-                // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-                thumbnail: [
-                {
-                    srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
-                    type: 'image/jpeg',
-                    media: '(min-width: 400px;)'
-                },
-                {
-                    src: 'http://media.w3.org/2010/05/sintel/poster.png'
+            // pass playlist content
+            if(res.data.length) {
+                for(let item of res.data){
+                    playlist.value.push({
+                        name: item.file_name,
+                        sources: [{
+                            src: `${item.file_hash}#t=0.1`,
+                            type: 'video/mp4',
+                        }],
+                        // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+                        thumbnail: [
+                            {
+                                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                                type: 'image/jpeg',
+                                media: '(min-width: 400px;)'
+                            },
+                            {
+                                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                            }
+                        ]
+                    })
                 }
-                ]
-            })
             }
-        }
-        ChannelPlaylistCheck.value = 2;
+            ChannelPlaylistCheck.value = 2;
+            share.value.title = `Watch "${res.data[0].channel_title}" on `;
+            const shareUrl = router.resolve({
+            name: 'ShareChannel',
+                params: {str: route.params.hash}
+            });
+            share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
+            share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.hash}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
         });
-}
-
-const videoOptions = {
-  autoplay: false,
-  controls: true,
-  muted: false,
-  loop: false,
-  playbackRates: [0.5, 1, 1.5, 2],
-  sources: [
-    {
-      src: 'https://muxed.s3.amazonaws.com/ink.mp4',
-      type: 'video/mp4',
-    }
-  ],
-}
-
-const share = {
-    socials: ['fb', 'tw'],
-
-    url: window.location.href,
-    title: 'videojs-share',
-    description: 'video.js share plugin',
-    image: 'https://dummyimage.com/1200x630',
-
-    // required for Facebook and Messenger
-    fbAppId: '74883939828939939900',
-    // optional for Facebook
-    redirectUri: window.location.href + '#close',
-
-    // optional for VK
-    isVkParse: true,
-
-    // optinal embed code
-    embedCode : '<iframe src="' + window.location.href + '" width="560" height="315" frameborder="0" allowfullscreen></iframe>'
 }
 
 onMounted(() => {

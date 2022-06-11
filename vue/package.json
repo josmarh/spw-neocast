@@ -22,6 +22,7 @@
     "videojs-event-tracking": "^1.0.3",
     "videojs-playlist": "^5.0.0",
     "videojs-playlist-ui": "^4.0.1",
+    "videojs-seek-buttons": "^2.2.1",
     "videojs-share": "^3.2.1",
     "vue": "^3.2.25",
     "vue-clipboard": "^0.0.1",

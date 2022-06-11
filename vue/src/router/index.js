@@ -13,6 +13,7 @@ import Scheduled from '../views/channels/scheduled.vue'
 import Ondemand from '../views/channels/ondemand.vue'
 import EditChannel from '../views/channels/edit.vue'
 import EmbedChannel from '../views/channels/embed-channel.vue'
+import ShareChannel from '../views/channels/share-channel.vue'
 import Videos from '../views/videos/index.vue'
 import ShareVideo from '../views/videos/external-video.vue'
 import EmbedVideo from '../views/videos/embeded-video.vue'
@@ -60,6 +61,7 @@ const routes = [
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },
     { path: '/embed/video/:str', name: 'EmbedVideo', component: EmbedVideo },
     { path: '/embed/channel/:str', name: 'EmbedChannel', component: EmbedChannel },
+    { path: '/watch/channel/:str', name: 'ShareChannel', component: ShareChannel },
 ];
 
 const router = createRouter({

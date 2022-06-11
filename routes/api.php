@@ -51,8 +51,9 @@ Route::middleware('auth:sanctum')->group(function(){
     });
 });
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/video/show/{str}', [VideoController::class, 'show']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::get('video/show/{str}', [VideoController::class, 'show']);
 Route::get('channel/show/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
-Route::put('channel/video/views/{chash}', [ChannelPlaylistController::class, 'videoPlayAnalysis']);
+Route::put('channel/video/track-views/{chash}', [ChannelPlaylistController::class, 'videoPlayAnalysis']);
+Route::get('video/info', [VideoController::class, 'index']);

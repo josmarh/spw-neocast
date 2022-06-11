@@ -230,12 +230,18 @@ const store = createStore({
             })
         },
         sendVideoViews({ }, payload){
-            return axiosClient.put(`channel/video/views/${payload.chash}`, {
+            return axiosClient.put(`/channel/video/track-views/${payload.chash}`, {
                     videoUrl: payload.videoUrl
                 })
             .then(({data}) => {
                 return data;
             })
+        },
+        getVideoTitle({ }, tempName){
+            return axiosClient.get(`/video/info?video=${tempName}`)
+                .then(({data}) => {
+                    return data;
+                })
         }
     },
     mutations: {

@@ -16,8 +16,9 @@ class VideoController extends Controller
         $contentTags = request()->query('tags');
         $matchTags = request()->query('match');
         $mediaTypes = request()->query('type');
+        $videoInfo = request()->query('video');
 
-        if( $contentName || $contentTags || $mediaTypes ) {
+        if( $contentName || $contentTags || $mediaTypes || $videoInfo ) {
             
             $content = new FileUploads;
 
@@ -41,6 +42,9 @@ class VideoController extends Controller
                 $contents = $content->where('user_id', $user->id)
                     ->where('upload_types', 'like', '%'.$mediaTypes.'%')
                     ->orderBy('created_at', 'desc');
+            }
+            if(isset($videoInfo)){
+                $contents = $content->where('file_hash', 'uploads/'.$videoInfo);
             }
 
             $getContents = $contents->paginate(12);
