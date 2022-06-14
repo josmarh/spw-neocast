@@ -67,6 +67,25 @@ export default {
         .then((res) => {
           this.videoName = res.data[0].file_name;
         })
+    },
+    playerCustomization(playBtn, playerId, pregressBar, sliderBar) {      
+      playBtn.style.border = '0';
+      playBtn.style.borderRadius = '0';
+
+      playerId.addEventListener('mouseover',function(){
+        playBtn.style.backgroundColor = '#6366F1';
+      })
+      playerId.addEventListener('mouseleave',function(){
+        playBtn.style.backgroundColor = '';
+      })
+      playBtn.addEventListener('mouseover',function(){
+        playBtn.style.backgroundColor = '#6366F1';
+      })
+      playBtn.addEventListener('mouseleave',function(){
+        playBtn.style.backgroundColor = '';
+      })
+      pregressBar.style.backgroundColor = '#6366F1';
+      sliderBar.style.color = '#6366F1';
     }
   },
   mounted() {
@@ -87,10 +106,12 @@ export default {
       this.player.share(this.shareOptions);
     }
 
+    // video event tracking
+    let playerId = document.getElementsByTagName('video')[0];
     this.player.eventTracking(true)
     this.player.on('tracking:firstplay', (e, data) => {
       // console.log(data)
-      this.videoTitle = document.getElementsByTagName('video')[0].getAttribute('src');
+      this.videoTitle = playerId.getAttribute('src');
       this.$emit('playedVideo', this.videoTitle)
 
       let arr = this.videoTitle.split('/');
@@ -113,6 +134,13 @@ export default {
     this.player.on('ended', () => {
        document.getElementsByClassName('overlay')[0].style.opacity = 1;
     });
+
+    // big play button customization
+    let playBtn = document.getElementsByClassName('vjs-big-play-button')[0];
+    let pregressBar = document.getElementsByClassName('vjs-play-progress')[0];
+    let sliderBar = document.getElementsByClassName('vjs-progress-holder')[0];
+    
+    this.playerCustomization(playBtn, playerId, pregressBar, sliderBar);
 
   },
   beforeDestroy() {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-component title="Channels">
+    <page-component title="Channels" :class="[channelListCheck == 0 || channelListCheck == 1 ? 'h-screen bg-gray-100' : '' ]">
       <notification />
       
       <div>
@@ -16,7 +16,7 @@
                 bg-indigo-600 hover:bg-indigo-700
                 focus:outline-none"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
                 Create Channel
@@ -30,7 +30,7 @@
                     <span class="sr-only">Open user menu</span>
                     <a
                       class="group relative flex justify-center
-                      py-2.5 px-3 border border-transparent
+                      py-2 px-3 border border-transparent
                       text-sm font-medium text-white
                       bg-indigo-600 hover:bg-indigo-700
                       focus:outline-none cursor-pointer"
@@ -1051,11 +1051,13 @@ const getChannelList = async () => {
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
       channelListCheck.value = 3
-      if (err.response.data) {
-        if (err.response.data.hasOwnProperty("message")) {
-          store.dispatch("setErrorNotification", err.response.data.message);
-        } else {
-          store.dispatch("setErrorNotification", err.response.data.error);
+      if(err.response) {
+        if (err.response.data) {
+          if (err.response.data.hasOwnProperty("message")) {
+            store.dispatch("setErrorNotification", err.response.data.message);
+          } else {
+            store.dispatch("setErrorNotification", err.response.data.error);
+          }
         }
       }
     });
@@ -1373,11 +1375,9 @@ const tabSwitch = (type) => {
     playlistChecks.value.allVideos = 1;
     store.dispatch('getVideos', {chash: channelId});
     playlistChecks.value.allVideos = 2;
-    isDisabled.value = false
   }else{
     allVideos.value=false;
     selectedVideos.value=true;
-    isDisabled.value = true
     getSelectedVideos();
   }
 }
@@ -1395,8 +1395,6 @@ const videoOptions = {
   //   }
   // ],
 }
-
-
 
 onMounted(() => {
   getChannelList();

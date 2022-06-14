@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import NewChannel from '../../components/NewChannel.vue';
+import NewChannel from '../../components/ChannelComponent.vue';
 </script>

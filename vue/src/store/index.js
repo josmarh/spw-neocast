@@ -24,6 +24,11 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        websites: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -242,9 +247,44 @@ const store = createStore({
                 .then(({data}) => {
                     return data;
                 })
+        },
+        getWebsites({ commit }, {url = null} = {}){
+            url = url || '/websites'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setWebsites', data)
+                    return data;
+                })
+        },
+        createWebsite({  }, payload){
+            return axiosClient.post(`/website/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        editWebsite({ }, whash){
+            return axiosClient.get(`/website/edit/${whash}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateWebsite({ }, payload){
+            return axiosClient.put(`/website/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteWebsite({ }, id){
+            return axiosClient.delete(`/website/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
         }
     },
     mutations: {
+        setWebsites: (state, data) => {
+            state.websites = data;
+        },
         setPlaylist: (state, data) => {
             state.playlist = data;
         },

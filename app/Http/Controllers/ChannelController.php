@@ -159,6 +159,8 @@ class ChannelController extends Controller
     {
         $channel = Channels::findOrFail($id);
 
+        File::delete(public_path().'/'.$channel->logo);
+
         $channel->delete();
 
         return response([

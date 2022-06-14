@@ -7,6 +7,7 @@ use App\Http\Controllers\UploadsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChannelPlaylistController;
+use App\Http\Controllers\WebsiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,14 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('playlist/{chash}', [ChannelPlaylistController::class, 'playlistVidoes']);
         Route::post('videos', [ChannelPlaylistController::class, 'videoStore']);
         Route::delete('playlist/delete/{cpId}', [ChannelPlaylistController::class, 'deleteVideo']);
+    });
+
+    Route::get('/websites', [WebsiteController::class, 'index']);
+    Route::group(['prefix' => 'website'], function () {
+        Route::post('store', [WebsiteController::class, 'store']);
+        Route::get('edit/{whash}', [WebsiteController::class, 'edit']);
+        Route::put('update/{id}', [WebsiteController::class, 'update']);
+        Route::delete('delete/{id}', [WebsiteController::class, 'delete']);
     });
 });
 

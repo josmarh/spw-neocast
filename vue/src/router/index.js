@@ -4,7 +4,6 @@ import GuestLayout from '../components/GuestLayout.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import ForgetPassword from '../views/auth/ForgetPassword.vue'
-import Dashboard from '../views/Dashboard.vue'
 import Profile from '../views/auth/UserProfile.vue'
 import Channels from '../views/channels/index.vue'
 import Channel from '../views/channels/create.vue'
@@ -20,6 +19,9 @@ import EmbedVideo from '../views/videos/embeded-video.vue'
 import Uploads from '../views/uploads/index.vue'
 import LiveStream from '../views/livestream/index.vue'
 import Website from '../views/websites/index.vue'
+import EditWebsite from '../views/websites/edit.vue'
+import CreateWebsite from '../views/websites/create.vue'
+import WebPage from '../views/websites/web-page.vue'
 import Analytics from '../views/analytics/index.vue'
 import Welcome from '../views/Welcome.vue'
 import store from "../store"
@@ -54,6 +56,8 @@ const routes = [
             {path: '/uploads', name: 'Uploads', component: Uploads},
             {path: '/livestream', name: 'LiveStream', component: LiveStream},
             {path: '/website', name: 'Website', component: Website},
+            {path: '/website/new', name: 'CreateWebsite', component: CreateWebsite},
+            {path: '/website/:whash', name: 'EditWebsite', component: EditWebsite},
             {path: '/analytics', name: 'Analytics', component: Analytics},
             {path: '/welcome', name: 'Welcome', component: Welcome},
         ] 
@@ -62,6 +66,7 @@ const routes = [
     { path: '/embed/video/:str', name: 'EmbedVideo', component: EmbedVideo },
     { path: '/embed/channel/:str', name: 'EmbedChannel', component: EmbedChannel },
     { path: '/watch/channel/:str', name: 'ShareChannel', component: ShareChannel },
+    { path: '/w/:str', name: 'WebPage', component: WebPage },
 ];
 
 const router = createRouter({
