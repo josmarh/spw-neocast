@@ -16,13 +16,13 @@ class ChannelController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $queryName = request()->query('name');
+        $filter = request()->query('name');
 
-        if(isset($queryName)) {
+        if(isset($filter)) {
             $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views'))
                 ->leftJoin('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
                 ->where('channels.user_id', $user->id)
-                ->where('channels.title', 'like', '%'.$queryName.'%')
+                ->where('channels.title', 'like', '%'.$filter.'%')
                 ->groupBy('channels.id')
                 ->orderBy('channels.created_at', 'desc')
                 ->paginate(10);

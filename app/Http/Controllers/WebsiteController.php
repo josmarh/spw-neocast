@@ -10,9 +10,23 @@ use App\Models\Websites;
 
 class WebsiteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return WebsiteResource::collection(Websites::orderBy('created_at', 'desc')->paginate(10));
+        $user = $request->user();
+        $filter = request()->query('name');
+
+        if(isset($filter)) {
+            $Websites = Websites::where('user_id', $user->id)
+                ->where('title', 'like', '%'.$filter.'%')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        }else {
+            $Websites =  Websites::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        }
+
+        return WebsiteResource::collection($Websites);
     }
 
     public function store(Request $request)
@@ -29,7 +43,7 @@ class WebsiteController extends Controller
             $relativePathFav = $this->extractUrl($request->favicon);
         }
 
-        Websites::create([
+        $website = Websites::create([
             'title'         => $request->title,
             'channel'       => json_encode($request->channel),
             'url_path'      => $request->urlPath,
@@ -51,6 +65,7 @@ class WebsiteController extends Controller
         ]);
 
         return response([
+            'data'      => new WebsiteResource($website),
             'message' => 'Website created successfully',
             'status' => 'success',
             'status_code' => 201
@@ -111,8 +126,9 @@ class WebsiteController extends Controller
         ]);
 
         return response([
-            'message' => 'Website updated successfully',
-            'status' => 'success',
+            'data'      => new WebsiteResource($website),
+            'message'   => 'Website updated successfully',
+            'status'    => 'success',
             'status_code' => 200
         ]);
     }
@@ -131,6 +147,17 @@ class WebsiteController extends Controller
             'status' => 'success',
             'status_code' => 204
         ]);
+    }
+
+    public function webContent($urlPath)
+    {
+        $website = Websites::where('url_path', $urlPath)->first();
+
+        return response([
+            'data'      => new WebsiteResource($website),
+            'status'    => 'success',
+            'status_code' => 200
+        ]); 
     }
 
     private function extractUrl($file)

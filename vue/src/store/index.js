@@ -279,7 +279,20 @@ const store = createStore({
                 .then(({data}) => {
                     return data;
                 })
-        }
+        },
+        filterWebsite({ commit }, params){
+            return axiosClient.get(`/websites?name=${params}`)
+                .then(({data}) => {
+                    commit('setWebsites', data)
+                    return data;
+                })
+        },
+        getWebsiteContent({ }, params){
+            return axiosClient.get(`/website/content/${params}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setWebsites: (state, data) => {

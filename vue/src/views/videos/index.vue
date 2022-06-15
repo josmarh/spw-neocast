@@ -328,15 +328,8 @@
           <div class="grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
             <div v-for="cont in contents.data" :key="cont.id">
               <div
-                class="
-                  w-72
-                  bg-white
-                  rounded-lg
-                  border border-gray-200
-                  shadow-md
-                  dark:bg-gray-800 dark:border-gray-700
-                  mb-3
-                "
+                class="w-72 bg-white rounded-lg border border-gray-200
+                shadow-md dark:bg-gray-800 dark:border-gray-700 mb-3"
               >
                 <span v-if="cont.file_name.includes('.mp3')" style="height: 170px; background-color:gray">
                   <a class="cursor-pointer" @click="playContent(cont)">

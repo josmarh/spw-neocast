@@ -35,7 +35,7 @@
             <input
               type="text"
               id="name-search"
-              
+              v-model="nameFilter"
               class="block pl-10 py-2 px-0 xl:w-full sm:w-full md:w-half
                 text-sm text-gray-900 bg-transparent
                 border-0 border-b-2 border-gray-300
@@ -107,7 +107,9 @@
                     {{item.title}}
                   </th>
                   <td class="px-6 py-4">
-                    
+                    <div v-for="c in JSON.parse(item.channel)" :key="c.id">
+                      {{c.title}},
+                    </div>
                   </td>
                   <td class="px-6 py-4">
                     <div class="flex">
@@ -272,6 +274,13 @@ let model = ref({
   id: null,
   name:'',
 });
+let nameFilter = ref('');
+
+watch(nameFilter, (after, before) => {
+  setTimeout(() => {
+    _filters(after)
+  }, 2000)
+})
 
 const _getWebsites = async () => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
@@ -282,7 +291,39 @@ const _getWebsites = async () => {
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
-      dataCheck.value = 2;
+      if(res.data.length)
+        dataCheck.value = 2;
+      else
+        dataCheck.value = 3;
+    })
+    .catch((err) => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      dataCheck.value = 3;
+      if(err.response) {
+          if (err.response.data) {
+              if (err.response.data.hasOwnProperty("message")) {
+                  store.dispatch("setErrorNotification", err.response.data.message);
+              } else {
+                  store.dispatch("setErrorNotification", err.response.data.error);
+              }
+          }
+      }
+    })
+}
+
+const _filters = (name) => {
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  dataCheck.value = 1;
+
+  store
+    .dispatch('filterWebsite', name)
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      if(res.data.length)
+        dataCheck.value = 2;
+      else
+        dataCheck.value = 3;
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();

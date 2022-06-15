@@ -66,3 +66,4 @@ Route::get('video/show/{str}', [VideoController::class, 'show']);
 Route::get('channel/show/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
 Route::put('channel/video/track-views/{chash}', [ChannelPlaylistController::class, 'videoPlayAnalysis']);
 Route::get('video/info', [VideoController::class, 'index']);
+Route::get('website/content/{urlPath}', [WebsiteController::class, 'webContent']);

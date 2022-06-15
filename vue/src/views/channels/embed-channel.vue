@@ -18,12 +18,12 @@
         </div>
         <div v-if="ChannelPlaylistCheck == 2">
             <video-player 
-            :options="videoOptions" 
-            :playlistOptions="playlist" 
-            :shareOptions="share"
-            :showShare="videoOptionsCustom.share"
-            :showTitle="videoOptionsCustom.title"
-            @playedVideo="sendPlayEvent"
+              :options="videoOptions" 
+              :playlistOptions="playlist" 
+              :shareOptions="share"
+              :showShare="videoOptionsCustom.share"
+              :showTitle="videoOptionsCustom.title"
+              @playedVideo="sendPlayEvent"
             />
         </div>
     </div>
