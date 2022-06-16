@@ -33,11 +33,11 @@ class ChannelPlaylistController extends Controller
             ->join('channel_playlists as cp', 'cp.video_id', '=', 'file_uploads.id')
             ->join('channels as ch', 'ch.channel_hash', '=', 'cp.channel_hash')
             ->whereIn('file_uploads.id', function($query)use($chash){
-                $query->select('video_id')
-                    ->from('channel_playlists');
+                $query->select('video_id')->from('channel_playlists');
             })
             ->where('cp.channel_hash', $chash)
             ->orderBy('file_uploads.created_at', 'desc')
+            ->with('videos')
             ->paginate(7);
  
         return PlaylistResource::collection($playlist);

@@ -3,7 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\PlaylistResource;
 use URL;
+
 
 class ChannelResource extends JsonResource
 {
@@ -32,7 +34,8 @@ class ChannelResource extends JsonResource
             'channel_type' => $this->channel_type,
             'channel_hash' => $this->channel_hash,
             'total_vidoes' => $this->total_vidoes,
-            'total_views' => $this->total_views
+            'total_views' => $this->total_views,
+            // 'channelplaylist' => PlaylistResource::collection($this->whenLoaded('channel_playlist')),
         ];
     }
 }

@@ -32,6 +32,7 @@ class ChannelController extends Controller
                 ->where('channels.user_id', $user->id)
                 ->groupBy('channels.id')
                 ->orderBy('channels.created_at', 'desc')
+                ->with('channel_playlist')
                 ->paginate(10);
         }
 

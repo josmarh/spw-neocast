@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\ChannelPlaylist;
 
 class FileUploads extends Model
 {
@@ -21,4 +23,14 @@ class FileUploads extends Model
         'user_id',
         'vhash',
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(ChannelPlaylist::class, 'video_id', 'id');
+    }
 }

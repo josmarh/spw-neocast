@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\ChannelResource;
+use App\Http\Resources\ContentResource;
 use URL;
 
 class PlaylistResource extends JsonResource
@@ -15,6 +17,7 @@ class PlaylistResource extends JsonResource
      */
     public function toArray($request)
     {
+        // $channel = $this->whenLoaded('channels');
         $splitLink = explode('/', $this->file_hash);
         $externalLink = explode('.', $splitLink[1]);
 
@@ -33,7 +36,8 @@ class PlaylistResource extends JsonResource
             'channel_hash'        => $this->channel_hash,
             'views'               => $this->views,
             'cpid'                => $this->cpId,
-            'channel_title'       => $this->title
+            'channel_title'       => $this->title,
+            // 'playlist'            => new ContentResource($this->videos),
         ];
     }
 }

@@ -31,7 +31,7 @@
                     />
                 </div>
                 <div v-if="model.channelCount > 1" class="mt-12">
-                    <h5 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">Channels</h5>
+                    <h5 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white flex">Channels</h5>
                     <div class="mt-6 grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
                         <div v-for="c in model.channels" :key="c.id">
                             <div class="w-72 bg-white rounded-lg
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div  v-if="isContentSet == 3">
-                <div class="flex justify-center items-center mt-12">
+                <div class="flex justify-center items-center h-screen">
                     <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                         <h5 class="text-2xl text-gray-900 dark:text-white">No channel available</h5>
                         <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
@@ -83,7 +83,7 @@ let model = ref({
     logo: null,
     channelCount: null,
     channels: null,
-    footerText: ''
+    footerText: '',
 });
 
 const playlist = ref([]);
@@ -125,7 +125,7 @@ const _getContent = () => {
         .then((res) => {
             if(res.data) {
                 let data = res.data;
-                isContentSet.value = 2;
+                
                 model.value.title = data.title
                 model.value.showHeader = data.header
                 model.value.pageLayout = data.page_layout
@@ -133,6 +133,9 @@ const _getContent = () => {
                 model.value.channelCount = JSON.parse(data.channel).length
                 model.value.footerText = data.footer_text
                 model.value.channels = JSON.parse(data.channel)
+
+                // getPlaylist(model.value.channels)
+                isContentSet.value = 2;
             }else{
                 isContentSet.value = 3;
             }
@@ -152,7 +155,45 @@ const _getContent = () => {
 }
 
 const getPlaylist = (chash) => {
-
+    store
+        .dispatch('getPlaylist', chash)
+        .then((res) => {
+            if(res.data.length) {
+                for(let item of res.data){
+                    playlist.value.push({
+                        name: item.file_name,
+                        sources: [{
+                        src: `${item.file_hash}#t=0.1`,
+                        type: 'video/mp4',
+                        }],
+                        // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+                        thumbnail: [
+                        {
+                            srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                            type: 'image/jpeg',
+                            media: '(min-width: 400px;)'
+                        },
+                        {
+                            src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                        }
+                        ]
+                    })
+                }
+                isContentSet.value = 2;
+            }
+        })
+        .catch((err) => {
+            isContentSet.value = 3;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message")) {
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    } else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        })
 }
 
 onMounted(() => {

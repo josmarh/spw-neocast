@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\ChannelPlaylist;
 
 class Channels extends Model
 {
@@ -26,4 +28,15 @@ class Channels extends Model
         'channel_hash',
         'user_id'
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function channel_playlist()
+    {
+        return $this->hasMany(ChannelPlaylist::class, 'channel_hash','channel_hash');
+    }
+
 }
