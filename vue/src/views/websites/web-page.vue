@@ -1,13 +1,6 @@
 <template>
     <div>
-        <web-page-component 
-            :title="model.title"
-            :showHeader="model.showHeader"
-            :pageLayout="model.pageLayout"
-            :logo="model.logo"
-            :channelCount="model.channelCount"
-            :footerText="model.footerText"
-        >
+        <web-page-component :config="model">
             <Notification/>
             <div v-if="isContentSet == 1">
                 <div class="flex justify-center py-40">
@@ -21,29 +14,51 @@
             </div>
             <div v-if="isContentSet == 2">
                 <div>
-                    <video-player 
+                    <video-player
                         :options="videoOptions" 
                         :playlistOptions="playlist" 
                         :shareOptions="share"
                         :showShare="videoOptionsCustom.share"
                         :showTitle="videoOptionsCustom.title"
                         @playedVideo="sendPlayEvent"
+                        class=""
                     />
                 </div>
                 <div v-if="model.channelCount > 1" class="mt-12">
                     <h5 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white flex">Channels</h5>
-                    <div class="mt-6 grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
-                        <div v-for="c in model.channels" :key="c.id">
-                            <div class="w-72 bg-white rounded-lg
+                    <div 
+                        class="mt-6 grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
+                        <div v-for="(c, index) in model.channels" :key="c.id">
+                            <div class="cortana w-72 bg-white rounded-lg
                                 border border-gray-200 shadow-md
                                 dark:bg-gray-800 dark:border-gray-700 mb-3"
                             >
                                 <!-- display channels -->
+                                <div v-if="index == 0" class="badge-overlay w-full z-10 uppercase px-2">
+                                    <span 
+                                        class="bg-green-100 text-green-800 text-sm font-medium 
+                                        px-2.5 py-1.5 rounded dark:bg-green-200 dark:text-green-900
+                                        inline-flex mt-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span class="px-2 text-sm">Watching</span>
+                                    </span>
+                                </div>
                                 <span class="flex">
-                                    <a href="#" class="item-center cursor-pointer">
-                                        <video src="" class="rounded-t-lg h-[12rem]"></video>
+                                    <a :href="`/w/${$route.params.str}/channel/${c.channel_hash}`" 
+                                        class="item-center cursor-pointer">
+                                        <!-- <video class="rounded-t-lg h-[12rem]" :src="c.poster" preload="metadata"></video> -->
+                                        <img 
+                                            :src="c.thumbnail"
+                                            class="rounded-t-lg h-[12rem]"
+                                        >
                                     </a>
                                 </span>
+                                <div class="title-overlay">{{c.title}}</div>
                             </div>
                         </div>
                     </div>
@@ -82,8 +97,12 @@ let model = ref({
     pageLayout: '',
     logo: null,
     channelCount: null,
-    channels: null,
+    channels: [],
+    tmpChannels: [],
     footerText: '',
+    menuNavigation: [],
+    bgColor: '',
+    fontColor: ''
 });
 
 const playlist = ref([]);
@@ -117,13 +136,13 @@ const share = ref({
     embedCode : ''
 })
 
-const _getContent = () => {
+const _getContent = async () => {
     isContentSet.value = 1;
 
-    store
+    await store
         .dispatch('getWebsiteContent', route.params.str)
         .then((res) => {
-            if(res.data) {
+            if(res.data.hasOwnProperty('url_path')) {
                 let data = res.data;
                 
                 model.value.title = data.title
@@ -132,9 +151,77 @@ const _getContent = () => {
                 model.value.logo = data.logo
                 model.value.channelCount = JSON.parse(data.channel).length
                 model.value.footerText = data.footer_text
+                model.value.bgColor = data.bg_color
+                model.value.fontColor = data.font_color
                 model.value.channels = JSON.parse(data.channel)
 
-                // getPlaylist(model.value.channels)
+                // assign player behaviour 
+                videoOptions.value.autoplay = data.autoplay == 0 ? false : true
+                videoOptions.value.controls = data.controls == 1 ? true : false
+                videoOptions.value.muted = data.volume == 1 ? false : true
+                videoOptionsCustom.value.title = data.content_title == 1 ? true : false
+                videoOptionsCustom.value.share = data.share_button == 1 ? true : false
+
+                // assign menus
+                for(let m of model.value.channels) {
+                    model.value.menuNavigation.push({
+                        name: m.title,
+                        href: `/w/${route.params.str}/channel/${m.channel_hash}`
+                    })
+                }
+                getPlaylist(model['_rawValue'].channels[0].channel_hash)
+            }else{
+                isContentSet.value = 3;
+            }
+        })
+        .catch((err) => {
+            isContentSet.value = 3;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message")) {
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    } else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        })
+}
+
+const getPlaylist = async (chash) => {
+    await store
+        .dispatch('getWebsitePlaylist', chash)
+        .then((res) => {
+            if(res.data.length) {
+                // add to playlist 
+                for(let item of res.data){
+                    playlist.value.push({
+                        name: item.file_name,
+                        sources: [{
+                            src: item.file_hash,
+                            type: 'video/mp4',
+                        }],
+                        poster: item.thumbnail,
+                        thumbnail: [
+                            {
+                                srcset: item.thumbnail,
+                                type: 'image/jpeg',
+                                media: '(min-width: 400px;)'
+                            },
+                            {
+                                src: item.thumbnail
+                            }
+                        ]
+                    })
+                }
+                // add to share button
+                share.value.title = `Watch "${res.data[0].channel_title}" on `;
+                const shareUrl = router.resolve({
+                    name: 'ShareChannel',
+                    params: { str: chash}
+                });
+                share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
+                share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${chash}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
                 isContentSet.value = 2;
             }else{
                 isContentSet.value = 3;
@@ -154,46 +241,36 @@ const _getContent = () => {
         })
 }
 
-const getPlaylist = (chash) => {
-    store
-        .dispatch('getPlaylist', chash)
-        .then((res) => {
-            if(res.data.length) {
-                for(let item of res.data){
-                    playlist.value.push({
-                        name: item.file_name,
-                        sources: [{
-                        src: `${item.file_hash}#t=0.1`,
-                        type: 'video/mp4',
-                        }],
-                        // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-                        thumbnail: [
-                        {
-                            srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
-                            type: 'image/jpeg',
-                            media: '(min-width: 400px;)'
-                        },
-                        {
-                            src: 'http://media.w3.org/2010/05/sintel/poster.png'
-                        }
-                        ]
+// redundant
+const _getPoster = async () => {
+    let poster = [];
+
+    for(let c of model['_rawValue'].channels) {
+        await store
+            .dispatch('getWebsitePlaylist', c.channel_hash)
+            .then((res) => {
+                for(let d of res.data) {
+                    poster.push({
+                        chash: d.channel_hash,
+                        video: d.thumbnail
                     })
                 }
-                isContentSet.value = 2;
+            })
+    }
+    
+    // remove duplicate 
+    let filterPoster = poster.filter((v,i,a)=>a.findIndex(v2=>(v2.chash===v.chash))===i);
+
+    // add 1st video link to channel array
+    // for box thumbnail
+    for (let i of filterPoster){
+        for(let v of model['_rawValue'].channels) {
+            if(v.channel_hash == i.chash) {
+                v['poster'] = i.video
             }
-        })
-        .catch((err) => {
-            isContentSet.value = 3;
-            if(err.response) {
-                if (err.response.data) {
-                    if (err.response.data.hasOwnProperty("message")) {
-                        store.dispatch("setErrorNotification", err.response.data.message);
-                    } else {
-                        store.dispatch("setErrorNotification", err.response.data.error);
-                    }
-                }
-            }
-        })
+        }
+    }
+    // console.log(model['_rawValue'].channels)
 }
 
 onMounted(() => {
@@ -201,6 +278,31 @@ onMounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
+.cortana {
+    position: relative;
+}
+.title-overlay {
+  position: absolute; 
+  bottom: 0; 
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+  color: #f1f1f1; 
+  width: 100%;
+  transition: .5s ease;
+  opacity:1;
+  color: white;
+  font-size: 15px;
+  font-weight: 'bold';
+  padding: 7px;
+  text-align: center;
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+
+.badge-overlay {
+    position: absolute; 
+    top: 0;
+}
 
 </style>

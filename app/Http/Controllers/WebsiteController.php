@@ -160,6 +160,11 @@ class WebsiteController extends Controller
         ]); 
     }
 
+    // public function websitePlaylist($urlPath)
+    // {
+        
+    // }
+
     private function extractUrl($file)
     {
         // check if it's a valid base64 string

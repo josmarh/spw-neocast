@@ -1,14 +1,14 @@
 <template>
   <div class="grid grid-cols-12">
     <div class="col-span-9">
-      <div class="container">
-        <video ref="videoPlayer" class="video-js vjs-big-play-centered"></video>
+      <div class="container" >
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered h-[20rem]"></video>
         <div class="overlay">
           {{ videoName }}
         </div>
       </div>
     </div>
-    <div class="vjs-playlist col-span-3 overflow-y-scroll scroll-smooth scroller"></div>
+    <div class="vjs-playlist col-span-3 overflow-y-scroll scroll-smooth scroller h-[20rem]"></div>
   </div>
 </template>
 

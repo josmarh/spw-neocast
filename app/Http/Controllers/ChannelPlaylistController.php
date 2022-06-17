@@ -55,9 +55,19 @@ class ChannelPlaylistController extends Controller
             ]);
         }
 
+        // check if channel playlist thumbnail is null
+        $channel = ChannelPlaylist::where('channel_hash', $channelId)->orderBy('created_at','asc')->first();
+        
+        if($channel->video_thumbnail == null){
+            $video = FileUploads::findOrFail($videoIds[0]);
+
+            // update playlist with thumbnail
+            $channel->update(['video_thumbnail' => $video->thumbnail]);
+        }
+
         return response([
             'message' => 'Videos added successfully',
-            'status' => 'success',
+            'status' => $channel,
             'status_code' => 201
         ]);
     }

@@ -19,7 +19,7 @@ class ChannelController extends Controller
         $filter = request()->query('name');
 
         if(isset($filter)) {
-            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views'))
+            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views, cpl.video_thumbnail'))
                 ->leftJoin('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
                 ->where('channels.user_id', $user->id)
                 ->where('channels.title', 'like', '%'.$filter.'%')
@@ -27,7 +27,7 @@ class ChannelController extends Controller
                 ->orderBy('channels.created_at', 'desc')
                 ->paginate(10);
         }else {
-            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views'))
+            $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views, cpl.video_thumbnail'))
                 ->leftJoin('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
                 ->where('channels.user_id', $user->id)
                 ->groupBy('channels.id')

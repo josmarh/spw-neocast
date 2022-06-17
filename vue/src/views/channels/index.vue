@@ -697,11 +697,12 @@
                                       </div>
                                     </td>
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                      <div class="w-10 h-10">
-                                        <video
-                                        :src="v.file_hash"
-                                        class="rounded-t-lg">
-                                        </video>
+                                      <div class="w-16 h-10">
+                                        <!-- <video
+                                          :src="v.file_hash"
+                                          class="rounded-t-lg">
+                                        </video> -->
+                                        <img :src="v.thumbnail" class="rounded-t-lg">
                                       </div>
                                     </th>
                                     <td class="px-6 py-4" :title="v.file_name">
@@ -759,11 +760,12 @@
                                 <tr v-for="v in ChannelPlaylist.data" :key="v.id"
                                   class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                   <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                    <div class="w-10 h-10">
-                                      <video
+                                    <div class="w-16 h-10">
+                                      <!-- <video
                                       :src="v.file_hash"
                                       class="rounded-t-lg">
-                                      </video>
+                                      </video> -->
+                                      <img :src="v.thumbnail" class="rounded-t-lg">
                                     </div>
                                   </th>
                                   <td class="" :title="v.file_name">
@@ -1177,14 +1179,14 @@ const addVideoAction = async () => {
   await store
     .dispatch('addToPlaylist', {
       channelId: videoToAddChecks['_rawValue'].channelId,
-      videos: videoToAddChecks['_rawValue'].videoToAdd
+      videos: videoToAddChecks['_rawValue'].videoToAdd,
     })
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
       store.dispatch('setSuccessNotification', res.message);
       store.dispatch('getVideos', {chash: channelHash});
       internalInstance.appContext.config.globalProperties.$Progress.finish();
-      openAddVideo.value = false
+      // openAddVideo.value = false
       videoToAddChecks.value.videoToAdd = []
     })
     .catch((err) => {
@@ -1290,18 +1292,18 @@ const embedChannel = async (hash, title) => {
           playlist.value.push({
             name: item.file_name,
             sources: [{
-              src: `${item.file_hash}#t=0.1`,
+              src: item.file_hash,
               type: 'video/mp4',
             }],
-            // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+            poster: item.thumbnail,
             thumbnail: [
               {
-                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                srcset: item.thumbnail,
                 type: 'image/jpeg',
                 media: '(min-width: 400px;)'
               },
               {
-                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                src: item.thumbnail
               }
             ]
           })

@@ -56,6 +56,13 @@ return [
             'throw' => false,
         ],
 
+        // custom added
+        'locale' => [
+            'driver' => 'local',
+            'root' => public_path('video_thumbnail'),
+            'throw' => false,
+        ]
+
     ],
 
     /*

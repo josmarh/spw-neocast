@@ -341,11 +341,12 @@
                 <span v-else class="flex">
                   <a :href="cont.file_hash"
                     class="item-center cursor-pointer" data-fancybox>
-                    <video
+                    <!-- <video
                       :src="cont.file_hash"
                       class="rounded-t-lg"
                       style="height: 170px;"
-                    ></video>
+                    ></video> -->
+                    <img :src="cont.thumbnail" class="rounded-t-lg" style="height: 170px;">
                   </a>
                 </span>
                 <div class="p-5">

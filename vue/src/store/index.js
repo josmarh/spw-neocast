@@ -198,7 +198,7 @@ const store = createStore({
         addToPlaylist({ commit }, videos){
             return axiosClient.post(`/channel/videos`, videos)
             .then(({data}) => {
-                commit('setChannels', data)
+                // commit('setChannels', data)
                 return data;
             })
         },
@@ -292,6 +292,13 @@ const store = createStore({
                 .then(({data}) => {
                     return data;
                 })
+        },
+        getWebsitePlaylist({ commit }, channelId){
+            return axiosClient.get(`channel/show/${channelId}`)
+            .then(({data}) => {
+                commit('setPlaylist', data)
+                return data;
+            })
         },
     },
     mutations: {

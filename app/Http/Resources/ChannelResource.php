@@ -35,6 +35,7 @@ class ChannelResource extends JsonResource
             'channel_hash' => $this->channel_hash,
             'total_vidoes' => $this->total_vidoes,
             'total_views' => $this->total_views,
+            'thumbnail' => $this->video_thumbnail ? URL::to($this->video_thumbnail) : null,
             // 'channelplaylist' => PlaylistResource::collection($this->whenLoaded('channel_playlist')),
         ];
     }

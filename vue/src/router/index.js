@@ -22,6 +22,7 @@ import Website from '../views/websites/index.vue'
 import EditWebsite from '../views/websites/edit.vue'
 import CreateWebsite from '../views/websites/create.vue'
 import WebPage from '../views/websites/web-page.vue'
+import WebPageSingle from '../views/websites/web-page-single.vue'
 import Analytics from '../views/analytics/index.vue'
 import Welcome from '../views/Welcome.vue'
 import store from "../store"
@@ -67,6 +68,7 @@ const routes = [
     { path: '/embed/channel/:str', name: 'EmbedChannel', component: EmbedChannel },
     { path: '/watch/channel/:str', name: 'ShareChannel', component: ShareChannel },
     { path: '/w/:str', name: 'WebPage', component: WebPage },
+    { path: '/w/:str/channel/:chash', name: 'WebPageSingle', component: WebPageSingle },
 ];
 
 const router = createRouter({

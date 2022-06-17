@@ -30,6 +30,7 @@ class ContentResource extends JsonResource
             'upload_types'        => $this->upload_types,
             'external_link'       => $this->file_hash ? $externalLink[0] : null,
             'vhash'               => $this->vhash,
+            'thumbnail'           => $this->thumbnail ? URL::to($this->thumbnail) : null,
         ];
     }
 }

@@ -121,18 +121,18 @@ const getPlaylist = async () => {
           playlist.value.push({
             name: item.file_name,
             sources: [{
-              src: `${item.file_hash}#t=0.1`,
+              src: item.file_hash,
               type: 'video/mp4',
             }],
-            // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+            poster: item.thumbnail,
             thumbnail: [
               {
-                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                srcset: item.thumbnail,
                 type: 'image/jpeg',
                 media: '(min-width: 400px;)'
               },
               {
-                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                src: item.thumbnail
               }
             ]
           })
@@ -141,7 +141,7 @@ const getPlaylist = async () => {
         share.value.title = `Watch "${res.data[0].channel_title}" on `;
         const shareUrl = router.resolve({
           name: 'ShareChannel',
-          params: { str: route.params.str}
+          params: { str: route.params.str }
         });
         share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
         share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.str}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`

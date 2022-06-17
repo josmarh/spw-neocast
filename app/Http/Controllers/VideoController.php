@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Models\FileUploads;
+use App\Models\ChannelPlaylist;
 use App\Http\Resources\ContentResource;
 
 class VideoController extends Controller
@@ -130,7 +131,9 @@ class VideoController extends Controller
     public function delete($id)
     {
         $content = FileUploads::findOrFail($id);
+        $video = ChannelPlaylist::where('video_id', $id)->delete();
 
+        File::delete(public_path().'/'.$content->thumbnail);
         File::delete(public_path().'/'.$content->file_hash);
         $content->delete();
 

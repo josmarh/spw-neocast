@@ -37,6 +37,7 @@ class PlaylistResource extends JsonResource
             'views'               => $this->views,
             'cpid'                => $this->cpId,
             'channel_title'       => $this->title,
+            'thumbnail'           => $this->thumbnail ? URL::to($this->thumbnail) : null,
             // 'playlist'            => new ContentResource($this->videos),
         ];
     }

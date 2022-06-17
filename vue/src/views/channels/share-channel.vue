@@ -108,18 +108,18 @@ const getPlaylist = async () => {
                 playlist.value.push({
                     name: item.file_name,
                     sources: [{
-                    src: `${item.file_hash}#t=0.1`,
+                    src: item.file_hash,
                     type: 'video/mp4',
                     }],
-                    // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+                    poster: item.thumbnail,
                     thumbnail: [
                     {
-                        srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                        srcset: item.thumbnail,
                         type: 'image/jpeg',
                         media: '(min-width: 400px;)'
                     },
                     {
-                        src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                        src: item.thumbnail
                     }
                     ]
                 })

@@ -1,24 +1,21 @@
 <template>
-    <div>
-        <header v-if="showHeader == 'show'">
-            <nav 
-                class="bg-white border-gray-200 
-                px-10 sm:px-4 py-2.5
-                rounded dark:bg-gray-800">
+    <div :style="{background: config.bgColor, color: config.fontColor}">
+        <header v-if="config.showHeader == 'show'">
+            <nav class="bg-white border-gray-200 px-10 sm:px-4 py-2.5 dark:bg-gray-800">
                 <div class="flex flex-wrap justify-between items-center mx-auto"
-                    :class="[pageLayout == 'fixed' ? 'container' : 'container-fluid']"
+                    :class="[config.pageLayout == 'fixed' ? 'container' : 'container-fluid']"
                 >
                     <router-link :to="{name: 'WebPage', params: {str: $route.params.str}}" class="flex items-center">
-                        <img v-if="logo != null" 
-                            :src="logo"
+                        <img v-if="config.logo != null" 
+                            :src="config.logo"
                             class="mr-3 h-6 sm:h-9"
-                            :alt="title">
+                            :alt="config.title">
                         <span v-else
                             class="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
-                            {{title}}
+                            {{config.title}}
                         </span>
                     </router-link>
-                    <div v-if="channelCount > 1" class="flex items-center md:order-2">
+                    <div v-if="config.channelCount > 1" class="flex items-center md:order-2">
                         <Menu as="div" class="relative">
                             <div>
                                 <MenuButton 
@@ -49,8 +46,8 @@
                                 <MenuItems 
                                     class="origin-top-right absolute right-0 mt-2 w-48 
                                     rounded-md shadow-lg py-1 bg-white ring-1 ring-black 
-                                    ring-opacity-5 focus:outline-none z-10">
-                                    <MenuItem v-for="item in userNavigation" :key="item.name" v-slot="{ active }">
+                                    ring-opacity-5 focus:outline-none z-10 cursor-pointer">
+                                    <MenuItem v-for="item in config.menuNavigation" :key="item.name" v-slot="{ active }">
                                         <a
                                             :href="item.href" 
                                             :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">
@@ -64,14 +61,14 @@
                 </div>
             </nav>
         </header>
-        <main :class="[pageLayout == 'fixed' ? 'container xl:m-10 sm:m-10' : 'container-fluid mt-5']">
+        <main :class="[config.pageLayout == 'fixed' ? 'container xl:m-10 sm:m-10' : 'container-fluid mt-5']">
             <slot></slot>
         </main>
-        <footer class="p-4 mt-12 bg-white rounded-lg shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">
-            <span v-if="footerText"
-                class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
-                © {{new Date().getFullYear()}} {{footerText}}
-                
+        <footer class="p-4 mt-12 bg-white shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">
+            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+                <span v-if="config.footerText">
+                    &copy; {{new Date().getFullYear()}} {{config.footerText}}
+                </span>
             </span>
             <span class="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
                 <p>Powered by Viloud</p>
@@ -86,18 +83,13 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { MenuIcon } from '@heroicons/vue/outline'
 
 const props = defineProps({
-    title: String,
-    showHeader: String,
-    pageLayout: String,
-    logo: String,
-    channelCount: Number,
-    footerText: String
+    config: Object,
 });
 
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-]
+// const userNavigation = [
+//   { name: 'Your Profile', href: '#' },
+//   { name: 'Settings', href: '#' },
+// ]
 </script>
 
 <style>

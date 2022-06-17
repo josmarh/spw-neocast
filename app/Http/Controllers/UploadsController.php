@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\FileUploads;
+use FFMpeg;
+use FFMpeg\Coordinate\Dimension;
+use FFMpeg\Format\Video\X264;
 use Log;
+use URL;
 
 class UploadsController extends Controller
 {
@@ -21,6 +25,8 @@ class UploadsController extends Controller
                 $relativePath = $this->extractUrl($f['url']);
                 $f['url'] = $relativePath;
 
+                $thumbnail = $this->generateThumbnail($relativePath);
+
                 fileUploads::create([
                     'file_name' => $f['name'],
                     'file_hash' => $f['url'],
@@ -29,6 +35,7 @@ class UploadsController extends Controller
                     'media_length' => $f['duration'],
                     'upload_types' => 'hosted video',
                     'vhash' => strtolower(Str::random(26)),
+                    'thumbnail' => $thumbnail,
                     'user_id' => $user->id
                 ]);
             }else {
@@ -71,5 +78,19 @@ class UploadsController extends Controller
         file_put_contents($relativePath, $file);
 
         return $relativePath;
+    }
+
+    public function generateThumbnail($file)
+    {
+        $thumbnail = Str::random();
+        $filePath = public_path().'/'.$file;
+
+        FFMpeg::openUrl($filePath)
+            ->getFrameFromString('00:00:05.01')
+            ->export()
+            ->toDisk('locale')
+            ->save($thumbnail.'.png');
+
+        return 'video_thumbnail/'.$thumbnail.'.png';
     }
 }
