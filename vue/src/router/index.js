@@ -25,6 +25,7 @@ import WebPage from '../views/websites/web-page.vue'
 import WebPageSingle from '../views/websites/web-page-single.vue'
 import Analytics from '../views/analytics/index.vue'
 import Welcome from '../views/Welcome.vue'
+import Welcomev from '../views/Welcomev.vue'
 import store from "../store"
 
 const routes = [
@@ -61,13 +62,18 @@ const routes = [
             {path: '/website/:whash', name: 'EditWebsite', component: EditWebsite},
             {path: '/analytics', name: 'Analytics', component: Analytics},
             {path: '/welcome', name: 'Welcome', component: Welcome},
+            {path: '/welcome', name: 'Welcomev', component: Welcomev},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },
     { path: '/embed/video/:str', name: 'EmbedVideo', component: EmbedVideo },
     { path: '/embed/channel/:str', name: 'EmbedChannel', component: EmbedChannel },
     { path: '/watch/channel/:str', name: 'ShareChannel', component: ShareChannel },
-    { path: '/w/:str', name: 'WebPage', component: WebPage },
+    { 
+        path: '/w/:str', 
+        name: 'WebPage', 
+        component: WebPage,
+    },
     { path: '/w/:str/channel/:chash', name: 'WebPageSingle', component: WebPageSingle },
 ];
 

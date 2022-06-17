@@ -102,7 +102,9 @@ let model = ref({
     footerText: '',
     menuNavigation: [],
     bgColor: '',
-    fontColor: ''
+    fontColor: '',
+    favicon: null,
+    siteSeo: ''
 });
 
 const playlist = ref([]);
@@ -153,8 +155,18 @@ const _getContent = async () => {
                 model.value.footerText = data.footer_text
                 model.value.bgColor = data.bg_color
                 model.value.fontColor = data.font_color
-                model.value.channels = JSON.parse(data.channel)
+                // model.value.favicon =  data.favicon
+                // model.value.siteSeo =  data.seo_site_meta
 
+                // manipulating the favicon tags, meta tags, title
+                let setFavicon = document.getElementsByTagName('link')[0];
+                let setTitle = document.getElementsByTagName('title')[0];
+                let setMeta = document.getElementsByTagName('meta')[2];
+
+                setFavicon.href = data.favicon != null ? data.favicon : 'https://favicon.ico';
+                setTitle.innerHTML = data.title;
+                setMeta.content = data.seo_site_meta;
+                
                 // assign player behaviour 
                 videoOptions.value.autoplay = data.autoplay == 0 ? false : true
                 videoOptions.value.controls = data.controls == 1 ? true : false
@@ -162,17 +174,41 @@ const _getContent = async () => {
                 videoOptionsCustom.value.title = data.content_title == 1 ? true : false
                 videoOptionsCustom.value.share = data.share_button == 1 ? true : false
 
-                // assign menus
-                for(let m of model.value.channels) {
-                    model.value.menuNavigation.push({
-                        name: m.title,
-                        href: `/w/${route.params.str}/channel/${m.channel_hash}`
-                    })
-                }
-                getPlaylist(model['_rawValue'].channels[0].channel_hash)
+                // getPlaylist(model['_rawValue'].channels[0].channel_hash)
+                getWebsiteChannels(data.whash);
             }else{
                 isContentSet.value = 3;
             }
+        })
+        .catch((err) => {
+            isContentSet.value = 3;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message")) {
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    } else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        })
+}
+
+const getWebsiteChannels = async (whash) => {
+    store
+        .dispatch('getWebsiteChannels', whash)
+        .then((res) => {
+            model.value.channels = res.data;
+
+            // assign menus
+            for(let m of model.value.channels) {
+                model.value.menuNavigation.push({
+                    name: m.title,
+                    href: `/w/${route.params.str}/channel/${m.channel_hash}`
+                })
+            }
+
+            getPlaylist(res.data[0].channel_hash);
         })
         .catch((err) => {
             isContentSet.value = 3;
@@ -271,6 +307,13 @@ const _getPoster = async () => {
         }
     }
     // console.log(model['_rawValue'].channels)
+}
+
+const sendPlayEvent = async (data) => {
+  store.dispatch('sendVideoViews', {
+    videoUrl: data,
+    chash: model['_rawValue'].channels[0].channel_hash
+  })
 }
 
 onMounted(() => {

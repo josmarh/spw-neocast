@@ -1,4 +1,5 @@
 <template>
+
     <div :style="{background: config.bgColor, color: config.fontColor}">
         <header v-if="config.showHeader == 'show'">
             <nav class="bg-white border-gray-200 px-10 sm:px-4 py-2.5 dark:bg-gray-800">
@@ -44,13 +45,18 @@
                                 leave-from-class="transform opacity-100 scale-100" 
                                 leave-to-class="transform opacity-0 scale-95">
                                 <MenuItems 
-                                    class="origin-top-right absolute right-0 mt-2 w-48 
+                                    class="origin-top-right absolute right-0 mt-2 w-48
                                     rounded-md shadow-lg py-1 bg-white ring-1 ring-black 
                                     ring-opacity-5 focus:outline-none z-10 cursor-pointer">
-                                    <MenuItem v-for="item in config.menuNavigation" :key="item.name" v-slot="{ active }">
-                                        <a
+                                    <MenuItem v-for="item in config.menuNavigation" :key="item.name" v-slot="{  }">
+                                        <a 
                                             :href="item.href" 
-                                            :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">
+                                            :class="[
+                                                item.href.split('channel/')[1] == $route.params.chash
+                                                ? 'bg-gray-100' 
+                                                : '', 
+                                                'block px-4 py-2 text-sm text-gray-700'
+                                            ]">
                                             {{ item.name }}
                                         </a>
                                     </MenuItem>
@@ -64,7 +70,7 @@
         <main :class="[config.pageLayout == 'fixed' ? 'container xl:m-10 sm:m-10' : 'container-fluid mt-5']">
             <slot></slot>
         </main>
-        <footer class="p-4 mt-12 bg-white shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">
+        <footer class="p-4 mt-10 bg-white shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800">
             <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
                 <span v-if="config.footerText">
                     &copy; {{new Date().getFullYear()}} {{config.footerText}}
@@ -85,6 +91,8 @@ import { MenuIcon } from '@heroicons/vue/outline'
 const props = defineProps({
     config: Object,
 });
+
+
 
 // const userNavigation = [
 //   { name: 'Your Profile', href: '#' },

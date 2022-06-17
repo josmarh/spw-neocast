@@ -300,6 +300,12 @@ const store = createStore({
                 return data;
             })
         },
+        getWebsiteChannels({ }, whash){
+            return axiosClient.get(`website/channels/${whash}`)
+            .then(({data}) => {
+                return data;
+            })
+        }
     },
     mutations: {
         setWebsites: (state, data) => {

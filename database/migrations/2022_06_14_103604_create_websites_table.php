@@ -35,6 +35,8 @@ return new class extends Migration
             $table->unSignedBigInteger('user_id');
             $table->timestamps();
             $table->index(['whash']);
+            $table->unique(['url_path']);
+
         });
     }
 

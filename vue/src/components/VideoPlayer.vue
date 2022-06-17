@@ -1,14 +1,16 @@
 <template>
-  <div class="grid grid-cols-12">
+  <div class="grid grid-cols-12 gap-1">
     <div class="col-span-9">
-      <div class="container" >
-        <video ref="videoPlayer" class="video-js vjs-big-play-centered h-[20rem]"></video>
+      <div class="container">
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered"></video>
         <div class="overlay">
           {{ videoName }}
         </div>
       </div>
     </div>
-    <div class="vjs-playlist col-span-3 overflow-y-scroll scroll-smooth scroller h-[20rem]"></div>
+    <div class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth scroller"
+      :class="[playlistOptions.length <= 2 ? 'player-default-height' : 'player-custom-height']"
+    ></div>
   </div>
 </template>
 
@@ -142,6 +144,12 @@ export default {
     
     this.playerCustomization(playBtn, playerId, pregressBar, sliderBar);
 
+    // playlist customization
+    let videoList = document.getElementsByClassName('vjs-playlist-item-list')[0];
+    videoList.style.paddingLeft = '4px';
+    videoList.style.paddingTop = '4px';
+    // videoList.style.display = 'inline-flex';
+
   },
   beforeDestroy() {
     if (this.player) {
@@ -183,5 +191,12 @@ export default {
     font-size: 20px;
     padding: 10px;
     text-align: left;
+  }
+
+  .player-default-height {
+    height: 100%
+  }
+  .player-custom-height {
+    height: 75%;
   }
 </style>

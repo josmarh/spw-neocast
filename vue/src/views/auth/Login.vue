@@ -91,7 +91,7 @@ function login(ev) {
     .dispatch('login', user)
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.finish()
-      channel();
+      videos();
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail()
@@ -101,6 +101,22 @@ function login(ev) {
         errorMsg.value = err.response.data.error
       }
     })
+}
+
+function videos()
+{
+  store
+    .dispatch('getContents')
+    .then((res) => {
+      if(res.data.length) {
+        channel();
+      }else {
+        router.push({name: 'Welcomev'})
+      }
+    })
+    .catch((err) => {
+      
+    });
 }
 
 function channel() {

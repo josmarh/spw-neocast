@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Http\Resources\WebsiteResource;
+use App\Http\Resources\ChannelResource;
 use App\Models\Websites;
+use App\Models\WebChannels;
+use App\Models\Channels;
+use DB;
 
 class WebsiteController extends Controller
 {
@@ -34,6 +38,10 @@ class WebsiteController extends Controller
         $user = $request->user();
         $relativePath = null;
         $relativePathFav = null;
+
+        $request->validate([
+            'urlPath' => 'required|string|unique:websites,url_path'
+        ]);
 
         if (isset($request->logo)) {
             $relativePath = $this->extractUrl($request->logo);
@@ -63,6 +71,15 @@ class WebsiteController extends Controller
             'whash'         => strtolower(Str::random(26)),
             'user_id'       => $user->id,
         ]);
+
+        if(count($request->channel) > 0) {
+            foreach($request->channel as $ch) {
+                WebChannels::create([
+                    'whash' => $website->whash,
+                    'channel_id' => $ch['id']
+                ]);
+            }
+        }
 
         return response([
             'data'      => new WebsiteResource($website),
@@ -125,6 +142,17 @@ class WebsiteController extends Controller
             'seo_site_meta' => $request->siteMeta,
         ]);
 
+        if(count($request->channel) > 0) {
+            WebChannels::where('whash', $website->whash)->delete();
+
+            foreach($request->channel as $ch) {
+                WebChannels::create([
+                    'whash' => $website->whash,
+                    'channel_id' => $ch['id']
+                ]);
+            }
+        }
+
         return response([
             'data'      => new WebsiteResource($website),
             'message'   => 'Website updated successfully',
@@ -139,6 +167,18 @@ class WebsiteController extends Controller
 
         File::delete(public_path().'/'.$website->logo);
         File::delete(public_path().'/'.$website->favicon);
+
+        if($website->channel != null || $website->channel != '') {
+            $chParser = json_decode($website->channel);
+
+            foreach($chParser as $ch) {
+                $webChannel = WebChannels::where('id', $ch->id)->first();
+                
+                if($webChannel){
+                    $webChannel->delete();
+                }
+            }
+        }
 
         $website->delete();
 
@@ -160,10 +200,24 @@ class WebsiteController extends Controller
         ]); 
     }
 
-    // public function websitePlaylist($urlPath)
-    // {
-        
-    // }
+    public function websiteChannels($whash)
+    {
+        // get channel data
+        $channels = Channels::select(DB::raw('channels.*, count(cpl.id) as total_vidoes, sum(cpl.views) as total_views, cpl.video_thumbnail'))
+            ->leftJoin('channel_playlists as cpl', 'cpl.channel_hash', '=', 'channels.channel_hash')
+            ->whereIn('channels.id', function($query)use($whash) {
+                $query->select('channel_id')
+                    ->from('web_channels')
+                    ->where('whash', $whash);
+            })
+            ->where('cpl.video_thumbnail', '!=', null)
+            ->groupBy('channels.id')
+            ->orderBy('channels.created_at', 'desc')
+            ->with('channel_playlist')
+            ->paginate(10);
+
+        return ChannelResource::collection($channels);
+    }
 
     private function extractUrl($file)
     {
