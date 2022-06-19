@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FileUploads;
 use App\Models\ChannelPlaylist;
+use App\Models\ChannelReport;
 use App\Http\Resources\ContentResource;
 use App\Http\Resources\PlaylistResource;
+use DB;
 
 class ChannelPlaylistController extends Controller
 {
@@ -76,6 +78,10 @@ class ChannelPlaylistController extends Controller
     {
         $content = ChannelPlaylist::findOrFail($cpId);
 
+        $report = ChannelReport::where('channel_hash', $content->channel_hash)
+            ->where('video_id', $content->video_id)
+            ->delete();
+
         $content->delete();
 
         return response([
@@ -91,18 +97,44 @@ class ChannelPlaylistController extends Controller
         $host = $request->getSchemeAndHttpHost();
         $relativePath = str_ireplace($host.'/', '', $videoUrl[0]);
 
+        // check video exists
         $getVideoId = FileUploads::where('file_hash', $relativePath)->first();
-        if($getVideoId){
-            $videoViews = ChannelPlaylist::where('channel_hash', $chash)->where('video_id', $getVideoId->id)->first();
-            if($videoViews){
+
+        if($getVideoId) {
+            // check the video tallies with the channel
+            $videoViews = ChannelPlaylist::where('channel_hash', $chash)
+                ->where('video_id', $getVideoId->id)
+                ->first();
+
+            if($videoViews) {
                 ChannelPlaylist::where('channel_hash', $chash)
                     ->where('video_id', $getVideoId->id)
                     ->update([
                         'views' => $videoViews->views + 1
                     ]);
+                
+                // update report table
+                $viewsToday = ChannelReport::where('channel_hash', $chash)
+                    ->where('video_id', $getVideoId->id)
+                    ->where(DB::raw("date(created_at)"), today())
+                    ->first();
+                
+                if($viewsToday) {
+                    ChannelReport::where('channel_hash', $chash)
+                        ->where('video_id', $getVideoId->id)
+                        ->update([
+                            'views' => $viewsToday->views + 1
+                        ]);
+                } else {
+                    ChannelReport::create([
+                        'channel_hash' => $chash,
+                        'video_id' => $getVideoId->id,
+                        'views' => 1
+                    ]);
+                }
             
                 return response([
-                    'message' => 'views added.',
+                    'message' => 'views updated.',
                     'status' => 'success',
                     'status_code' => 200
                 ]);

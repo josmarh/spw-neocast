@@ -8,6 +8,7 @@ use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/password/update', [AuthController::class, 'updatePassword']);
     Route::post('/uploads', [UploadsController::class, 'fileUpload']);
 
-    Route::get('/videos', [VideoController::class, 'index']);
+    Route::get('videos', [VideoController::class, 'index']);
     Route::group(['prefix' => 'video'], function () {
         Route::put('update', [VideoController::class, 'update']);
         Route::get('download/{id}', [VideoController::class, 'download']);
@@ -37,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('external', [VideoController::class, 'upload']);
     });
 
-    Route::get('/channels', [ChannelController::class, 'index']);
+    Route::get('channels', [ChannelController::class, 'index']);
     Route::group(['prefix' => 'channel'], function () {
         Route::post('store', [ChannelController::class, 'store']);
         Route::get('edit/{chash}', [ChannelController::class, 'edit']);
@@ -51,13 +52,19 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::delete('playlist/delete/{cpId}', [ChannelPlaylistController::class, 'deleteVideo']);
     });
 
-    Route::get('/websites', [WebsiteController::class, 'index']);
+    Route::get('websites', [WebsiteController::class, 'index']);
     Route::group(['prefix' => 'website'], function () {
         Route::post('store', [WebsiteController::class, 'store']);
         Route::get('edit/{whash}', [WebsiteController::class, 'edit']);
         Route::put('update/{id}', [WebsiteController::class, 'update']);
         Route::delete('delete/{id}', [WebsiteController::class, 'delete']);
     });
+
+    Route::group(['prefix' => 'report'], function () {
+        Route::get('card', [ReportController::class, 'cardReport']);
+        Route::get('chart', [ReportController::class, 'chartReport']);
+    });
+
 });
 
 Route::post('register', [AuthController::class, 'register']);

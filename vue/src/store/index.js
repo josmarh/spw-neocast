@@ -305,7 +305,24 @@ const store = createStore({
             .then(({data}) => {
                 return data;
             })
-        }
+        },
+        getCardReport({ }){
+            return axiosClient.get(`report/card`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getChartReport({ }, queryParams){
+            return axiosClient.get(`report/chart`, {
+                params: {
+                    chash: queryParams.chash.channel_hash,
+                    period: queryParams.period.val
+                }
+            })
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setWebsites: (state, data) => {

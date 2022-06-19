@@ -44,6 +44,10 @@ class ChannelController extends Controller
         $user = $request->user();
         $relativePath = null;
 
+        $request->validate([
+            'title' => 'required|string|unique:channels,title'
+        ]);
+
         if (isset($request->logo)) {
             $relativePath = $this->extractUrl($request->logo);
         }

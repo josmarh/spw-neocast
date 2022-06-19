@@ -82,15 +82,15 @@ class UploadsController extends Controller
 
     public function generateThumbnail($file)
     {
-        $thumbnail = Str::random();
+        $thumbnail = Str::random().'.png';
         $filePath = public_path().'/'.$file;
 
         FFMpeg::openUrl($filePath)
             ->getFrameFromString('00:00:05.01')
             ->export()
             ->toDisk('locale')
-            ->save($thumbnail.'.png');
+            ->save($thumbnail);
 
-        return 'video_thumbnail/'.$thumbnail.'.png';
+        return 'video_thumbnail/'.$thumbnail;
     }
 }
