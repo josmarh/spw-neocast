@@ -44,7 +44,7 @@
       <h4 class="text-xl mt-10 font-medium text-gray-900 dark:text-white">Channel  plays</h4>
       <div class="grid xl:grid-cols-12 xl:gap-2 mt-6">
         <div v-if="queryParams.chash" class="col-span-3">
-          <Listbox as="div" v-model="queryParams.chash" @change="changeFilter">
+          <Listbox as="div" v-model="queryParams.chash">
             <div class="mt-1 relative">
               <ListboxButton 
                 class="relative w-full bg-white border border-gray-300 
@@ -106,7 +106,7 @@
           </Listbox>
         </div>
         <div v-if="queryParams.chash" class="col-span-3">
-          <Listbox as="div" v-model="queryParams.period" @change="changeFilter">
+          <Listbox as="div" v-model="queryParams.period">
             <!-- <ListboxLabel class="block text-sm font-medium text-gray-700  mt-6"> Assigned to </ListboxLabel> -->
             <div class="mt-1 relative">
               <ListboxButton 
@@ -174,10 +174,8 @@
               <span class="text-4xl font-medium">{{model.channelTotal}}</span> 
               <span v-if="queryParams.period" class="pl-2 text-gray-500">Plays in {{queryParams.period.name}}</span>
             </div>
-            <div class="mt-6">
-              <ChartComponentVue 
-                :height="chartModel.height" 
-              />
+            <div class="mt-10">
+              <tmc-chartjs-vue :options="model.channelChart" />
             </div>
           </div>
         </div>
@@ -189,7 +187,7 @@
 <script setup>
 import PageComponentVue from '../../components/PageComponent.vue';
 import NotificationVue from '../../components/Notification.vue';
-import ChartComponentVue from '../../components/ChartComponent.vue';
+import tmcChartjsVue from '../../components/tmcChartjs.vue';
 import store from '../../store';
 import { ref } from '@vue/reactivity';
 import { computed, onMounted, watch } from '@vue/runtime-core';
@@ -197,8 +195,6 @@ import { getCurrentInstance } from 'vue';
 import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 import { PaperClipIcon } from '@heroicons/vue/solid';
-import { Bar } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 
 const internalInstance = getCurrentInstance();
 const channels = computed(() => store.state.channels);
@@ -213,6 +209,7 @@ const model = ref({
     {val: 365, name: 'Last 365 days'}
   ],
   channelTotal: 0,
+  channelChart: {}
 });
 
 const queryParams = ref({
@@ -226,9 +223,9 @@ watch(queryParams, (after, before) => {
   }, 2000)
 }, {deep: true})
 
-let chartModel = ref({
-  height: 200,
-})
+// let chartModel = ref({
+//   height: 200,
+// })
 
 let setChartDataCheck = ref(0);
 
@@ -298,6 +295,7 @@ const getChannelsReport = async () => {
       let data = res.data;
 
       model.value.channelTotal = data.total;
+      model.value.channelChart = data.chart;
       setChartDataCheck.value = 2;
       internalInstance.appContext.config.globalProperties.$Progress.finish();
     })
@@ -317,9 +315,9 @@ const getChannelsReport = async () => {
     })
 }
 
-const changeFilter = () => {
-  getChannelsReport();
-}
+// const changeFilter = () => {
+//   getChannelsReport();
+// }
 
 onMounted(() => {
   getCardReport();

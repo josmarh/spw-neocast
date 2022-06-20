@@ -8,6 +8,7 @@ use App\Models\ChannelPlaylist;
 use App\Models\ChannelReport;
 use App\Http\Resources\ContentResource;
 use App\Http\Resources\PlaylistResource;
+use Carbon\Carbon;
 use DB;
 
 class ChannelPlaylistController extends Controller
@@ -96,6 +97,7 @@ class ChannelPlaylistController extends Controller
         $videoUrl = explode('#', $request->videoUrl);
         $host = $request->getSchemeAndHttpHost();
         $relativePath = str_ireplace($host.'/', '', $videoUrl[0]);
+        $todate = Carbon::now();
 
         // check video exists
         $getVideoId = FileUploads::where('file_hash', $relativePath)->first();
@@ -116,12 +118,13 @@ class ChannelPlaylistController extends Controller
                 // update report table
                 $viewsToday = ChannelReport::where('channel_hash', $chash)
                     ->where('video_id', $getVideoId->id)
-                    ->where(DB::raw("date(created_at)"), today())
+                    ->where(DB::raw('date(created_at)'), $todate->toDateString())
                     ->first();
                 
                 if($viewsToday) {
                     ChannelReport::where('channel_hash', $chash)
                         ->where('video_id', $getVideoId->id)
+                        ->where(DB::raw('date(created_at)'), $todate->toDateString())
                         ->update([
                             'views' => $viewsToday->views + 1
                         ]);
@@ -134,7 +137,7 @@ class ChannelPlaylistController extends Controller
                 }
             
                 return response([
-                    'message' => 'views updated.',
+                    'message' => 'views added',
                     'status' => 'success',
                     'status_code' => 200
                 ]);
