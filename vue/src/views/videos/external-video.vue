@@ -10,7 +10,7 @@
                 </div>
                 <div v-if="data.fileurl !== null" class="mt-10  xl:h-[40rem]">
                     <!-- audio element -->
-                    <vue-plyr v-if="data.filename.includes('.mp3')">
+                    <!-- <vue-plyr v-if="data.filename.includes('.mp3')">
                         <audio controls playsinline >
                         <source
                             :src="data.fileurl"
@@ -18,9 +18,9 @@
                             class="pt-20"
                         />
                         </audio>
-                    </vue-plyr>
+                    </vue-plyr> -->
                     <!-- video element -->
-                    <vue-plyr v-else :options="options">
+                    <!-- <vue-plyr v-else :options="options">
                         <video
                         controls
                         playsinline
@@ -37,7 +37,14 @@
                             type="video/mp4"
                         />
                         </video>
-                    </vue-plyr>
+                    </vue-plyr> -->
+                    <video-player 
+                        :options="videoOptions"
+                        :shareOptions="share"
+                        :showShare="videoOptionsCustom.share"
+                        :showTitle="videoOptionsCustom.title"
+                    />
+
                 </div>
                 <div v-if="contentCheck == true" class="flex justify-center items-center mt-12">
                     <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -56,6 +63,7 @@
 import store from "../../store";
 import { ref, onMounted, getCurrentInstance, computed } from "vue";
 import { useRouter, useRoute } from 'vue-router';
+import VideoPlayer from '../../components/VideoPlayer2.vue';
 
 const internalInstance = getCurrentInstance();
 const content = computed(() => store.state.externalContent);
@@ -67,6 +75,43 @@ let errorMsg = ref("");
 let data = ref({
     filename: null,
     fileurl: null,
+});
+let videoShow = ref(0)
+// player setting 
+const videoOptions = ref({
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+  sources: [
+    {
+      src: '',
+      type: 'video/mp4',
+    }
+  ]
+})
+const videoOptionsCustom = ref({
+  title: true,
+  share: true
+})
+const share = ref({
+    socials: ['fbFeed', 'tw'],
+
+    url: '',
+    title: '',
+    description: '',
+    image: 'https://dummyimage.com/1200x630',
+
+    // required for Facebook and Messenger
+    fbAppId: '74883939828939939900',
+    // optional for Facebook
+    redirectUri: window.location.href + '#close',
+
+    // optional for VK
+    isVkParse: true,
+
+    // optinal embed code
+    embedCode : ''
 })
 
 // Get param contents 
@@ -78,6 +123,22 @@ const getExternalContent = async () => {
         internalInstance.appContext.config.globalProperties.$Progress.finish();
         data.value.filename = res.content.file_name
         data.value.fileurl = res.content.file_hash
+
+        const shareUrl = router.resolve({
+            name: 'ShareVideo',
+            params: { str: route.params.str}
+        });
+        const embedUrl = router.resolve({
+            name: 'EmbedVideo',
+            params: { str: route.params.str}
+        });
+        
+        //videojs player settings
+        videoOptions.value.sources[0].src = res.content.file_hash
+        share.value.url = `https://${window.location.host+shareUrl.href}`;
+        share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
+        share.value.title = `Watch "${res.content.file_name}" on `;
+
         if (data.value.fileurl == null){
             contentCheck.value = true
         }

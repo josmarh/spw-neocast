@@ -521,7 +521,7 @@
                         <div class="mt-6 w-full">
                           <div v-if="videoUpdate.contentName !== null" class="share-overlay-container">
                             <!-- audio element -->
-                            <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
+                            <!-- <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
                               <audio controls playsinline >
                                 <source
                                   :src="videoUpdate.contentUrl"
@@ -529,9 +529,9 @@
                                   class="pt-20"
                                 />
                               </audio>
-                            </vue-plyr>
+                            </vue-plyr> -->
                             <!-- video element -->
-                            <vue-plyr v-else :options="options">
+                            <!-- <vue-plyr v-else :options="options">
                               <video
                                 controls
                                 playsinline
@@ -549,7 +549,15 @@
                                   type="video/mp4"
                                 />
                               </video>
-                            </vue-plyr>
+                            </vue-plyr> -->
+                            <div v-if="editVideoShow == 2">
+                              <video-player 
+                                :options="videoOptions"
+                                :shareOptions="share"
+                                :showShare="videoOptionsCustom.share"
+                                :showTitle="videoOptionsCustom.title"
+                              />
+                            </div>
                             <!-- share / embed element -->
                             <div class="mt-3" v-show="sEmbed">
                               <div class="px-4  sm:px-0 sm:flex sm:flex-row-reverse">
@@ -660,7 +668,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="px-4 py-3 sm:px-0 sm:flex sm:flex-row-reverse">
+                          <!-- <div class="px-4 py-3 sm:px-0 sm:flex sm:flex-row-reverse">
                             <button type="button" 
                               class="mt-6 w-full inline-flex justify-center  
                               border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
@@ -669,7 +677,7 @@
                               sm:ml-3 sm:w-auto sm:text-sm" 
                               @click="sEmbed = true" ref="shareButtonRef"
                             >Share / Embed</button>
-                          </div>
+                          </div> -->
                           
                           <div class="relative z-0 w-full mb-6 group mt-6">
                             <input type="text" name="video-name" id="video-name" v-model="videoUpdate.contentName"
@@ -897,7 +905,7 @@
                       <div class="mt-2">
                         <div v-if="videoUpdate.contentName !== null" class="share-overlay-container">
                           <!-- audio element -->
-                          <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
+                          <!-- <vue-plyr v-if="videoUpdate.contentName.includes('.mp3')" >
                             <audio controls playsinline >
                               <source
                                 :src="videoUpdate.contentUrl"
@@ -905,9 +913,9 @@
                                 class="pt-20"
                               />
                             </audio>
-                          </vue-plyr>
+                          </vue-plyr> -->
                           <!-- video element -->
-                          <vue-plyr v-else :options="options">
+                          <!-- <vue-plyr v-else :options="options">
                             <video
                               controls
                               playsinline
@@ -925,7 +933,15 @@
                                 type="video/mp4"
                               />
                             </video>
-                          </vue-plyr>
+                          </vue-plyr> -->
+                          <div v-if="embedVideoShow == 2">
+                              <video-player 
+                                :options="videoOptions"
+                                :shareOptions="share"
+                                :showShare="videoOptionsCustom.share"
+                                :showTitle="videoOptionsCustom.title"
+                              />
+                            </div>
                         </div>
                         <!-- embed settings/twerks -->
                         <div class="grid grid-cols-3 gap-3 mt-4">
@@ -1144,6 +1160,7 @@ import PageComponent from "../../components/PageComponent.vue";
 // import EmbedModal from "../../components/EmbedModal.vue";
 import store from "../../store";
 import Notification from '../../components/Notification.vue';
+import VideoPlayer from '../../components/VideoPlayer2.vue';
 import { ref, onMounted, getCurrentInstance, computed, watch } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
@@ -1165,6 +1182,8 @@ const videoListCheck = ref(0)
 
 let isDisabled = ref(false)
 let externalLink = ref('')
+let editVideoShow = ref(0)
+let embedVideoShow = ref(0)
 
 let videoUpdate = ref({
   contentName: null,
@@ -1180,6 +1199,43 @@ const searchParam = ref({
   tag: null,
   tagMatch: 'any_tag',
   mediaType: ''
+})
+
+// player setting 
+const videoOptions = ref({
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+  sources: [
+    {
+      src: '',
+      type: 'video/mp4',
+    }
+  ]
+})
+const videoOptionsCustom = ref({
+  title: true,
+  share: true
+})
+const share = ref({
+    socials: ['fbFeed', 'tw'],
+
+    url: '',
+    title: '',
+    description: '',
+    image: 'https://dummyimage.com/1200x630',
+
+    // required for Facebook and Messenger
+    fbAppId: '74883939828939939900',
+    // optional for Facebook
+    redirectUri: window.location.href + '#close',
+
+    // optional for VK
+    isVkParse: true,
+
+    // optinal embed code
+    embedCode : ''
 })
 
 const embedFilters = ref({
@@ -1230,6 +1286,13 @@ const embedContent = (cont) => {
   videoUpdate.value.embededFrame = `https://${window.location.host+embedUrl.href}`
   openEmbed.value = true;
   code.value = `<div style='position: relative; padding-bottom: ${embedFilters.value.ratio}; height: 0;'><iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&controls=1&title=1&share=1' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' frameborder='0' allow='autoplay' allowfullscreen></iframe></div>`
+  
+  // videojs player
+  videoOptions.value.sources[0].src = cont.file_hash;
+  share.value.url = `https://${window.location.host+shareUrl.href}`;
+  share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
+  share.value.title = `Watch "${cont.file_name}" on `;
+  embedVideoShow.value = 2;
 }
 
 const searchContent = async (item) => {
@@ -1438,6 +1501,13 @@ const editVideo = (cont) => {
   videoUpdate.value.externalUrl = `https://${window.location.host+shareUrl.href}` // external sharing
   videoUpdate.value.embededFrame = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
   sEmbed.value = false
+
+  // videojs player
+  videoOptions.value.sources[0].src = cont.file_hash;
+  share.value.url = `https://${window.location.host+shareUrl.href}`;
+  share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
+  share.value.title = `Watch "${cont.file_name}" on `;
+  editVideoShow.value = 2;
 
   if(cont.tags == null) {
     videoUpdate.value.videoTag = []
