@@ -351,9 +351,15 @@
                 </span>
                 <div class="p-5">
                   <!-- Content Title -->
-                  <p class="font-normal mb-3 text-sm text-gray-700 dark:text-gray-400" :title="cont.file_name">
-                    {{ cont.file_name.replace(/(.{27})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'+cont.media_length}}
-                  </p>
+                  <div class="flex justify-between">
+                    <span class="font-normal mb-3 text-sm text-gray-700 dark:text-gray-400" :title="cont.file_name">
+                      {{ cont.file_name.replace(/(.{22})..+/, "$1…") +'&nbsp;&nbsp;&nbsp;'}}
+                    </span>
+                    <span class="font-normal mb-3 text-sm text-gray-700 dark:text-gray-400">
+                      {{cont.media_length}}
+                    </span>
+                  </div>
+                  
                   <div class="flex mb-2 justify-center">
                     <!-- Edit video btn -->
                     <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip-default">
@@ -1342,34 +1348,38 @@ const addExternalContent = async (ev) => {
   ev.preventDefault();
   isDisabled.value = true;
 
-  if ( !isValidURL(externalLink.value) || !externalLink.value.includes('.m3u8')){
-    errorMsg.value = 'Insert a valid URL, example: "https://yourcdn.com/video.m3u8".';
+  if ( !isValidURL(externalLink.value) || !externalLink.value.includes('.m3u8')) {
+    store.dispatch("setErrorNotification", 'Insert a valid URL, example: "https://yourcdn.com/video.m3u8".');
     isDisabled.value = false;
     return false;
   }
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+  internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+  await store
+    .dispatch('addExternalContent', {link: externalLink.value})
+    .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.increase(10);
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(20);
+      externalLink.value = '';
+      isDisabled.value = false;
+      store.dispatch("setSuccessNotification", res.status);
+      store.dispatch("getContents")
+      internalInstance.appContext.config.globalProperties.$Progress.increase(10);
+      internalInstance.appContext.config.globalProperties.$Progress.decrease(20);
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+    })
+    .catch(err => {
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      isDisabled.value = false;
 
-  // store
-  //   .dispatch('addExternalContent', {link: externalLink.value})
-  //   .then((res) => {
-  //     internalInstance.appContext.config.globalProperties.$Progress.decrease(10);
-  //     externalLink.value = '';
-  //     isDisabled.value = false;
-  //     successMsg.value = res.message
-  //     store.dispatch("getContents")
-  //     internalInstance.appContext.config.globalProperties.$Progress.finish();
-  //   })
-  //   .catch(err => {
-  //     internalInstance.appContext.config.globalProperties.$Progress.fail();
-  //     isDisabled.value = false;
-
-  //     if(err.response.data) {
-  //       if (err.response.data.hasOwnProperty('message')){
-  //         errorMsg.value = err.response.data.message
-  //       }else {
-  //         errorMsg.value = err.response.data.error
-  //       }
-  //     }
-  //   })
+      if(err.response.data) {
+        if (err.response.data.hasOwnProperty('message')){
+          store.dispatch("setErrorNotification", err.response.data.message);
+        }else {
+          store.dispatch("setErrorNotification", err.response.data.error);
+        }
+      }
+    })
 }
 
 // Get all contents 
@@ -1436,7 +1446,8 @@ const downloadContent = async (cont) => {
     .dispatch("downloadContent", cont.id)
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.finish();
-      forceFileDownload(res, cont.file_name)
+      let fileExt = cont.file_hash.replace('http://127.0.0.1:8000/uploads/', '');
+      forceFileDownload(res, cont.file_name, fileExt.split('.')[1])
     })
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -1565,11 +1576,11 @@ const socialShare = (shareLink, contentName, platform) => {
   }
 }
 
-const forceFileDownload = (response, filename) => {
+const forceFileDownload = (response, filename, fhash) => {
   const url = window.URL.createObjectURL(new Blob([response]))
   const link = document.createElement('a')
   link.href = url
-  link.setAttribute('download', filename) //or any other extension
+  link.setAttribute('download', `${filename}.${fhash}`) //or any other extension
   document.body.appendChild(link)
   link.click()
 }

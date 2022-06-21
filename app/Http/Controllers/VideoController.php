@@ -104,7 +104,9 @@ class VideoController extends Controller
             'Content-Type: audio/3gpp',
         );
 
-        return response()->download(public_path().'/'.$content->file_hash, $content->file_name, $headers );
+        $fileExt = explode('.', $content->file_hash);
+
+        return response()->download(public_path().'/'.$content->file_hash, $content->file_name.'.'.$fileExt[1], $headers );
     }
 
     public function upload(Request $request) // work in progress

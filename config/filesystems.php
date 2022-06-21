@@ -57,9 +57,14 @@ return [
         ],
 
         // custom added
-        'locale' => [
+        'thumnail' => [
             'driver' => 'local',
             'root' => public_path('video_thumbnail'),
+            'throw' => false,
+        ],
+        'video' => [
+            'driver' => 'local',
+            'root' => public_path('uploads'),
             'throw' => false,
         ]
 

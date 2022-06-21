@@ -49,6 +49,41 @@ class UploadsController extends Controller
         ]);
     }
 
+    public function linkUpload(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'link' => 'required|url'
+        ]);
+
+        $relativePath = $this->convertm3u8($request->link);
+        $thumbnail = $this->generateThumbnail($relativePath);
+        $linkArr = explode('/', $request->link);
+        $arrLen = count($linkArr) -1;
+
+        $fileType = explode('.', $linkArr[$arrLen]);
+        $fileSize = filesize($relativePath);
+        $duration = $this->getDuration($relativePath);
+
+        fileUploads::create([
+            'file_name' => $linkArr[$arrLen],
+            'file_hash' => $relativePath,
+            'file_size' => $fileSize,
+            'file_type' => 'video/'.$fileType[1],
+            'media_length' => $duration,
+            'upload_types' => 'external links',
+            'vhash' => strtolower(Str::random(32)),
+            'thumbnail' => $thumbnail,
+            'user_id' => $user->id
+        ]);
+
+        return response([
+            'status' => 'File uploaded successfully',
+            'status_code' => 201
+        ]);
+    }
+
     private function extractUrl($file)
     {
         // check if it's a valid base64 string
@@ -80,17 +115,52 @@ class UploadsController extends Controller
         return $relativePath;
     }
 
-    public function generateThumbnail($file)
+    public function generateThumbnail($filePath)
     {
+        $file = explode('/', $filePath);
         $thumbnail = Str::random().'.png';
-        $filePath = public_path().'/'.$file;
 
-        FFMpeg::openUrl($filePath)
+        FFMpeg::fromDisk('video')
+            ->open($file[1])
             ->getFrameFromString('00:00:05.01')
             ->export()
-            ->toDisk('locale')
+            ->toDisk('thumnail')
             ->save($thumbnail);
 
         return 'video_thumbnail/'.$thumbnail;
+    }
+
+    public function convertm3u8($file)
+    {
+        $dir = 'uploads/';
+        $video = Str::random().'.mp4';
+        $relativePath = $dir . $video;
+
+        try {
+
+            shell_exec('C:\ffmpeg\bin\ffmpeg.exe -i "'.$file.'" -bsf:a aac_adtstoasc -vcodec copy -c copy -crf 50 '.$relativePath);
+
+        } catch (\Throwable $th) {
+            
+            throw $th;
+        }
+
+        return $relativePath;
+    }
+
+    public function getDuration($file)
+    {
+        $file = explode('/', $file);
+        $media = FFMpeg::fromDisk('video')->open($file[1]);
+
+        $durationInMiliseconds = $media->getDurationInSeconds();
+
+        $duration = gmdate("H:i:s", $durationInMiliseconds);
+
+        if (explode(':', $duration)[0] == '00') {
+            $duration = gmdate("i:s", $durationInMiliseconds);
+        }
+
+        return $duration;
     }
 }
