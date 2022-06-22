@@ -107,6 +107,7 @@
                     {{item.title}}
                   </th>
                   <td class="px-6 py-4">
+                    <div v-if="!JSON.parse(item.channel).length"><em>No channels added</em></div>
                     <div v-for="c in JSON.parse(item.channel)" :key="c.id">
                       {{c.title}},
                     </div>
@@ -299,14 +300,15 @@ const _getWebsites = async () => {
     .catch((err) => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
       dataCheck.value = 3;
+
       if(err.response) {
-          if (err.response.data) {
-              if (err.response.data.hasOwnProperty("message")) {
-                  store.dispatch("setErrorNotification", err.response.data.message);
-              } else {
-                  store.dispatch("setErrorNotification", err.response.data.error);
-              }
+        if (err.response.data) {
+          if (err.response.data.hasOwnProperty("message")) {
+            store.dispatch("setErrorNotification", err.response.data.message);
+          } else {
+            store.dispatch("setErrorNotification", err.response.data.error);
           }
+        }
       }
     })
 }
@@ -354,6 +356,8 @@ const deleteConfirm = (data) => {
 }
 
 const _delete = async (id) => {
+  internalInstance.appContext.config.globalProperties.$Progress.start();
+
   await store
     .dispatch('deleteWebsite', id)
     .then((res) => {

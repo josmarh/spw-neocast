@@ -36,7 +36,7 @@
                                 Add Channel
                             </button>
 
-                            <p class="text-sm mt-6" v-if="!model.channel.length">No channel added yet</p>
+                            <p class="text-sm mt-6" v-if="!model.channel.length"><em>No channel added yet</em></p>
                             <div class="mt-6" v-if="model.channel.length">
                                 <ul class="w-auto text-sm text-gray-900 bg-white border border-gray-200  dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                     <li v-for="c in model.channel" :key="c.id"

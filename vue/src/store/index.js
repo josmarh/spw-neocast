@@ -29,6 +29,11 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        liveStream: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -323,8 +328,50 @@ const store = createStore({
                     return data;
                 })
         },
+        liveStreams({ commit }, {url = null} = {}){
+            url = url || '/livestreams'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setliveStreams', data)
+                    return data;
+                })
+        },
+        liveStreamFilter({ commit }, params){
+            return axiosClient.get(`/livestreams?title=${params}`)
+                .then(({data}) => {
+                    commit('setliveStreams', data)
+                    return data;
+                })
+        },
+        liveStreamCreate({  }, payload){
+            return axiosClient.post(`/livestream/create`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        liveStreamEdit({ }, lhash){
+            return axiosClient.get(`/livestream/edit/${lhash}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        liveStreamUpdate({ }, payload){
+            return axiosClient.put(`/livestream/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        liveStreamDelete({ }, id){
+            return axiosClient.delete(`/livestream/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
+        setliveStreams: (state, data) => {
+            state.liveStream = data;
+        },
         setWebsites: (state, data) => {
             state.websites = data;
         },

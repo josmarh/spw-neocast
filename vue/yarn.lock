@@ -111,6 +111,11 @@
   "resolved" "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.11.tgz"
   "version" "7.0.11"
 
+"@types/uuid@^8.3.4":
+  "integrity" "sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw=="
+  "resolved" "https://registry.npmjs.org/@types/uuid/-/uuid-8.3.4.tgz"
+  "version" "8.3.4"
+
 "@videojs/http-streaming@2.14.2":
   "integrity" "sha512-K1raSfO/pq5r8iUas3OSYni0kXOj91n8ealIpV02khghzGv9LQ6O3YUqYd/eAhJ1HIrmZWOnrYpK/P+mhUExXQ=="
   "resolved" "https://registry.npmjs.org/@videojs/http-streaming/-/http-streaming-2.14.2.tgz"
@@ -1468,6 +1473,11 @@
   "resolved" "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   "version" "1.0.2"
 
+"uuid@^8.3.2":
+  "integrity" "sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg=="
+  "resolved" "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
+  "version" "8.3.2"
+
 "vanilla-sharing@^5.3.2":
   "integrity" "sha512-9VTRemEqj/EV7qzeGLuHatrULgJ0crUeeRxf5kmL/jvGRMS4gsKIr08godgAA0bTdIRUdJsnoLJXLucXwMy93g=="
   "resolved" "https://registry.npmjs.org/vanilla-sharing/-/vanilla-sharing-5.7.0.tgz"
@@ -1615,7 +1625,15 @@
   dependencies:
     "is-plain-object" "5.0.0"
 
-"vue@^2.0.0 || ^3.0.0", "vue@^2.6.0 || ^3.2.0", "vue@^2.6.4", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.2", "vue@^3.0.5", "vue@^3.2.0", "vue@^3.2.21", "vue@^3.2.25", "vue@^3.2.31", "vue@^3.2.6", "vue@>= 3", "vue@>=3.0.0", "vue@3.2.33":
+"vue-uuid@^3.0.0":
+  "integrity" "sha512-+5DP857xVmTHYd00dMC1c1gVg/nxG6+K4Lepojv9ckHt8w0fDpGc5gQCCttS9D+AkSkTJgb0cekidKjTWu5OQQ=="
+  "resolved" "https://registry.npmjs.org/vue-uuid/-/vue-uuid-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "@types/uuid" "^8.3.4"
+    "uuid" "^8.3.2"
+
+"vue@^2.0.0 || ^3.0.0", "vue@^2.6.0 || ^3.2.0", "vue@^2.6.4", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.2", "vue@^3.0.5", "vue@^3.2.0", "vue@^3.2.21", "vue@^3.2.25", "vue@^3.2.31", "vue@^3.2.6", "vue@>= 3", "vue@>= 3.0.0", "vue@>=3.0.0", "vue@3.2.33":
   "integrity" "sha512-si1ExAlDUrLSIg/V7D/GgA4twJwfsfgG+t9w10z38HhL/HA07132pUQ2KuwAo8qbCyMJ9e6OqrmWrOCr+jW7ZQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-3.2.33.tgz"
   "version" "3.2.33"

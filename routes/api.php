@@ -9,6 +9,7 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LiveStreamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,14 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('edit/{whash}', [WebsiteController::class, 'edit']);
         Route::put('update/{id}', [WebsiteController::class, 'update']);
         Route::delete('delete/{id}', [WebsiteController::class, 'delete']);
+    });
+
+    Route::get('livestreams', [LiveStreamController::class, 'index']);
+    Route::group(['prefix' => 'livestream'], function () {
+        Route::post('create', [LiveStreamController::class, 'store']);
+        Route::get('edit/{lhash}', [LiveStreamController::class, 'edit']);
+        Route::put('update/{id}', [LiveStreamController::class, 'update']);
+        Route::delete('delete/{id}', [LiveStreamController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'report'], function () {

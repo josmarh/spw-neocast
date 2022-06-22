@@ -984,8 +984,8 @@
                             <div v-if="embedFilters.isPicked == 'responsive'" class="mt-5">
                               <select
                                 v-model="embedFilters.ratio"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                                focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
+                                focus:ring-blue-500 focus:border-blue-500 block xl:w-1/2 p-2.5 dark:bg-gray-700 
                                 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
                                 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                               >
@@ -993,7 +993,7 @@
                                 <option value="75%">4:3</option>
                                 <option value="100%">1:1</option>
                               </select>
-                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
+                              <label class="block mb-2 mt-2  text-sm font-medium text-gray-900 dark:text-gray-400">
                                 Aspect Ratio
                               </label>
                             </div>
@@ -1003,7 +1003,7 @@
                                   <div class="">
                                     <input type="text" id="width" v-model="embedFilters.pixelWid"
                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
-                                      rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 
+                                      focus:ring-blue-500 focus:border-blue-500 block w-full 
                                       p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
                                       dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     >
@@ -1014,14 +1014,14 @@
                                   <div class="">
                                     <input type="text" id="length" v-model="embedFilters.pixelLen"
                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
-                                      rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 
+                                      focus:ring-blue-500 focus:border-blue-500 block w-full 
                                       p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
                                       dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     >
                                   </div>
                                 </div>
                               </div>
-                              <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Pixels</label>
+                              <label class="block mb-2 mt-2 text-sm font-medium text-gray-900 dark:text-gray-400">Pixels</label>
                             </div>
                           </div>
                           <div>
@@ -1255,7 +1255,7 @@ const embedFilters = ref({
   sContentTitle: true,
   sShare: true
 })
-const code = ref(`<div style='position: relative; padding-bottom: ${embedFilters.value.ratio}; height: 0;'><iframe src='https://player.viloud.tv/embed/video/311c6d3890a9ecebb200f8d2eb473367?autoplay=0&volume=1&controls=1&title=1&share=1' style='position: absolute; top: 0; left: 0; width: 100%; height: 100%;' frameborder='0' allow='autoplay' allowfullscreen></iframe></div>`)
+const code = ref('')
 
 watch(embedFilters, (after, before) => {
   embedCode(after)

@@ -75,6 +75,7 @@ class UploadsController extends Controller
             'upload_types' => 'external links',
             'vhash' => strtolower(Str::random(32)),
             'thumbnail' => $thumbnail,
+            'external_video_link' => $request->link,
             'user_id' => $user->id
         ]);
 

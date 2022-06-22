@@ -18,6 +18,8 @@ import ShareVideo from '../views/videos/external-video.vue'
 import EmbedVideo from '../views/videos/embeded-video.vue'
 import Uploads from '../views/uploads/index.vue'
 import LiveStream from '../views/livestream/index.vue'
+import LiveStreamEdit from '../views/livestream/edit.vue'
+import LiveEmbed from '../views/livestream/embed-live.vue'
 import Website from '../views/websites/index.vue'
 import EditWebsite from '../views/websites/edit.vue'
 import CreateWebsite from '../views/websites/create.vue'
@@ -57,6 +59,7 @@ const routes = [
             {path: '/contents', name: 'Videos', component: Videos},
             {path: '/uploads', name: 'Uploads', component: Uploads},
             {path: '/livestream', name: 'LiveStream', component: LiveStream},
+            {path: '/livestream/:hash', name: 'LiveStreamEdit', component: LiveStreamEdit},
             {path: '/website', name: 'Website', component: Website},
             {path: '/website/new', name: 'CreateWebsite', component: CreateWebsite},
             {path: '/website/:whash', name: 'EditWebsite', component: EditWebsite},
@@ -75,6 +78,7 @@ const routes = [
         component: WebPage,
     },
     { path: '/w/:str/channel/:chash', name: 'WebPageSingle', component: WebPageSingle },
+    { path: '/embed/live/:lhash', name: 'LiveEmbed', component: LiveEmbed },
 ];
 
 const router = createRouter({
