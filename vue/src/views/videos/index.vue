@@ -941,13 +941,13 @@
                             </video>
                           </vue-plyr> -->
                           <div v-if="embedVideoShow == 2">
-                              <video-player 
-                                :options="videoOptions"
-                                :shareOptions="share"
-                                :showShare="videoOptionsCustom.share"
-                                :showTitle="videoOptionsCustom.title"
-                              />
-                            </div>
+                            <video-player 
+                              :options="videoOptions"
+                              :shareOptions="share"
+                              :showShare="videoOptionsCustom.share"
+                              :showTitle="videoOptionsCustom.title"
+                            />
+                          </div>
                         </div>
                         <!-- embed settings/twerks -->
                         <div class="grid grid-cols-3 gap-3 mt-4">
@@ -1225,23 +1225,23 @@ const videoOptionsCustom = ref({
   share: true
 })
 const share = ref({
-    socials: ['fbFeed', 'tw'],
+  socials: ['fbFeed', 'tw'],
 
-    url: '',
-    title: '',
-    description: '',
-    image: 'https://dummyimage.com/1200x630',
+  url: '',
+  title: '',
+  description: '',
+  image: 'https://dummyimage.com/1200x630',
 
-    // required for Facebook and Messenger
-    fbAppId: '74883939828939939900',
-    // optional for Facebook
-    redirectUri: window.location.href + '#close',
+  // required for Facebook and Messenger
+  fbAppId: '74883939828939939900',
+  // optional for Facebook
+  redirectUri: window.location.href + '#close',
 
-    // optional for VK
-    isVkParse: true,
+  // optional for VK
+  isVkParse: true,
 
-    // optinal embed code
-    embedCode : ''
+  // optinal embed code
+  embedCode : ''
 })
 
 const embedFilters = ref({

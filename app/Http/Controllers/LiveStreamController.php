@@ -57,9 +57,24 @@ class LiveStreamController extends Controller
         return new LiveStreamResource($liveStream);
     }
 
-    public function update(Request $request, $lhash)
+    public function update(Request $request, $id)
     {
+        $liveStream = LiveStream::findOrFail($id);
 
+        $liveStream->update([
+            'title' => $request->title,
+            'channels' => json_encode($request->channel),
+            'stream_record' => $request->record_stream,
+            'broadcast_signal' => $request->bsignal,
+            'stream_key' => $request->streamKey,
+            'live_status' => $request->liveStatus,
+        ]);
+
+        return response([
+            'data' => new LiveStreamResource($liveStream),
+            'message' => 'success',
+            'status_code' => 200,
+        ]);
     }
 
     public function delete($id)

@@ -20,6 +20,7 @@ import Uploads from '../views/uploads/index.vue'
 import LiveStream from '../views/livestream/index.vue'
 import LiveStreamEdit from '../views/livestream/edit.vue'
 import LiveEmbed from '../views/livestream/embed-live.vue'
+import LiveShare from '../views/livestream/share-live.vue'
 import Website from '../views/websites/index.vue'
 import EditWebsite from '../views/websites/edit.vue'
 import CreateWebsite from '../views/websites/create.vue'
@@ -79,6 +80,7 @@ const routes = [
     },
     { path: '/w/:str/channel/:chash', name: 'WebPageSingle', component: WebPageSingle },
     { path: '/embed/live/:lhash', name: 'LiveEmbed', component: LiveEmbed },
+    { path: '/watch/live/:lhash', name: 'LiveShare', component: LiveShare },
 ];
 
 const router = createRouter({

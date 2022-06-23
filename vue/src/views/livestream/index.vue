@@ -315,7 +315,7 @@ let liveModel = ref({
 
 watch(nameFilter, (after, before) => {
   setTimeout(() => {
-    // _filters(after)
+    _filters(after)
   }, 2000)
 })
 
