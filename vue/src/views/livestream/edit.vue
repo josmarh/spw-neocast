@@ -23,7 +23,7 @@
             <!-- main section -->
             <div class="grid xl:grid-cols-12 xl:gap-6">
                 <div class="col-span-6">
-                    <!-- <div class="p-4 w-full bg-white border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700"> -->
+                    <div v-if="model.streamKey != ''">
                         <video-player 
                             :options="videoOptions"
                             :shareOptions="share"
@@ -31,7 +31,7 @@
                             :showTitle="videoOptionsCustom.title"
                             
                         />
-                    <!-- </div> -->
+                    </div>
                     <div class="p-4 w-full mt-8 bg-white border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                         <h5 class="mb-2 text-xl font-semibold text-gray-900 dark:text-white">Streaming Settings</h5>
                         <div class="flex mt-6">
@@ -558,16 +558,17 @@ let embedLink = ref('')
 let shareLink = ref('')
 const code = ref('')
 const videoOptions = ref({
-  autoplay: false,
-  controls: true,
-  muted: false,
-  loop: false,
-  sources: [
-    {
-      src: 'https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8',
-      type: 'application/x-mpegURL',
-    }
-  ]
+    autoplay: false,
+    controls: true,
+    muted: false,
+    loop: false,
+    sources: [
+        {
+        //   src: 'https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8',
+            src: '',
+            type: 'application/x-mpegURL',
+        }
+    ]
 })
 const videoOptionsCustom = ref({
   title: true,
@@ -594,7 +595,7 @@ const share = ref({
 })
 
 watch(embedFilters, (after, before) => {
-  embedCode(after)
+    embedCode(after)
 }, {deep: true})
 
 watch(checkboxAllChannel, (after, before) => {
@@ -642,6 +643,8 @@ const getLiveStreamContent = () => {
                 share.value.url = `https://${window.location.host+shareUrl.href}`;
                 share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
                 share.value.title = `Watch "${model.value.title}" Live on `;
+
+                videoOptions.value.sources[0].src = `http://192.168.43.142:3070/hls/${data.stream_key}.m3u8`;
             }
         })
         .catch((err) => {
@@ -686,6 +689,18 @@ const updateStream = async () => {
             }
         }
     })
+}
+
+const checkStreamUri = async () => {
+    setTimeout(() => {
+        fetch(`http://192.168.43.142:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
+        .then((res) => {
+            console.log(res)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }, 2000)
 }
 
 const broadcastSignal = () => {

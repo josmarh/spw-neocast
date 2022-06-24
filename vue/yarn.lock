@@ -116,7 +116,7 @@
   "resolved" "https://registry.npmjs.org/@types/uuid/-/uuid-8.3.4.tgz"
   "version" "8.3.4"
 
-"@videojs/http-streaming@2.14.2":
+"@videojs/http-streaming@^2.14.2", "@videojs/http-streaming@2.14.2":
   "integrity" "sha512-K1raSfO/pq5r8iUas3OSYni0kXOj91n8ealIpV02khghzGv9LQ6O3YUqYd/eAhJ1HIrmZWOnrYpK/P+mhUExXQ=="
   "resolved" "https://registry.npmjs.org/@videojs/http-streaming/-/http-streaming-2.14.2.tgz"
   "version" "2.14.2"
