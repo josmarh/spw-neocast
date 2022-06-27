@@ -367,6 +367,12 @@ const store = createStore({
                     return data;
                 })
         },
+        liveStreamVideo({ }, payload){
+            return axiosClient.post(`/livestream/store/live`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setliveStreams: (state, data) => {

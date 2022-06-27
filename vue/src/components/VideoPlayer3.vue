@@ -121,7 +121,7 @@ export default {
       let tempName = arr[len].split('#')[0]
 
       if(this.showTitle == true){
-        this.getVideoTitle(tempName)
+        // this.getVideoTitle(tempName)
       }
     })
 

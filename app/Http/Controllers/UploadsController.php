@@ -70,7 +70,7 @@ class UploadsController extends Controller
             'file_name' => $linkArr[$arrLen],
             'file_hash' => $relativePath,
             'file_size' => $fileSize,
-            'file_type' => 'video/'.$fileType[1],
+            'file_type' => 'video/mp4',
             'media_length' => $duration,
             'upload_types' => 'external links',
             'vhash' => strtolower(Str::random(32)),

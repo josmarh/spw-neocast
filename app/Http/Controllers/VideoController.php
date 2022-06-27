@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use App\Http\Resources\ContentResource;
 use App\Models\FileUploads;
 use App\Models\ChannelPlaylist;
-use App\Http\Resources\ContentResource;
+use App\Models\LivestreamVideos;
 
 class VideoController extends Controller
 {
@@ -134,6 +135,7 @@ class VideoController extends Controller
     {
         $content = FileUploads::findOrFail($id);
         $video = ChannelPlaylist::where('video_id', $id)->delete();
+        $livestreamVideo = LivestreamVideos::where('video_id', $id)->delete();
 
         File::delete(public_path().'/'.$content->thumbnail);
         File::delete(public_path().'/'.$content->file_hash);

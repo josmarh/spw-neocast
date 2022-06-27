@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('edit/{lhash}', [LiveStreamController::class, 'edit']);
         Route::put('update/{id}', [LiveStreamController::class, 'update']);
         Route::delete('delete/{id}', [LiveStreamController::class, 'delete']);
+        Route::post('store/live', [LiveStreamController::class, 'storeLiveVideo']);
     });
 
     Route::group(['prefix' => 'report'], function () {

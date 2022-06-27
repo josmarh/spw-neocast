@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Resources\LiveStreamResource;
+use App\Http\Resources\LastestStreamsResource;
+use App\Http\Controllers\UploadsController;
 use App\Models\LiveStream;
+use App\Models\LivestreamVideos;
+use App\Models\ChannelPlaylist;
+use App\Models\FileUploads;
+use Carbon\Carbon;
 
 class LiveStreamController extends Controller
 {
@@ -54,7 +60,19 @@ class LiveStreamController extends Controller
     {
         $liveStream = LiveStream::where('lhash', $lhash)->first();
 
-        return new LiveStreamResource($liveStream);
+        // call existing videos associated to this lhash limit 5
+        $latestStreams = LivestreamVideos::select('fu.*', 'livestream_videos.lhash', 'livestream_videos.video_id')
+            ->join('file_uploads as fu', 'fu.id', '=', 'livestream_videos.video_id')
+            ->where('lhash', $lhash)
+            ->orderBy('fu.created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return response([
+            'data' => new LiveStreamResource($liveStream),
+            'latestStreams' => LastestStreamsResource::collection($latestStreams),
+            'status_code' => 200
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -80,5 +98,78 @@ class LiveStreamController extends Controller
     public function delete($id)
     {
         $LiveStream = LiveStream::findOrFail($id);
+
+        // delete from livestream videos tbl
+        LivestreamVideos::where('lhash', $LiveStream->lhash)->delete();
+
+        // delete livestream data
+        $LiveStream->delete();
+
+        return response([
+            'message' => 'Deleted successfully.',
+            'status_code' => 204,
+        ]);
+    }
+
+    public function storeLiveVideo(Request $request, UploadsController $converter)
+    {
+        $user = $request->user();
+        
+        // save to upload table
+        $link = $converter->convertm3u8($request->link);
+        $thumbnail = $converter->generateThumbnail($link);
+        $linkArr = explode('/', $request->link);
+        $arrLen = count($linkArr) -1;
+        $fileType = explode('.', $linkArr[$arrLen]);
+        $fileSize = filesize($link);
+        $duration = $converter->getDuration($link);
+
+        $video = FileUploads::create([
+            'file_name' => 'Live '. Carbon::now()->toDateTimeString(),
+            'file_hash' => $link,
+            'file_size' => $fileSize,
+            'file_type' => 'video/mp4',
+            'media_length' => $duration,
+            'upload_types' => 'hosted video',
+            'vhash' => strtolower(Str::random(32)),
+            'thumbnail' => $thumbnail,
+            'external_video_link' => $request->link,
+            'user_id' => $user->id
+        ]);
+
+        // save to livestream videos
+        if($video){
+            LivestreamVideos::create([
+                'lhash' => $request->lhash,
+                'video_id' => $video->id,
+            ]);
+        }
+
+        // save to channel playlist if channel isset
+        $channels = $request->channel;
+        
+        if(count($channels) > 0) {
+            foreach ($channels as $ch) {
+                ChannelPlaylist::create([
+                    'channel_hash' => $ch->channel_hash,
+                    'video_id' => $video->id,
+                    'video_thumbnail' => $thumbnail,
+                ]);
+            }
+        }
+
+        // call existing videos associated to this lhash limit 5
+        $latestStreams = LivestreamVideos::select('fu.*', 'livestream_videos.lhash', 'livestream_videos.video_id')
+            ->join('file_uploads as fu', 'fu.id', '=', 'livestream_videos.video_id')
+            ->where('lhash', $request->lhash)
+            ->orderBy('fu.created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return response([
+            'message' => 'Live video added',
+            'latestStreams' => LastestStreamsResource::collection($latestStreams),
+            'status_code' => 201,
+        ]);
     }
 }
