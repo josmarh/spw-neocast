@@ -40,7 +40,7 @@
                     </div>
                     <div v-if="streamStatus == 3">
                         <div class="p-20 w-full bg-black border shadow-md sm:p-36 dark:bg-gray-800 dark:border-gray-700 text-center">
-                            <span class="text-red-700 font-medium font-bolder text-4xl">OFFLINE</span>
+                            <span class="text-red-700 font-medium font-bold text-4xl">OFFLINE</span>
                         </div>
                     </div>
                     <div class="p-4 w-full mt-8 bg-white border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
@@ -367,7 +367,7 @@
                                         </div>
                                         <div v-if="streamStatus == 3" class="mt-4">
                                             <div class="p-20 w-full bg-black border shadow-md sm:p-36 dark:bg-gray-800 dark:border-gray-700 text-center">
-                                                <span class="text-red-700 font-medium font-bolder text-4xl">OFFLINE</span>
+                                                <span class="text-red-700 font-medium font-bold text-4xl">OFFLINE</span>
                                             </div>
                                         </div>
                                         <!-- embed settings/twerks -->
@@ -575,7 +575,7 @@ let model = ref({
     bsignal: false,
     record_stream: null,
     streamKey: '',
-    rtmpUrl: 'rtmp://192.168.43.142:2446/app',
+    rtmpUrl: 'rtmp://tubetargeterapp.com:2446/app',
     liveStatus: '',
     latestStreams: []
 });
@@ -686,7 +686,7 @@ const getLiveStreamContent = () => {
                 share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
                 share.value.title = `Watch "${model.value.title}" Live on `;
 
-                videoOptions.value.sources[0].src = `http://192.168.43.142:3070/hls/${data.stream_key}.m3u8`;
+                videoOptions.value.sources[0].src = `http://tubetargeterapp.com:3070/hls/${data.stream_key}.m3u8`;
                 checkStreamUri();
             }
         })
@@ -735,10 +735,14 @@ const updateStream = async () => {
 }
 
 let timeoutStream;
+let saveLiveVideo = ref(0) // 0: default, 1: ready to save, 2: save is ongoing, 3: saved
+let playingLive = ref(0)
+let playingLive2 = ref(0)
+
 const checkStreamUri = () => {
     let lopper = () => {
         timeoutStream = setTimeout( async () => {
-            await fetch(`http://192.168.43.142:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
+            await fetch(`http://tubetargeterapp.com:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
             .then(res => res)
             .then(data => {
                 if(data.status) {
@@ -750,6 +754,41 @@ const checkStreamUri = () => {
                         streamStatus.value = 2;
                         model.value.liveStatus = 'live'
                         // check live status if is not there then download video after 10 sec
+                        let _liveStatus = document.getElementsByClassName('vjs-seek-to-live-control')[0];
+                        let _liveStatus2 = document.getElementsByClassName('vjs-hidden')[0];
+                        
+                        if(_liveStatus){
+                            if(_liveStatus.getAttribute('title').includes('currently playing live')) {
+                                playingLive.value = 1
+                            }
+
+                            if(_liveStatus.getAttribute('title').includes('currently behind live')) {
+                                if(playingLive.value = 1){
+                                    saveLiveVideo.value = 1
+                                } 
+                            }
+                        }
+
+                        if (_liveStatus2) {
+                            playingLive2.value = 1
+                        }else if(!_liveStatus2) {
+                            if( playingLive2.value == 1)
+                                saveLiveVideo.value = 1
+                        }
+
+                        if(saveLiveVideo.value == 1 && playingLive.value == 1) {
+                            // run save
+                            setTimeout(() => {
+                                storeLiveVideo();
+                            }, 10000);
+                        }
+
+                        if(saveLiveVideo.value == 1 && playingLive2.value == 1) {
+                            // run save
+                            setTimeout(() => {
+                                storeLiveVideo();
+                            }, 10000);
+                        }
 
                         lopper();
                     } else if(data.status == 500) {
@@ -772,6 +811,9 @@ const checkStreamUri = () => {
 }
 
 const storeLiveVideo = () => {
+    saveLiveVideo.value = 2
+    playingLive.value = 2
+    playingLive2.value = 2
     store
         .dispatch('liveStreamVideo', {
             link: videoOptions.value.sources[0].src,
@@ -780,7 +822,10 @@ const storeLiveVideo = () => {
         })
         .then((res) => {
             if (res.latestStreams.length > 0){
-                model.value.latestStreams = res.latestStreams
+                model.value.latestStreams = res.latestStream
+                saveLiveVideo.value = 3
+                playingLive.value = 0 
+                playingLive2.value = 0     
             }
         })
         .catch((err) => {

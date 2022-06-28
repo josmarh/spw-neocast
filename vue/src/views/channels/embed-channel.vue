@@ -184,8 +184,8 @@ const sendPlayEvent = async (data) => {
 }
 
 onMounted(() => {
-    getPlaylist();
-    contentSettings();
+  getPlaylist();
+  contentSettings();
 });
 </script>
 

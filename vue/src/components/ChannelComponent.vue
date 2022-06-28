@@ -270,7 +270,35 @@
                                                 <div class="grid grid-cols-3 gap-2 mt-5">
                                                     <div >
                                                         <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Main color</span>
-                                                        <color-picker v-model:pureColor="pureColor" v-model:gradientColor="gradientColor"/>
+                                                        <div class="flex">
+                                                            <span
+                                                                class="inline-flex items-center px-3
+                                                                text-sm text-gray-900 bg-gray-200 
+                                                                border border-gray-300 
+                                                                dark:bg-gray-600 dark:text-gray-400 
+                                                                dark:border-gray-600"
+                                                                :style="{background: channelModel.colorPicker}"
+                                                            ></span>
+                                                            <input type="text" id="bg-color" 
+                                                                class="rounded-none bg-gray-50
+                                                                text-gray-900 block flex-1 min-w-0 
+                                                                text-sm border-gray-300 p-2 border-0"
+                                                                v-model="channelModel.colorPicker"
+                                                                @click="bgPicker.show = true"
+                                                                @blur="bgPicker.show = false"
+                                                            >
+                                                        </div>
+                                                        <ColorPicker
+                                                            class="z-50 absolute "
+                                                            theme="light"
+                                                            :color="channelModel.colorPicker"
+                                                            :sucker-hide="true"
+                                                            :sucker-canvas="bgPicker.suckerCanvas"
+                                                            :sucker-area="bgPicker.suckerArea"
+                                                            @changeColor="changeColor"
+                                                            @openSucker="openSucker"
+                                                            v-show="bgPicker.show == true"
+                                                        />
                                                     </div>
                                                     <div class="col-span-2">
                                                         <div class="relative z-0">
@@ -462,13 +490,12 @@ import VideoPlayer from './VideoPlayer.vue';
 import store from '../store';
 import Notification from './Notification.vue';
 import { ref, watch, getCurrentInstance } from 'vue';
-import { ColorInputWithoutInstance } from "tinycolor2";
 import { useRouter, useRoute } from 'vue-router';
+import { ColorPicker } from 'vue-color-kit';
+import 'vue-color-kit/dist/vue-color-kit.css';
 
 const router = useRouter();
 const internalInstance = getCurrentInstance();
-const pureColor = ref<ColorInputWithoutInstance>("red");
-const gradientColor = ref("linear-gradient(0deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 100%)");
 
 const props = defineProps({
     title: String,
@@ -489,8 +516,34 @@ const channelModel = ref({
     looptimeH: '00',
     looptimeM: '00',
     channelType: props.title,
-    timezone: null
+    timezone: null,
+    colorPicker: '#000000',
+    colorHex: '#000000',
 })
+let bgPicker = ref({
+  color: '#f3f3f3',
+  colorHex: '#f3f3f3',
+  suckerCanvas: null,
+  suckerArea: [],
+  isSucking: false,
+  show: false
+});
+
+const changeColor = (color) => {
+  const { r, g, b, a } = color.rgba
+  bgPicker.value.color = `rgba(${r}, ${g}, ${b}, ${a})`
+  bgPicker.value.colorHex = color.hex
+  channelModel.value.colorPicker = color.hex
+}
+const openSucker = (isOpen) => {
+  if (isOpen) {
+    // ... canvas be created
+    // bgPicker.value.suckerCanvas = canvas
+    // bgPicker.value.suckerArea = [x1, y1, x2, y2]
+  } else {
+    // bgPicker.value.suckerCanvas && bgPicker.value.suckerCanvas.remove
+  }
+}
 
 const lhours = ref([]);
 const lmins = ref([]);
@@ -628,7 +681,6 @@ const share = {
 const postChannel = async () => {
     internalInstance.appContext.config.globalProperties.$Progress.start();
     isDisabled.value = true;
-    let colorPicker = document.querySelector('.current-color').style.background;
 
     await store
         .dispatch('storeChannel', {
@@ -639,7 +691,7 @@ const postChannel = async () => {
             logo: channelModel.value.logo == true ? channelModel.value.image : null,
             logolink: channelModel.value.logoLink,
             logoposition: channelModel.value.logoPosition,
-            color: colorPicker,
+            color: channelModel.value.colorPicker,
             twitter: channelModel.value.twitter,
             privacy: channelModel.value.privacy,
             privacydomain: channelModel.value.privacy == 'anywhere' ? null : channelModel.value.domains.toString(),

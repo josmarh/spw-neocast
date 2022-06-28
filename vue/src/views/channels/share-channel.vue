@@ -39,7 +39,7 @@
 
 <script setup>
 import store from "../../store";
-import VideoPlayer from '../../components/VideoPlayer.vue';
+import VideoPlayer from '../../components/VideoPlayerChannel.vue';
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 

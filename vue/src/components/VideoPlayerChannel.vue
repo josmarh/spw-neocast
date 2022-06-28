@@ -1,16 +1,16 @@
 <template>
-  <div class="">
-    <div class="">
-      <div class="">
-        <video ref="videoPlayer" class="video-js vjs-big-play-centered" data-setup='{"liveui": true}'></video>
+  <div class="grid grid-cols-12 gap-1">
+    <div class="col-span-9">
+      <div class="container">
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered"></video>
         <div class="overlay">
-          <!-- {{ videoName }} -->
+          {{ videoName }}
         </div>
       </div>
     </div>
-    <!-- <div class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth scroller"
+    <div class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth scroller"
       :class="[playlistOptions.length <= 2 ? 'player-default-height' : 'player-custom-height']"
-    ></div> -->
+    ></div>
   </div>
 </template>
 
@@ -25,7 +25,9 @@ import sharecss from 'videojs-share/dist/videojs-share.css';
 import eventTracking from 'videojs-event-tracking';
 import seekButtons from 'videojs-seek-buttons';
 import seekButtonscss from 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
-import store from '../../src/store';
+import store from '../store';
+// import awesomeWatermark from 'videojs-awesome-watermark';
+import 'videojs-watermark';
 
 export default {
   name: 'VideoPlayer',
@@ -121,7 +123,7 @@ export default {
       let tempName = arr[len].split('#')[0]
 
       if(this.showTitle == true){
-        // this.getVideoTitle(tempName)
+        this.getVideoTitle(tempName)
       }
     })
 
@@ -145,10 +147,16 @@ export default {
     this.playerCustomization(playBtn, playerId, pregressBar, sliderBar);
 
     // playlist customization
-    // let videoList = document.getElementsByClassName('vjs-playlist-item-list')[0];
-    // videoList.style.paddingLeft = '4px';
-    // videoList.style.paddingTop = '4px';
+    let videoList = document.getElementsByClassName('vjs-playlist-item-list')[0];
+    videoList.style.paddingLeft = '4px';
+    videoList.style.paddingTop = '4px';
     // videoList.style.display = 'inline-flex';
+
+    // water mark customization
+    const watermarkOptions = {
+      image: 'http://127.0.0.1:8000/channel_logos/CfKKthXGpIaZxhLm.jpeg'
+    };
+    this.player.watermark(watermarkOptions);
 
   },
   beforeDestroy() {

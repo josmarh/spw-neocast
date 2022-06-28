@@ -373,6 +373,12 @@ const store = createStore({
                     return data;
                 })
         },
+        liveStreamWatch({ }, lhash){
+            return axiosClient.get(`/live/watch/${lhash}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setliveStreams: (state, data) => {
