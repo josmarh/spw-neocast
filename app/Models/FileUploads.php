@@ -17,6 +17,7 @@ class FileUploads extends Model
         'file_size',
         'file_type',
         'media_length',
+        'duration_seconds',
         'tags',
         'external_video_link',
         'upload_types',

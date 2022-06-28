@@ -11,6 +11,7 @@ use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Format\Video\X264;
 use Log;
 use URL;
+use Validator;
 
 class UploadsController extends Controller
 {
@@ -19,7 +20,7 @@ class UploadsController extends Controller
         $data = json_encode($request->all());
         $decodeFile = json_decode($data, true);
         $user = $request->user();
-        
+
         foreach($decodeFile['file'] as $f) {
             if (isset($f['url'])) {
                 $relativePath = $this->extractUrl($f['url']);
@@ -33,6 +34,7 @@ class UploadsController extends Controller
                     'file_size' => $f['size'],
                     'file_type' => $f['type'],
                     'media_length' => $f['duration'],
+                    'duration_seconds' => $f['durationInSec'],
                     'upload_types' => 'hosted video',
                     'vhash' => strtolower(Str::random(26)),
                     'thumbnail' => $thumbnail,
@@ -71,7 +73,8 @@ class UploadsController extends Controller
             'file_hash' => $relativePath,
             'file_size' => $fileSize,
             'file_type' => 'video/mp4',
-            'media_length' => $duration,
+            'media_length' => $duration['duration'],
+            'duration_seconds' => $duration['durationInSec'],
             'upload_types' => 'external links',
             'vhash' => strtolower(Str::random(32)),
             'thumbnail' => $thumbnail,
@@ -123,7 +126,7 @@ class UploadsController extends Controller
 
         FFMpeg::fromDisk('video')
             ->open($file[1])
-            ->getFrameFromString('00:00:05.01')
+            ->getFrameFromString('00:00:01.01')
             ->export()
             ->toDisk('thumnail')
             ->save($thumbnail);
@@ -154,14 +157,19 @@ class UploadsController extends Controller
         $file = explode('/', $file);
         $media = FFMpeg::fromDisk('video')->open($file[1]);
 
-        $durationInMiliseconds = $media->getDurationInSeconds();
+        $durationInSec = $media->getDurationInSeconds();
 
-        $duration = gmdate("H:i:s", $durationInMiliseconds);
+        $duration = gmdate("H:i:s", $durationInSec);
 
         if (explode(':', $duration)[0] == '00') {
-            $duration = gmdate("i:s", $durationInMiliseconds);
+            $duration = gmdate("i:s", $durationInSec);
         }
 
-        return $duration;
+        $durations = [
+            'duration' => $duration,
+            'durationInSec' => $durationInSec,
+        ];
+
+        return $durations;
     }
 }

@@ -85,3 +85,4 @@ Route::put('channel/video/track-views/{chash}', [ChannelPlaylistController::clas
 Route::get('video/info', [VideoController::class, 'index']);
 Route::get('website/content/{urlPath}', [WebsiteController::class, 'webContent']);
 Route::get('website/channels/{whash}', [WebsiteController::class, 'websiteChannels']);
+Route::get('live/watch/{lhash}', [LiveStreamController::class, 'edit']);
