@@ -1,8 +1,14 @@
+
 <template>
   <div class="grid grid-cols-12 gap-1">
     <div class="col-span-9">
       <div class="container">
-        <video ref="videoPlayer" class="video-js vjs-big-play-centered"></video>
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered">
+          <p class='vjs-no-js'>
+            To view this video, please enable JavaScript and consider upgrading to a web browser that
+            <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+          </p>
+        </video>
         <div class="overlay">
           {{ videoName }}
         </div>
@@ -13,7 +19,6 @@
     ></div>
   </div>
 </template>
-
 <script>
 import videojs from 'video.js';
 import videocss from 'video.js/dist/video-js.css';
@@ -26,8 +31,12 @@ import eventTracking from 'videojs-event-tracking';
 import seekButtons from 'videojs-seek-buttons';
 import seekButtonscss from 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
 import store from '../store';
-// import awesomeWatermark from 'videojs-awesome-watermark';
-import 'videojs-watermark';
+import awesomeWatermark from 'videojs-awesome-watermark';
+import imacss from 'videojs-ima/dist/videojs.ima.css'
+import 'videojs-contrib-ads';
+import 'videojs-ima';
+// import vast from '@filmgardi/videojs-vast';
+// import logo from 'videojs-logo';
 
 export default {
   name: 'VideoPlayer',
@@ -55,6 +64,18 @@ export default {
     },
     showTitle: {
       type: Boolean
+    },
+    logoOptions: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    playerColor: {
+      type: String
+    },
+    adsTag: {
+      type: String
     }
   },
   data() {
@@ -77,19 +98,19 @@ export default {
       playBtn.style.borderRadius = '0';
 
       playerId.addEventListener('mouseover',function(){
-        playBtn.style.backgroundColor = '#6366F1';
+        playBtn.style.backgroundColor = this.playerColor;
       })
       playerId.addEventListener('mouseleave',function(){
         playBtn.style.backgroundColor = '';
       })
       playBtn.addEventListener('mouseover',function(){
-        playBtn.style.backgroundColor = '#6366F1';
+        playBtn.style.backgroundColor = this.playerColor;
       })
       playBtn.addEventListener('mouseleave',function(){
         playBtn.style.backgroundColor = '';
       })
-      pregressBar.style.backgroundColor = '#6366F1';
-      sliderBar.style.color = '#6366F1';
+      pregressBar.style.backgroundColor = this.playerColor;
+      sliderBar.style.color = this.playerColor;
     }
   },
   mounted() {
@@ -114,7 +135,6 @@ export default {
     let playerId = document.getElementsByTagName('video')[0];
     this.player.eventTracking(true)
     this.player.on('tracking:firstplay', (e, data) => {
-      // console.log(data)
       this.videoTitle = playerId.getAttribute('src');
       this.$emit('playedVideo', this.videoTitle)
 
@@ -150,14 +170,26 @@ export default {
     let videoList = document.getElementsByClassName('vjs-playlist-item-list')[0];
     videoList.style.paddingLeft = '4px';
     videoList.style.paddingTop = '4px';
-    // videoList.style.display = 'inline-flex';
 
     // water mark customization
-    const watermarkOptions = {
-      image: 'http://127.0.0.1:8000/channel_logos/CfKKthXGpIaZxhLm.jpeg'
-    };
-    this.player.watermark(watermarkOptions);
+    if(this.logoOptions.show == true) {
+      this.player.awesomeWatermark(this.logoOptions);
+      setTimeout(() => {
+        document.getElementsByClassName('vjs-watermark-content')[0].style.position = 'absolute';
+        document.getElementsByClassName('vjs-watermark-content')[0].style.top = 0;
+      }, 1500)
+    }
 
+    // ads setup
+    let imaOptions = {
+      adTagUrl: this.adsTag
+    };
+    this.player.ima(imaOptions);
+
+    // let viblast = document.createElement("script");
+    // viblast.setAttribute("type", "text/javascript");
+    // viblast.setAttribute("src", "https://imasdk.googleapis.com/js/sdkloader/ima3.js");
+    // document.head.appendChild(viblast);
   },
   beforeDestroy() {
     if (this.player) {

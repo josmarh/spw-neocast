@@ -16,6 +16,7 @@ class Channels extends Model
         'schedule_duration',
         'start_time',
         'timezone',
+        'logo_enable',
         'logo',
         'logo_link',
         'logo_position',

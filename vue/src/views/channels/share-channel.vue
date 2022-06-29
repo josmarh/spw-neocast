@@ -31,6 +31,9 @@
                     :showShare="true"
                     :showTitle="true"
                     @playedVideo="sendPlayEvent"
+                    :logoOptions="logoOptions"
+                    :playerColor="playerColor"
+                    :adsTag="adsUrl"
                 />
             </div>
         </div>
@@ -39,6 +42,7 @@
 
 <script setup>
 import store from "../../store";
+import NotificationVue from "../../components/Notification.vue";
 import VideoPlayer from '../../components/VideoPlayerChannel.vue';
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from 'vue-router';
@@ -59,13 +63,7 @@ const videoOptions = ref({
   controls: true,
   muted: false,
   loop: false,
-//   playbackRates: [0.5, 1, 1.5, 2],
-//   sources: [
-//     {
-//       src: 'https://muxed.s3.amazonaws.com/ink.mp4',
-//       type: 'video/mp4',
-//     }
-//   ]
+  playbackRates: [0.5, 1, 1.5, 2],
 })
 
 const videoOptionsCustom = ref({
@@ -78,7 +76,7 @@ const playlist = ref([]);
 const share = ref({
     socials: ['fbFeed', 'tw'],
 
-    url: window.location.href,
+    url: '',
     title: '',
     description: '',
     image: 'https://dummyimage.com/1200x630',
@@ -94,6 +92,43 @@ const share = ref({
     // optinal embed code
     embedCode : ''
 })
+
+let logoOptions = ref({
+    type: 'img',
+    image: '',
+    opacity: 0.9,
+    position: '',
+    show: false,
+});
+let playerColor = ref('#6366F1');
+let adsUrl = ref('')
+let twitterHandle = ref('')
+
+const getChannelInfo = () => {
+    store
+        .dispatch('externalChannel', route.params.str)
+        .then((res) => {
+            if(res.data) {
+                logoOptions.value.image = res.data.logo == null ? res.data.logo_link : res.data.logo;
+                logoOptions.value.position = res.data.logo_position == 'left' ? 'top-left' : null;
+                logoOptions.value.show = res.data.logo_enable == 1 ? true : false;
+                twitterHandle.value = res.data.twitter;
+                playerColor.value = res.data.color;
+                adsUrl.value = res.data.ad_tag_url;
+            }
+        })
+        .catch((err) => {
+            if (err.response){
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty('message')){
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    }else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        });
+}
 
 const getPlaylist = async () => {
     playlist.value = [];
@@ -125,7 +160,10 @@ const getPlaylist = async () => {
                 })
             }
             ChannelPlaylistCheck.value = 2;
-            share.value.title = `Watch "${res.data[0].channel_title}" on `;
+            let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
+
+            share.value.title = `Watch "${res.data[0].channel_title}" ${twitter} on `;
+            share.value.url = `${window.location.href}`
             share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.str}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
             data.value.filename = res.data[0].channel_title;
         }else {
@@ -161,6 +199,7 @@ const sendPlayEvent = async (data) => {
 }
 
 onMounted(() => {
+    getChannelInfo();
     getPlaylist();
     contentSettings();
 });

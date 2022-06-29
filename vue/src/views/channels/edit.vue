@@ -444,7 +444,7 @@
                                         <h3 class="flex items-center mb-1 mt-6 text-md font-semibold text-gray-900 dark:text-white">
                                             Ads Monetization
                                         </h3>
-                                        <div class="relative z-0 mt-3">
+                                        <div class="relative z-0 mt-3 mb-4">
                                             <input
                                                 type="url"
                                                 id="ads_tag_url"
@@ -485,6 +485,9 @@
                                             :shareOptions="share"
                                             :showShare="true"
                                             :showTitle="true"
+                                            :logoOptions="logoOptions"
+                                            :playerColor="playerColor"
+                                            :adsTag="channelModel.monetization"
                                         />
                                     </div>
                                 </div>
@@ -570,6 +573,15 @@ const openSucker = (isOpen) => {
   }
 }
 
+let logoOptions = ref({
+    type: 'img',
+    image: channelModel.value.logo == null ? channelModel.value.logoLink : channelModel.value.logo,
+    opacity: 0.9,
+    position: channelModel.value.logoPosition == 'left' ? 'top-left' : null,
+    show: true
+});
+let playerColor = ref('#6366F1');
+
 const playlist = ref([]);
 const ChannelPlaylistCheck = ref(0)
 const lhours = ref([]);
@@ -620,6 +632,7 @@ const updateChannel = async () => {
             schedule: channelModel.value.schedule,
             starttime: channelModel.value.looptimeH+':'+channelModel.value.looptimeM,
             timezone: channelModel.value.timezone,
+            logoEnable: channelModel.value.logo,
             logo: channelModel.value.image,
             logolink: channelModel.value.logoLink,
             logoposition: channelModel.value.logoPosition,
@@ -642,6 +655,16 @@ const updateChannel = async () => {
                 }
             }
         });
+}
+
+const passDomain = (ev) => {
+    ev.preventDefault();
+
+    let domain = document.getElementById('domain');
+    if(domain.value !='')
+        channelModel.value.domains.push(domain.value);
+
+    domain.value = '';
 }
 
 const removeDomain = (domain) => {
@@ -701,7 +724,7 @@ const share = ref({
 
 const dataPlacement = async (data) => {
     channelModel.value.name = data.title
-    channelModel.value.logo = data.logo == null && data.logo_link == null ? false : true
+    channelModel.value.logo = data.logo_enable == 1 ? true : false
     channelModel.value.logoLink = data.logo_link
     channelModel.value.logoPosition = data.logo_position
     channelModel.value.image = data.logo
@@ -731,32 +754,40 @@ const dataPlacement = async (data) => {
                     playlist.value.push({
                         name: item.file_name,
                         sources: [{
-                            src: `${item.file_hash}#t=0.1`,
+                            src: item.file_hash,
                             type: 'video/mp4',
                         }],
-                        // poster: 'http://media.w3.org/2010/05/sintel/poster.png',
+                        poster: item.thumbnail,
                         thumbnail: [
                             {
-                                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
+                                srcset: item.thumbnail,
                                 type: 'image/jpeg',
                                 media: '(min-width: 400px;)'
                             },
                             {
-                                src: 'http://media.w3.org/2010/05/sintel/poster.png'
+                                src: item.thumbnail
                             }
                         ]
                     })
                 }
             }
             ChannelPlaylistCheck.value = 2;
-            share.value.title = `Watch "${res.data[0].channel_title}" on `;
+            let twitter = data.twitter != null ? `via @${data.twitter}` : '';
+            share.value.title = `Watch "${res.data[0].channel_title}" ${twitter} on `;
             const shareUrl = router.resolve({
             name: 'ShareChannel',
                 params: {str: route.params.hash}
             });
-            let twitter = data.twitter != null ? `via @${data.twitter}` : '';
-            share.value.url = `https://${window.location.host+shareUrl.href} ${twitter}` // external sharing
+            
+            share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
             share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.hash}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+            
+            logoOptions.value.image = data.logo == null ? data.logo_link : data.logo
+            logoOptions.value.position = data.logo_position == 'left' ? 'top-left' : null
+            logoOptions.value.show = data.logo_enable == 1 ? true : false
+
+            playerColor.value = data.color;
+            
         });
 }
 

@@ -688,6 +688,7 @@ const postChannel = async () => {
             schedule: channelModel.value.schedule,
             starttime: `${channelModel.value.looptimeH}:${channelModel.value.looptimeM}`,
             timezone: channelModel.value.timezone,
+            logoEnable: channelModel.value.logo,
             logo: channelModel.value.logo == true ? channelModel.value.image : null,
             logolink: channelModel.value.logoLink,
             logoposition: channelModel.value.logoPosition,

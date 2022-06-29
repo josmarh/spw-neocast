@@ -21,6 +21,9 @@
                         :showShare="videoOptionsCustom.share"
                         :showTitle="videoOptionsCustom.title"
                         @playedVideo="sendPlayEvent"
+                        :logoOptions="logoOptions"
+                        :playerColor="playerColor"
+                        :adsTag="adsUrl"
                         class=""
                     />
                 </div>
@@ -81,7 +84,7 @@
 <script setup>
 import WebPageComponent from '../../components/WebPageComponent.vue';
 import Notification from '../../components/Notification.vue';
-import VideoPlayer from '../../components/VideoPlayer.vue';
+import VideoPlayer from '../../components/VideoPlayerChannel.vue';
 import store from '../../store';
 import { ref, onMounted, getCurrentInstance } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -137,6 +140,16 @@ const share = ref({
     // optinal embed code
     embedCode : ''
 })
+let logoOptions = ref({
+  type: 'img',
+  image: '',
+  opacity: 0.9,
+  position: '',
+  show: false,
+});
+let playerColor = ref('#6366F1');
+let adsUrl = ref('')
+let twitterHandle = ref('');
 
 const _getContent = async () => {
     isContentSet.value = 1;
@@ -208,6 +221,13 @@ const getWebsiteChannels = async (whash) => {
                 })
             }
 
+            logoOptions.value.image = res.data[0].logo == null ? res.data[0].logo_link : res.data[0].logo;
+            logoOptions.value.position = res.data[0].logo_position == 'left' ? 'top-left' : null;
+            logoOptions.value.show = res.data[0].logo_enable == 1 ? true : false;
+            twitterHandle.value = res.data[0].twitter;
+            playerColor.value = res.data[0].color;
+            adsUrl.value = res.data[0].ad_tag_url;
+
             getPlaylist(res.data[0].channel_hash);
         })
         .catch((err) => {
@@ -251,11 +271,13 @@ const getPlaylist = async (chash) => {
                     })
                 }
                 // add to share button
-                share.value.title = `Watch "${res.data[0].channel_title}" on `;
+                let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
+                share.value.title = `Watch "${res.data[0].channel_title}" ${twitter} on `;
                 const shareUrl = router.resolve({
                     name: 'ShareChannel',
                     params: { str: chash}
                 });
+
                 share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
                 share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${chash}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
                 isContentSet.value = 2;

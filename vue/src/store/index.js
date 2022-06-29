@@ -186,6 +186,12 @@ const store = createStore({
                     return data;
                 })
         },
+        externalChannel({ commit }, hash){
+            return axiosClient.get(`/channel/info/${hash}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
         getVideos({ commit }, chash){
             return axiosClient.get(`/channel/videos/${chash.chash}`)
             .then(({data}) => {

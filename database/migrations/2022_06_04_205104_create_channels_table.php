@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('schedule_duration', 10)->nullable();
             $table->string('start_time', 10)->nullable();
             $table->unSignedBigInteger('timezone')->nullable();
+            $table->smallInteger('logo_enable')->nullable();
             $table->string('logo')->nullable();
             $table->string('logo_link')->nullable();
             $table->string('logo_position', 6);

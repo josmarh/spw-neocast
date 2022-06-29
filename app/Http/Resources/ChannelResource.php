@@ -23,6 +23,7 @@ class ChannelResource extends JsonResource
             'schedule_duration' => $this->schedule_duration,
             'start_time' => $this->start_time,
             'timezone' => $this->timezone,
+            'logo_enable' => $this->logo_enable,
             'logo' => $this->logo ? URL::to($this->logo) : null,
             'logo_link' => $this->logo_link,
             'logo_position' => $this->logo_position,
