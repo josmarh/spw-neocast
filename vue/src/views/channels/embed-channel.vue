@@ -35,6 +35,7 @@
           :logoOptions="logoOptions"
           :playerColor="playerColor"
           :adsTag="adsUrl"
+          :loopPlaylist="loopPlaylist"
         />
       </div>
     </div>
@@ -101,6 +102,7 @@ let logoOptions = ref({
 let playerColor = ref('#6366F1');
 let adsUrl = ref('')
 let twitterHandle = ref('');
+let loopPlaylist = ref(false);
 
 const getChannelInfo = () => {
     store
@@ -121,6 +123,8 @@ const getChannelInfo = () => {
               twitterHandle.value = res.data.twitter;
               playerColor.value = res.data.color;
               adsUrl.value = res.data.ad_tag_url;
+              if(res.data.channel_type == 'Looped (Linear)')
+                loopPlaylist.value = true;
 
               if(ChannelPlaylistCheck.value !== 4){
                 getPlaylist();

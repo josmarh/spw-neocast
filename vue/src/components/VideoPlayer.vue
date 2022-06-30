@@ -2,7 +2,7 @@
   <div class="grid grid-cols-12 gap-1">
     <div class="col-span-9">
       <div class="container">
-        <video ref="videoPlayer" class="video-js vjs-big-play-centered"></video>
+        <video ref="videoPlayer" class="video-js vjs-big-play-centered" data-setup='{"liveui": true}'></video>
         <div class="overlay">
           {{ videoName }}
         </div>
@@ -26,6 +26,7 @@ import eventTracking from 'videojs-event-tracking';
 import seekButtons from 'videojs-seek-buttons';
 import seekButtonscss from 'videojs-seek-buttons/dist/videojs-seek-buttons.css';
 import store from '../../src/store';
+import '@devmobiliza/videojs-vimeo/dist/videojs-vimeo.cjs';
 
 export default {
   name: 'VideoPlayer',
@@ -52,6 +53,9 @@ export default {
       type: Boolean
     },
     showTitle: {
+      type: Boolean
+    },
+    loopPlaylist: {
       type: Boolean
     }
   },

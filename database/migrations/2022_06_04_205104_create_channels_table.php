@@ -29,7 +29,8 @@ return new class extends Migration
             $table->text('privacy_domain')->nullable();
             $table->text('ad_tag_url')->nullable();
             $table->string('channel_type', 25);
-            $table->string('channel_hash', 50);
+            $table->string('channel_hash', 50);	
+            $table->string('stream_name', 32);
             $table->unSignedBigInteger('user_id');
             $table->timestamps();
         });

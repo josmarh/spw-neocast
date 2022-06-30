@@ -27,6 +27,7 @@ class Channels extends Model
         'ad_tag_url',
         'channel_type',
         'channel_hash',
+        'stream_name',
         'user_id'
     ];
 

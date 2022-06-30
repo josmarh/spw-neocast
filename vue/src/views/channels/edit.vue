@@ -153,7 +153,7 @@
                                         </select>
                                     </div>
                                     <div class="ml-2 text-sm">
-                                        With current timezone Africa/Lagos
+                                        <!-- With current timezone Africa/Lagos -->
                                     </div>
                                 </div>
                             </div>
@@ -448,6 +448,7 @@
                                             <input
                                                 type="url"
                                                 id="ads_tag_url"
+                                                v-model="channelModel.monetization"
                                                 class="block py-2 px-0 w-full
                                                 text-sm text-gray-900 bg-transparent
                                                 border-0 border-b-2 border-gray-300
@@ -488,6 +489,7 @@
                                             :logoOptions="logoOptions"
                                             :playerColor="playerColor"
                                             :adsTag="channelModel.monetization"
+                                            :loopPlaylist="loopPlaylist"
                                         />
                                     </div>
                                 </div>
@@ -549,12 +551,12 @@ const channelModel = ref({
 })
 
 let bgPicker = ref({
-  color: '#f3f3f3',
-  colorHex: '#f3f3f3',
-  suckerCanvas: null,
-  suckerArea: [],
-  isSucking: false,
-  show: false
+    color: '#f3f3f3',
+    colorHex: '#f3f3f3',
+    suckerCanvas: null,
+    suckerArea: [],
+    isSucking: false,
+    show: false
 });
 
 const changeColor = (color) => {
@@ -581,6 +583,7 @@ let logoOptions = ref({
     show: true
 });
 let playerColor = ref('#6366F1');
+let loopPlaylist = ref(false);
 
 const playlist = ref([]);
 const ChannelPlaylistCheck = ref(0)
@@ -787,6 +790,8 @@ const dataPlacement = async (data) => {
             logoOptions.value.show = data.logo_enable == 1 ? true : false
 
             playerColor.value = data.color;
+            if(data.channel_type == 'Looped (Linear)')
+                loopPlaylist.value = true;
             
         });
 }

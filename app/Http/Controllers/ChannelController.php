@@ -7,9 +7,13 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\Channels;
 use App\Models\ChannelPlaylist;
+use App\Models\FileUploads;
 use App\Http\Resources\ChannelResource;
+use App\Http\Resources\PlaylistResource;
 use App\Http\Controllers\UploadsController;
+use Carbon\Carbon;
 use DB;
+
 
 class ChannelController extends Controller
 {
@@ -67,7 +71,8 @@ class ChannelController extends Controller
             'privacy_domain' => $request->privacydomain,
             'ad_tag_url' => $request->adtagurl,
             'channel_type' => $request->channeltype,
-            'channel_hash' => strtolower(Str::random(26)),
+            'channel_hash' => strtolower(Str::random(32)),
+            'stream_name' => strtolower(Str::random(32)).'m3u8',
             'user_id' => $user->id,
         ]);
 
@@ -80,7 +85,16 @@ class ChannelController extends Controller
 
     public function edit($hash)
     {
+        $currentDateTime = Carbon::now();
         $channel = Channels::where('channel_hash', $hash)->first();
+
+        // if($channel->type == 'Looped (Linear)') {
+
+        // } elseif ($channel->type == 'Scheduled (Linear)') {
+
+        // } else {
+
+        // }
 
         return new ChannelResource($channel);
     }
@@ -176,6 +190,25 @@ class ChannelController extends Controller
             'status' => 'success',
             'status_code' => 204
         ]);
+    }
+
+    public function streamVideo($chash)
+    {
+        $playlist = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash', 'ch.title', 'cp.id as cpId')
+            ->join('channel_playlists as cp', 'cp.video_id', '=', 'file_uploads.id')
+            ->join('channels as ch', 'ch.channel_hash', '=', 'cp.channel_hash')
+            ->whereIn('file_uploads.id', function($query)use($chash){
+                $query->select('video_id')->from('channel_playlists');
+            })
+            ->where('cp.channel_hash', $chash)
+            ->orderBy('file_uploads.created_at', 'desc')
+            ->get();
+
+        foreach($playlist as $stream) {
+            shell_exec('C:\ffmpeg\bin\ffmpeg.exe -re -i "'.$stream->file_hash.'"-c:v copy -c:a aac -ar 44100 -ac 1 -f flv rtmp://tubetargeterapp.com:2446/app');
+        }
+
+        return 'completed';
     }
 
     private function extractUrl($file)

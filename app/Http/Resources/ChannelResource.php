@@ -34,6 +34,7 @@ class ChannelResource extends JsonResource
             'ad_tag_url' => $this->ad_tag_url,
             'channel_type' => $this->channel_type,
             'channel_hash' => $this->channel_hash,
+            'stream_name' => $this->stream_name,
             'total_vidoes' => $this->total_vidoes,
             'total_views' => $this->total_views,
             'thumbnail' => $this->video_thumbnail ? URL::to($this->video_thumbnail) : null,

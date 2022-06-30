@@ -10,6 +10,7 @@ use App\Http\Controllers\ChannelPlaylistController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LiveStreamController;
+use App\Http\Controllers\FFmpegConverter;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,3 +88,5 @@ Route::get('video/info', [VideoController::class, 'index']);
 Route::get('website/content/{urlPath}', [WebsiteController::class, 'webContent']);
 Route::get('website/channels/{whash}', [WebsiteController::class, 'websiteChannels']);
 Route::get('live/watch/{lhash}', [LiveStreamController::class, 'edit']);
+Route::get('converter', [FFmpegConverter::class, 'mp4ToM3u8']);
+Route::get('channel/linear/{chash}', [ChannelController::class, 'streamVideo']);

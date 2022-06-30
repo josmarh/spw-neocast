@@ -25,8 +25,8 @@
             </div>
             <div class="mt-4">
                 <video-player 
-                    :options="videoOptions" 
-                    :playlistOptions="playlist" 
+                    :options="videoOptions"
+                    :playlistOptions="playlist"
                     :shareOptions="share"
                     :showShare="true"
                     :showTitle="true"
@@ -34,6 +34,7 @@
                     :logoOptions="logoOptions"
                     :playerColor="playerColor"
                     :adsTag="adsUrl"
+                    :loopPlaylist="loopPlaylist"
                 />
             </div>
         </div>
@@ -102,7 +103,8 @@ let logoOptions = ref({
 });
 let playerColor = ref('#6366F1');
 let adsUrl = ref('')
-let twitterHandle = ref('')
+let twitterHandle = ref('');
+let loopPlaylist = ref(false);
 
 const getChannelInfo = () => {
     store
@@ -115,6 +117,12 @@ const getChannelInfo = () => {
                 twitterHandle.value = res.data.twitter;
                 playerColor.value = res.data.color;
                 adsUrl.value = res.data.ad_tag_url;
+
+                if(res.data.channel_type == 'Looped (Linear)')
+                    loopPlaylist.value = true;
+
+                getPlaylist();
+                contentSettings();
             }
         })
         .catch((err) => {
@@ -200,8 +208,6 @@ const sendPlayEvent = async (data) => {
 
 onMounted(() => {
     getChannelInfo();
-    getPlaylist();
-    contentSettings();
 });
 
 </script>

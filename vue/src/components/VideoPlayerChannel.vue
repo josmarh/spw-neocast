@@ -76,6 +76,9 @@ export default {
     },
     adsTag: {
       type: String
+    },
+    loopPlaylist: {
+      type: Boolean
     }
   },
   data() {
@@ -121,6 +124,7 @@ export default {
     this.player.fluid(true)
     this.player.playlist(this.playlistOptions);
     this.player.playlist.autoadvance(0);
+    this.player.playlist.repeat(this.loopPlaylist);
     this.player.playlistUi();
     this.player.seekButtons({
       forward: 15,
@@ -131,6 +135,13 @@ export default {
       this.player.share(this.shareOptions);
     }
 
+    // ads setup
+    let imaOptions = {
+      adTagUrl: this.adsTag
+    };
+    
+    this.player.ima(imaOptions);
+
     // video event tracking
     let playerId = document.getElementsByTagName('video')[0];
     this.player.eventTracking(true)
@@ -140,7 +151,7 @@ export default {
 
       let arr = this.videoTitle.split('/');
       let len = arr.length -1;
-      let tempName = arr[len].split('#')[0]
+      let tempName = arr[len].split('#')[0];
 
       if(this.showTitle == true){
         this.getVideoTitle(tempName)
@@ -151,12 +162,12 @@ export default {
       if(this.showTitle == true){
         document.getElementsByClassName('overlay')[0].style.opacity = 1;
       }
-    })
+    });
     this.player.on('play', () => {
-       document.getElementsByClassName('overlay')[0].style.opacity = 0;
+      document.getElementsByClassName('overlay')[0].style.opacity = 0;
     });
     this.player.on('ended', () => {
-       document.getElementsByClassName('overlay')[0].style.opacity = 1;
+      document.getElementsByClassName('overlay')[0].style.opacity = 1;
     });
 
     // big play button customization
@@ -180,16 +191,6 @@ export default {
       }, 1500)
     }
 
-    // ads setup
-    let imaOptions = {
-      adTagUrl: this.adsTag
-    };
-    this.player.ima(imaOptions);
-
-    // let viblast = document.createElement("script");
-    // viblast.setAttribute("type", "text/javascript");
-    // viblast.setAttribute("src", "https://imasdk.googleapis.com/js/sdkloader/ima3.js");
-    // document.head.appendChild(viblast);
   },
   beforeDestroy() {
     if (this.player) {

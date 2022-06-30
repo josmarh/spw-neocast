@@ -134,7 +134,7 @@
                                                 </select>
                                             </div>
                                             <div class="ml-2">
-                                                With current timezone Africa/Lagos
+                                                <!-- With current timezone Africa/Lagos -->
                                             </div>
                                         </div>
                                     </div>
@@ -451,11 +451,24 @@
                                                 </div>
                                             </div>
                                             <div class="col-span-8">
-                                                <video-player 
-                                                    :options="videoOptions" 
-                                                    :playlistOptions="playlist" 
-                                                    :shareOptions="share"
-                                                />
+                                                <div>
+                                                    <video-player-linear 
+                                                        v-if="title.includes('Looped') || title.includes('Scheduled')"
+                                                        :options="videoOptions" 
+                                                        :shareOptions="share"
+                                                        :loopPlaylist="loopPlaylist"
+                                                        :showTitle="true"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <video-player 
+                                                        v-if="title.includes('Playlist (On demand)')"
+                                                        :options="videoOptions" 
+                                                        :playlistOptions="playlist" 
+                                                        :shareOptions="share"
+                                                        :loopPlaylist="loopPlaylist"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -486,7 +499,8 @@
 
 <script setup>
 import PageComponent from './PageComponent.vue';
-import VideoPlayer from './VideoPlayer.vue';
+import VideoPlayer from './VideoPlayerChinto.vue';
+import VideoPlayerLinear from './VideoPlayerLinear.vue';
 import store from '../store';
 import Notification from './Notification.vue';
 import { ref, watch, getCurrentInstance } from 'vue';
@@ -499,6 +513,9 @@ const internalInstance = getCurrentInstance();
 
 const props = defineProps({
     title: String,
+    playlist: Array,
+    videoOptions: Object,
+    loopPlaylist: Boolean,
 });
 
 const channelModel = ref({
@@ -602,61 +619,6 @@ const onLogoChoose = (ev) => {
     }
     reader.readAsDataURL(file)
 }
-
-const videoOptions = {
-  autoplay: false,
-  controls: true,
-  muted: false,
-  loop: false,
-  playbackRates: [0.5, 1, 1.5, 2],
-  sources: [
-    {
-      src: 'https://muxed.s3.amazonaws.com/ink.mp4',
-      type: 'video/mp4',
-    }
-  ],
-}
-
-const playlist = [
-    {
-        name: 'Sintel',
-        sources: [{
-            src: 'http://media.w3.org/2010/05/sintel/trailer.mp4',
-            type: 'video/mp4',
-        }],
-        poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-        thumbnail: [
-            {
-                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
-                type: 'image/jpeg',
-                media: '(min-width: 400px;)'
-            },
-            {
-                src: 'http://media.w3.org/2010/05/sintel/poster.png'
-            }
-        ],
-        duration: 90,
-    },
-    {
-        name: 'Ocean',
-        sources: [{
-            src: 'https://muxed.s3.amazonaws.com/ink.mp4',
-            type: 'video/mp4'
-        }],
-        poster: 'http://media.w3.org/2010/05/sintel/poster.png',
-        thumbnail: [
-            {
-                srcset: 'http://media.w3.org/2010/05/sintel/poster.png',
-                type: 'image/jpeg',
-                media: '(min-width: 400px;)'
-            },
-            {
-                src: 'http://media.w3.org/2010/05/sintel/poster.png'
-            }
-        ],
-        duration: 90,
-    }
-];
 
 const share = {
     socials: ['fb', 'tw'],
