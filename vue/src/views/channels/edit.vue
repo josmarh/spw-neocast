@@ -826,9 +826,9 @@ const dataPlacement = async (data) => {
                     loopPlaylist.value = true;
 
                 channelType.value = data.channel_type;
-                streamLink.value = `http://tubetargeterapp.com:3070/hls/channels/${data.stream_name}.m3u8`
+                streamLink.value = `http://tubetargeterapp.com:3070/channels/${data.stream_name}.m3u8`
                 if(data.channel_type.includes('Linear')) {
-                    videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/hls/channels/${data.stream_name}.m3u8`;
+                    videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/channels/${data.stream_name}.m3u8`;
                     videoOptionsLinear.sources[0].type = 'application/x-mpegURL';
                     videoOptionsLinear.poster = res.data[0].thumbnail;
                     if(data.channel_type.includes('Looped')){ videoOptionsLinear.loop = true; }else{ videoOptionsLinear.loop = false; }

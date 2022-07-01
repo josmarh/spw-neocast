@@ -736,6 +736,7 @@ const updateStream = async () => {
 
 let timeoutStream;
 let saveLiveVideo = ref(0) // 0: default, 1: ready to save, 2: save is ongoing, 3: saved
+let saveLiveVideo2 = ref(0)
 let playingLive = ref(0)
 let playingLive2 = ref(0)
 
@@ -760,10 +761,8 @@ const checkStreamUri = () => {
                         if(_liveStatus){
                             if(_liveStatus.getAttribute('title').includes('currently playing live')) {
                                 playingLive.value = 1
-                            }
-
-                            if(_liveStatus.getAttribute('title').includes('currently behind live')) {
-                                if(playingLive.value = 1){
+                            }else if(_liveStatus.getAttribute('title').includes('currently behind live')) {
+                                if(playingLive.value == 1) {
                                     saveLiveVideo.value = 1
                                 } 
                             }
@@ -773,7 +772,7 @@ const checkStreamUri = () => {
                             playingLive2.value = 1
                         }else if(!_liveStatus2) {
                             if( playingLive2.value == 1)
-                                saveLiveVideo.value = 1
+                                saveLiveVideo2.value = 1
                         }
 
                         if(saveLiveVideo.value == 1 && playingLive.value == 1) {
@@ -781,9 +780,7 @@ const checkStreamUri = () => {
                             setTimeout(() => {
                                 storeLiveVideo();
                             }, 10000);
-                        }
-
-                        if(saveLiveVideo.value == 1 && playingLive2.value == 1) {
+                        }else if(saveLiveVideo2.value == 1 && playingLive2.value == 1) {
                             // run save
                             setTimeout(() => {
                                 storeLiveVideo();
@@ -805,15 +802,17 @@ const checkStreamUri = () => {
                 console.log(`error ${err}`)
             })
 
-        }, 10000)
+        }, 12000)
     }
     lopper();
 }
 
 const storeLiveVideo = () => {
     saveLiveVideo.value = 2
+    saveLiveVideo2.value = 2
     playingLive.value = 2
     playingLive2.value = 2
+
     store
         .dispatch('liveStreamVideo', {
             link: videoOptions.value.sources[0].src,
@@ -822,8 +821,8 @@ const storeLiveVideo = () => {
         })
         .then((res) => {
             if (res.latestStreams.length > 0){
-                model.value.latestStreams = res.latestStream
                 saveLiveVideo.value = 3
+                saveLiveVideo2.value = 3
                 playingLive.value = 0 
                 playingLive2.value = 0     
             }

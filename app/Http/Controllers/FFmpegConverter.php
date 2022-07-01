@@ -48,7 +48,7 @@ class FFmpegConverter extends Controller
 
 
 // working demo for multiple
-// C:\ffmpeg\bin\ffmpeg.exe -re -f concat -i compiled_videos.txt -b:v 1M -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 linear_demo.m3u8
+// C:\ffmpeg\bin\ffmpeg.exe -re -f concat -i 79cbvpcy94sncenwsgkli3izt1kj2ikm.txt -b:v 1M -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 ..\m3u8\linear_demo.m3u8
 
 // test
 // C:\ffmpeg\bin\ffmpeg.exe -re -f concat -i compiled_videos.txt -b:v 1M -g 60 -hls_time 10 -hls_list_size 0 -hls_segment_size 500000 ../m3u8/linear_demo.m3u8

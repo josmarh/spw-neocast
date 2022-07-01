@@ -10,9 +10,12 @@ use App\Models\ChannelPlaylist;
 use App\Models\ChannelReport;
 use App\Http\Resources\ContentResource;
 use App\Http\Resources\PlaylistResource;
+use App\Jobs\CreateHLSVideos;
+use App\Jobs\DeleteHLSVideos;
 use Carbon\Carbon;
 use URL;
 use DB;
+use Log;
 
 class ChannelPlaylistController extends Controller
 {
@@ -75,7 +78,9 @@ class ChannelPlaylistController extends Controller
         $linearCheck = Channels::where('channel_hash', $channelId)->first();
 
         if(strpos($linearCheck->channel_type, 'Linear') !== false) {
-            $this->makeStreams($channelId, $linearCheck);
+            $streamInfo = $this->makeStreams($channelId, $linearCheck);
+            Log::info($streamInfo);
+            dispatch(new CreateHLSVideos($streamInfo))->delay(5);
         }
 
         return response([
@@ -92,6 +97,12 @@ class ChannelPlaylistController extends Controller
         $report = ChannelReport::where('channel_hash', $content->channel_hash)
             ->where('video_id', $content->video_id)
             ->delete();
+
+        // check if channel is linear and refresh streams
+        $linearCheck = Channels::where('channel_hash', $content->channel_hash)->first();
+        if(strpos($linearCheck->channel_type, 'Linear') !== false) {
+            $this->makeStreams($content->channel_hash, $linearCheck);
+        }
 
         $content->delete();
 
@@ -168,25 +179,42 @@ class ChannelPlaylistController extends Controller
             ->orderBy('file_uploads.created_at', 'desc')
             ->get();
         
-        // delete file if exist and creat new file        
-        $dir = 'uploads/';
-        $absolutePath = public_path($dir);
-        if(File::exists($absolutePath.$channelId.".txt")){
-            unlink($absolutePath.$channelId.".txt");
+        if($videos) {
+            // delete file if exist and creat new file        
+            $dir = 'uploads/';
+            $absolutePath = public_path($dir);
+            if(File::exists($absolutePath.$channelId.".txt")){
+                unlink($absolutePath.$channelId.".txt");
+            }
+
+            $channelFile = fopen($absolutePath.$channelId.".txt", "a") or die("Unable to open file!");
+
+            foreach($videos as $i => $video) {
+                if($i == count($videos) -1) {
+                    fwrite($channelFile, "file ".explode('/', $video->file_hash)[1]);
+                }else{
+                    fwrite($channelFile, "file ".explode('/', $video->file_hash)[1]."\n");
+                }
+            }
+
+            fclose($channelFile);
+
+            // send for dispatch: videos url, stream_name
+            return $convertInfo = [
+                'filePath' => 'C:\Users\"BUYPC COMPUTER"\Documents\DevProjects\lara-vue\viloud\public\uploads',
+                'fileName' => $channelId.".txt",
+                'streamPath' => 'C:\Users\"BUYPC COMPUTER"\Documents\DevProjects\lara-vue\viloud\public\m3u8'.$linearCheck->stream_name.'.m3u8'
+            ];
+        }else {
+            // delete all ${channel}.m3u8 
+            $dir = 'uploads/';
+            $absolutePath = public_path($dir);
+            if(File::exists($absolutePath.$channelId.".txt")){
+                unlink($absolutePath.$channelId.".txt");
+            }
+
+            return $linearCheck->stream_name;
         }
-        $channelFile = fopen($absolutePath.$channelId.".txt", "a") or die("Unable to open file!");
-
-        foreach($videos as $video) {
-            fwrite($channelFile, "file ".explode('/', $video->file_hash)[1]."\n");
-        }
-
-        fclose($channelFile);
-
-        // send for dispatch: videos url, stream_name
-        // return $convertInfo = [
-        //     'streamName' => $linearCheck->stream_name.'.m3u8',
-        //     'folderName' => $channelId,
-        // ];
     }
 
 }
