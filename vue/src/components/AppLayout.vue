@@ -17,6 +17,42 @@
                   :class="[this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
                   'px-3 py-2 rounded-md text-sm font-medium']">{{ item.name }}
                 </router-link>
+
+                <Menu as="div" class="">
+                  <div>
+                    <MenuButton class="">
+                      <span class="sr-only">Open user menu</span>
+                      <div 
+                        active-class="bg-gray-900 text-white"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                        >User Manager 
+
+                      </div>
+                    </MenuButton>
+                  </div>
+                  <transition 
+                    enter-active-class="transition ease-out duration-100" 
+                    enter-from-class="transform opacity-0 scale-95" 
+                    enter-to-class="transform opacity-100 scale-100" 
+                    leave-active-class="transition ease-in duration-75" 
+                    leave-from-class="transform opacity-100 scale-100" 
+                    leave-to-class="transform opacity-0 scale-95">
+                    <MenuItems 
+                      class="origin-top-left absolute mt-2 w-48 
+                      rounded-md shadow-lg py-1 bg-white ring-1 ring-black 
+                      ring-opacity-5 focus:outline-none z-10"
+                    >
+                      <MenuItem 
+                        v-for="item in userManagerNav" :key="item.name" v-slot="{ active }">
+                        <router-link 
+                          :to="item.to" 
+                          active-class="bg-gray-100"
+                          :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}
+                        </router-link>
+                      </MenuItem>
+                    </MenuItems>
+                  </transition>
+                </Menu>
               </div>
             </div>
           </div>
@@ -40,7 +76,6 @@
                           d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    
                   </MenuButton>
                 </div>
                 <transition 
@@ -96,6 +131,7 @@
             :class="[ this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
               'block px-3 py-2 rounded-md text-base font-medium']">{{ item.name }}
           </router-link>
+          
         </div>
         <div class="pt-4 pb-3 border-t border-gray-700">
           <div class="flex items-center px-5">
@@ -168,6 +204,9 @@ const navigation = [
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },
 ]
+const userManagerNav = [
+  { name: 'Users', to: {name: 'Users'} },
+]
 
 export default {
   components: {
@@ -199,6 +238,7 @@ export default {
       user: computed(() => store.state.user.data),
       navigation,
       userNavigation,
+      userManagerNav,
       logout
     }
   },

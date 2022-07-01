@@ -15,6 +15,7 @@
             <div v-if="isContentSet == 2">
                 <div>
                     <video-player
+                        v-if="channelType.includes('Playlist (On demand)')"
                         :options="videoOptions" 
                         :playlistOptions="playlist" 
                         :shareOptions="share"
@@ -24,6 +25,17 @@
                         :logoOptions="logoOptions"
                         :playerColor="playerColor"
                         :adsTag="adsUrl"
+                    />
+                    <video-player-linear 
+                        v-else
+                        :options="videoOptionsLinear" 
+                        :shareOptions="share"
+                        :showShare="true"
+                        :showTitle="false"
+                        :logoOptions="logoOptions"
+                        :playerColor="playerColor"
+                        :adsTag="adsUrl"
+                        :loopPlaylist="loopPlaylist"
                     />
                 </div>
                 <div v-if="model.channelCount > 1" class="">
@@ -84,6 +96,7 @@
 import WebPageComponent from '../../components/WebPageComponent.vue';
 import Notification from '../../components/Notification.vue';
 import VideoPlayer from '../../components/VideoPlayerChannel.vue';
+import VideoPlayerLinear from '../../components/VideoPlayerLinearMain.vue';
 import store from '../../store';
 import { ref, onMounted, getCurrentInstance } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -120,6 +133,30 @@ const videoOptions = ref({
   muted: false,
   loop: false
 })
+const videoOptionsLinear = {
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+  sources: [
+    {
+      src: '',
+      type: 'video/mp4',
+    }
+  ],
+  poster: '',
+  bigPlayButton: true,
+  controlBar: {
+    fullscreenToggle: true,
+    pictureInPictureToggle: true,
+    remainingTimeDisplay: true,
+    volumePanel: true,
+    currentTimeDisplay: true,
+    timeDivider: true,
+    durationDisplay: true,
+    progressControl: true
+  }
+}
 const share = ref({
     socials: ['fbFeed', 'tw'],
 
@@ -149,6 +186,8 @@ let logoOptions = ref({
 let playerColor = ref('#6366F1');
 let adsUrl = ref('')
 let twitterHandle = ref('');
+let streamLink = ref('');
+let channelType = ref('');
 
 const _getContent = async () => {
     isContentSet.value = 1;
@@ -185,6 +224,9 @@ const _getContent = async () => {
                 videoOptions.value.muted = data.volume == 1 ? false : true
                 videoOptionsCustom.value.title = data.content_title == 1 ? true : false
                 videoOptionsCustom.value.share = data.share_button == 1 ? true : false
+
+                videoOptionsLinear.autoplay = data.autoplay == 0 ? false : true
+                videoOptionsLinear.muted = data.volume == 1 ? false : true
                 
                 getWebsiteChannels(data.whash);       
             }else{
@@ -219,7 +261,7 @@ const getWebsiteChannels = async (whash) => {
                 })
             }
             getChannelInfo();
-            getPlaylist(route.params.chash);
+            // getPlaylist(route.params.chash);
         })
         .catch((err) => {
             isContentSet.value = 3;
@@ -240,14 +282,7 @@ const getChannelInfo = () => {
         .dispatch('externalChannel', route.params.chash)
         .then((res) => {
             if(res.data) {
-
-              logoOptions.value.image = res.data.logo == null ? res.data.logo_link : res.data.logo;
-              logoOptions.value.position = res.data.logo_position == 'left' ? 'top-left' : null;
-              logoOptions.value.show = res.data.logo_enable == 1 ? true : false;
-              twitterHandle.value = res.data.twitter;
-              playerColor.value = res.data.color;
-              adsUrl.value = res.data.ad_tag_url;
-
+                getPlaylist(res.data);
             } 
         })
         .catch((err) => {
@@ -257,7 +292,7 @@ const getChannelInfo = () => {
 
 const getPlaylist = async (chash) => {
     await store
-        .dispatch('getWebsitePlaylist', chash)
+        .dispatch('getWebsitePlaylist', chash.channel_hash)
         .then((res) => {
             if(res.data.length) {
                 // add to playlist 
@@ -282,14 +317,35 @@ const getPlaylist = async (chash) => {
                     })
                 }
                 // add to share button
+                twitterHandle.value = chash.twitter;
                 let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
                 share.value.title = `Watch "${res.data[0].channel_title}" ${twitter} on `;
                 const shareUrl = router.resolve({
                     name: 'ShareChannel',
-                    params: { str: chash}
+                    params: { str: chash.channel_hash}
                 });
                 share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
-                share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${chash}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+                share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${chash.channel_hash}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
+                
+                logoOptions.value.image = chash.logo == null ? chash.logo_link : chash.logo;
+                logoOptions.value.position = chash.logo_position == 'left' ? 'top-left' : null;
+                logoOptions.value.show = chash.logo_enable == 1 ? true : false;
+                playerColor.value = chash.color;
+                adsUrl.value = chash.ad_tag_url;
+
+                channelType.value = chash.channel_type;
+                streamLink.value = `http://tubetargeterapp.com:3070/hls/channels/${chash.stream_name}.m3u8`
+                if(chash.channel_type.includes('Linear')) {
+                    videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/hls/channels/${chash.stream_name}.m3u8`;
+                    videoOptionsLinear.sources[0].type = 'application/x-mpegURL';
+                    videoOptionsLinear.poster = res.data[0].thumbnail;
+                    if(chash.channel_type.includes('Looped')){ videoOptionsLinear.loop = true; }else{ videoOptionsLinear.loop = false; }
+                    videoOptionsLinear.controlBar.fullscreenToggle = false;
+                    videoOptionsLinear.controlBar.pictureInPictureToggle = false;
+                    videoOptionsLinear.controlBar.remainingTimeDisplay = false;
+                    videoOptionsLinear.controlBar.progressControl = false;
+                }
+
                 isContentSet.value = 2;
             }else{
                 isContentSet.value = 3;

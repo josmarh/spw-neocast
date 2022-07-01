@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Models\FileUploads;
+use App\Models\Channels;
 use App\Models\ChannelPlaylist;
 use App\Models\ChannelReport;
 use App\Http\Resources\ContentResource;
 use App\Http\Resources\PlaylistResource;
 use Carbon\Carbon;
+use URL;
 use DB;
 
 class ChannelPlaylistController extends Controller
@@ -66,6 +69,13 @@ class ChannelPlaylistController extends Controller
 
             // update playlist with thumbnail
             $channel->update(['video_thumbnail' => $video->thumbnail]);
+        }
+
+        // check if channel is linear
+        $linearCheck = Channels::where('channel_hash', $channelId)->first();
+
+        if(strpos($linearCheck->channel_type, 'Linear') !== false) {
+            $this->makeStreams($channelId, $linearCheck);
         }
 
         return response([
@@ -143,6 +153,40 @@ class ChannelPlaylistController extends Controller
                 ]);
             }
         }
+    }
+
+    public function makeStreams($channelId, $linearCheck)
+    {
+        // channel videos
+        $videos = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash', 'ch.title', 'cp.id as cpId')
+            ->join('channel_playlists as cp', 'cp.video_id', '=', 'file_uploads.id')
+            ->join('channels as ch', 'ch.channel_hash', '=', 'cp.channel_hash')
+            ->whereIn('file_uploads.id', function($query)use($channelId){
+                $query->select('video_id')->from('channel_playlists');
+            })
+            ->where('cp.channel_hash', $channelId)
+            ->orderBy('file_uploads.created_at', 'desc')
+            ->get();
+        
+        // delete file if exist and creat new file        
+        $dir = 'uploads/';
+        $absolutePath = public_path($dir);
+        if(File::exists($absolutePath.$channelId.".txt")){
+            unlink($absolutePath.$channelId.".txt");
+        }
+        $channelFile = fopen($absolutePath.$channelId.".txt", "a") or die("Unable to open file!");
+
+        foreach($videos as $video) {
+            fwrite($channelFile, "file ".explode('/', $video->file_hash)[1]."\n");
+        }
+
+        fclose($channelFile);
+
+        // send for dispatch: videos url, stream_name
+        // return $convertInfo = [
+        //     'streamName' => $linearCheck->stream_name.'.m3u8',
+        //     'folderName' => $channelId,
+        // ];
     }
 
 }

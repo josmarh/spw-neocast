@@ -1,6 +1,7 @@
 <template>
   <div>
-    <page-component title="Channels" :class="[channelListCheck == 0 || channelListCheck == 1 ? 'h-screen bg-gray-100' : '' ]">
+    <page-component title="Channels" 
+      :class="[channelListCheck == 0 || channelListCheck == 1 || channels.data.length < 3  ? 'h-screen bg-gray-100' : '' ]">
       <notification />
       
       <div>
@@ -115,7 +116,16 @@
               </label>
             </div>
           </div>
-          
+          <div v-if="channelListCheck == 3">
+          <div class="flex justify-center items-center">
+            <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+              <h5 class="text-2xl text-gray-900 dark:text-white">No channel available</h5>
+              <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
+                <img src="../../assets/no_channel.png" class="xl:w-82 xl:h-82" />
+              </div>
+            </div>
+          </div>
+        </div>
           <!-- table data  -->
           <div v-if="channelListCheck == 2">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -162,7 +172,7 @@
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3" 
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" 
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
                             d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -177,10 +187,22 @@
                           font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
                           <svg xmlns="http://www.w3.org/2000/svg" 
-                            class="h-4 w-4 mr-3 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            class="h-4 w-4 mr-1 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                           </svg>
                           Preview & Embed
+                        </button>
+                      </div>
+                      <div v-if="c.channel_type.includes('Linear')" class="">
+                        <button type="button" @click="streamLinkModal(c.stream_name)"
+                          class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                          focus:outline-none focus:ring-gray-100 
+                          font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
+                          inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          .M3U8
                         </button>
                       </div>
                       <div class="">
@@ -262,16 +284,7 @@
               <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
           </svg>
         </div>
-        <div v-if="channelListCheck == 3">
-          <div class="flex justify-center items-center">
-            <div class="p-4 xl:w-[55rem] text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-              <h5 class="text-2xl text-gray-900 dark:text-white">No channel available</h5>
-              <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
-                <img src="../../assets/no_channel.png" class="xl:w-82 xl:h-82" />
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
       <!-- delete channel modal -->
       <TransitionRoot as="template" :show="openDelete">
@@ -373,12 +386,24 @@
                         </div>
                         <div v-if="ChannelPlaylistCheck == 2">
                           <video-player 
+                            v-if="channelType.includes('Playlist (On demand)')"
                             :options="videoOptions" 
                             :playlistOptions="playlist" 
                             :shareOptions="share"
                             :showShare="true"
                             :showTitle="true"
                             @playedVideo="sendPlayEvent"
+                            :logoOptions="logoOptions"
+                            :playerColor="playerColor"
+                            :adsTag="adsUrl"
+                            :loopPlaylist="loopPlaylist"
+                          />
+                          <video-player-linear
+                            v-else
+                            :options="videoOptionsLinear" 
+                            :shareOptions="share"
+                            :showShare="true"
+                            :showTitle="false"
                             :logoOptions="logoOptions"
                             :playerColor="playerColor"
                             :adsTag="adsUrl"
@@ -947,6 +972,77 @@
           </div>
         </Dialog>
       </TransitionRoot>
+      <!-- stream link modal openStreamLink-->
+      <TransitionRoot as="template" :show="openStreamLink">
+        <Dialog as="div" class="relative z-10" @close="openStreamLink = false">
+          <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+
+          <div class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full">
+                  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" 
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                        </svg>
+                      </div>
+                      <div class=" text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <DialogTitle as="h3" class="text-lg mt-2 leading-6 font-medium text-gray-900"> Get .m3u8 link </DialogTitle>
+                      </div>
+                    </div>
+                    <div class="mt-8">
+                      <p class="text-bold font-medium">M3U8 stream link</p>
+                      <p class="text-gray-500 bg-gray-100 p-2 mt-2">
+                        Stream your live linear channel in a third-party player, native apps or OTT platforms.
+                      </p>
+                      <div class="flex mt-4">
+                        <div class="relative w-full">
+                          <!-- <label for="stream-link" 
+                            class="block mb-2 text-sm font-medium 
+                            text-gray-900 dark:text-gray-300 font-bold">Stream Link
+                          </label> -->
+                          <input type="text" id="stream-link" v-model="streamLink"
+                            class="block p-2.5 w-full z-20 text-sm text-gray-900 
+                            bg-gray-50 border border-gray-300 
+                            dark:placeholder-gray-400 dark:text-white 
+                            dark:focus:border-indigo-500" 
+                            placeholder="" required="" readonly>
+                          <div class="tooltip">
+                            <button type="button" @click="copyDataLink(streamLink,'stream-link','stream-tip')"
+                              class="absolute top-0 right-0 p-2.5 text-sm font-medium 
+                              text-white bg-indigo-600 border border-indigo-700 
+                              hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
+                              <span class="tooltiptext" id="stream-tip">Copy</span>
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-6" fill="none" 
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" 
+                      class="mt-3 w-full inline-flex justify-center border border-gray-300 
+                      shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
+                      hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                      @click="openStreamLink = false" ref="cancelButtonRef">Cancel
+                    </button>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
       
     </page-component>
   </div>
@@ -957,6 +1053,7 @@ import PageComponent from '../../components/PageComponent.vue';
 import Notification from '../../components/Notification.vue';
 import store from '../../store';
 import VideoPlayer from '../../components/VideoPlayerChannel.vue';
+import VideoPlayerLinear from '../../components/VideoPlayerLinearMain.vue'
 import { ref, computed, onMounted, watch, getCurrentInstance } from 'vue';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { ExclamationIcon } from '@heroicons/vue/outline';
@@ -977,6 +1074,7 @@ const openDelete = ref(false)
 const openEmbed = ref(false)
 const openAddVideo = ref(false)
 const openDup = ref(false)
+const openStreamLink = ref(false)
 const allVideos = ref(true)
 const selectedVideos = ref(false)
 const isDisabled = ref(false)
@@ -1001,6 +1099,36 @@ const embedFilters = ref({
   sShare: true
 });
 
+const videoOptions = {
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+}
+const videoOptionsLinear = {
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+  sources: [
+    {
+      src: '',
+      type: 'video/mp4',
+    }
+  ],
+  poster: '',
+  bigPlayButton: true,
+  controlBar: {
+    fullscreenToggle: true,
+    pictureInPictureToggle: true,
+    remainingTimeDisplay: true,
+    volumePanel: true,
+    currentTimeDisplay: true,
+    timeDivider: true,
+    durationDisplay: true,
+    progressControl: true
+  }
+}
 const playlist = ref([]);
 const share = ref({
     socials: ['fbFeed', 'tw'],
@@ -1036,6 +1164,8 @@ let playerColor = ref('#6366F1');
 let adsUrl = ref('')
 let twitterHandle = ref('');
 let loopPlaylist = ref(false);
+let streamLink = ref('');
+let channelType = ref('')
 
 const code = ref('')
 const embedSrc = ref('')
@@ -1288,6 +1418,22 @@ const copyData = (data, elmId) => {
   alert("Copied to clipboard!");
 }
 
+// copy to clipboard
+const copyDataLink = (data, elmId, elmId2) => {
+    let copyText = document.getElementById(elmId);
+    let tooltip = document.getElementById(elmId2);
+
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(data);
+    tooltip.innerHTML = "Copied!";
+
+    setTimeout(() => {
+        tooltip.innerHTML = "Copy"
+    }, 1500);
+//   alert("Copied to clipboard!");
+}
+
 const embedChannel = async (hash, title, data) => {
   const embedUrl = router.resolve({
     name: 'EmbedChannel',
@@ -1327,17 +1473,8 @@ const embedChannel = async (hash, title, data) => {
             ]
           })
         }
-
-        logoOptions.value.image = data.logo == null ? data.logo_link : data.logo;
-        logoOptions.value.position = data.logo_position == 'left' ? 'top-left' : null;
-        logoOptions.value.show = data.logo_enable == 1 ? true : false;
+        
         twitterHandle.value = data.twitter;
-        playerColor.value = data.color;
-        adsUrl.value = data.ad_tag_url;
-
-        if(data.channel_type == 'Looped (Linear)')
-          loopPlaylist.value = true;
-
         let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
         share.value.embedCode = code.value
         share.value.title = `Watch "${title}" ${twitter} on `;
@@ -1347,10 +1484,30 @@ const embedChannel = async (hash, title, data) => {
         });
         share.value.url = `https://${window.location.host+shareUrl.href}` // external sharing
 
-        
+        logoOptions.value.image = data.logo == null ? data.logo_link : data.logo;
+        logoOptions.value.position = data.logo_position == 'left' ? 'top-left' : null;
+        logoOptions.value.show = data.logo_enable == 1 ? true : false;
+        playerColor.value = data.color;
+        adsUrl.value = data.ad_tag_url;
+
+        if(data.channel_type == 'Looped (Linear)')
+          loopPlaylist.value = true;
+
+        channelType.value = data.channel_type
+        if(data.channel_type.includes('Linear')) {
+          videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/hls/channels/${data.stream_name}.m3u8`;
+          // videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/m3u8/linear_demo.m3u8`;
+          videoOptionsLinear.poster = res.data[0].thumbnail;
+          videoOptionsLinear.sources[0].type = 'application/x-mpegURL';
+          if(data.channel_type.includes('Looped')){ videoOptionsLinear.loop = true; }else{ videoOptionsLinear.loop = false; }
+          videoOptionsLinear.controlBar.fullscreenToggle = false;
+          videoOptionsLinear.controlBar.pictureInPictureToggle = false;
+          videoOptionsLinear.controlBar.remainingTimeDisplay = false;
+          videoOptionsLinear.controlBar.progressControl = false;
+        }
       }
-      ChannelPlaylistCheck.value = 2;
     })
+    ChannelPlaylistCheck.value = 2;    
 }
 
 const sendPlayEvent = async (data) => {
@@ -1370,6 +1527,11 @@ const embedCode = (item) => {
     code.value = `<iframe src='${embedSrc.value}?autoplay=${item.isAutoPlay == true ? 1 : 0}&volume=${item.isVolume == true ? 1 : 0}&controls=${item.sControls == true ? 1 : 0}&title=${item.sContentTitle == true ? 1 : 0}&share=${item.sShare == true ? 1 : 0}' width='${item.pixelWid}' height='${item.pixelLen}' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
     share.value.embedCode = code.value
   }
+}
+
+const streamLinkModal = (stream_name) => {
+  streamLink.value = `http://tubetargeterapp.com:3070/hls/channels/${stream_name}.m3u8`
+  openStreamLink.value = true;
 }
 
 const confirmDelete = (c) => {
@@ -1417,22 +1579,42 @@ const tabSwitch = (type) => {
   }
 }
 
-const videoOptions = {
-  autoplay: false,
-  controls: true,
-  muted: false,
-  loop: false,
-  // playbackRates: [0.5, 1, 1.5, 2],
-  // sources: [
-  //   {
-  //     src: '',
-  //     type: 'video/mp4',
-  //   }
-  // ],
-}
+
 
 onMounted(() => {
   getChannelList();
 });
 
 </script>
+<style scoped>
+.tooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 40px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 160%;
+  margin-left: -68px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+</style>

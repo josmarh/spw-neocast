@@ -72,7 +72,7 @@ class ChannelController extends Controller
             'ad_tag_url' => $request->adtagurl,
             'channel_type' => $request->channeltype,
             'channel_hash' => strtolower(Str::random(32)),
-            'stream_name' => strtolower(Str::random(32)).'m3u8',
+            'stream_name' => strtolower(Str::random(32)),
             'user_id' => $user->id,
         ]);
 
@@ -159,7 +159,8 @@ class ChannelController extends Controller
             'privacy_domain' => $channel->privacy_domain,
             'ad_tag_url' => $channel->ad_tag_url,
             'channel_type' => $channel->channel_type,
-            'channel_hash' => strtolower(Str::random(26)),
+            'channel_hash' => strtolower(Str::random(32)),
+            'stream_name' => strtolower(Str::random(32)),
             'user_id' => $user->id,
         ]);
 

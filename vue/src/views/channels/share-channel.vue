@@ -25,12 +25,24 @@
             </div>
             <div class="mt-4">
                 <video-player 
+                    v-if="channelType.includes('Playlist (On demand)')"
                     :options="videoOptions"
                     :playlistOptions="playlist"
                     :shareOptions="share"
                     :showShare="true"
                     :showTitle="true"
                     @playedVideo="sendPlayEvent"
+                    :logoOptions="logoOptions"
+                    :playerColor="playerColor"
+                    :adsTag="adsUrl"
+                    :loopPlaylist="loopPlaylist"
+                />
+                <video-player-linear 
+                    v-else
+                    :options="videoOptionsLinear" 
+                    :shareOptions="share"
+                    :showShare="true"
+                    :showTitle="false"
                     :logoOptions="logoOptions"
                     :playerColor="playerColor"
                     :adsTag="adsUrl"
@@ -45,6 +57,7 @@
 import store from "../../store";
 import NotificationVue from "../../components/Notification.vue";
 import VideoPlayer from '../../components/VideoPlayerChannel.vue';
+import VideoPlayerLinear from '../../components/VideoPlayerLinearMain.vue';
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from 'vue-router';
 
@@ -65,7 +78,31 @@ const videoOptions = ref({
   muted: false,
   loop: false,
   playbackRates: [0.5, 1, 1.5, 2],
-})
+});
+const videoOptionsLinear = {
+  autoplay: false,
+  controls: true,
+  muted: false,
+  loop: false,
+  sources: [
+    {
+      src: '',
+      type: 'video/mp4',
+    }
+  ],
+  poster: '',
+  bigPlayButton: true,
+  controlBar: {
+    fullscreenToggle: true,
+    pictureInPictureToggle: true,
+    remainingTimeDisplay: true,
+    volumePanel: true,
+    currentTimeDisplay: true,
+    timeDivider: true,
+    durationDisplay: true,
+    progressControl: true
+  }
+}
 
 const videoOptionsCustom = ref({
     title: 0,
@@ -105,23 +142,15 @@ let playerColor = ref('#6366F1');
 let adsUrl = ref('')
 let twitterHandle = ref('');
 let loopPlaylist = ref(false);
+let streamLink = ref('');
+let channelType = ref('');
 
 const getChannelInfo = () => {
     store
         .dispatch('externalChannel', route.params.str)
         .then((res) => {
             if(res.data) {
-                logoOptions.value.image = res.data.logo == null ? res.data.logo_link : res.data.logo;
-                logoOptions.value.position = res.data.logo_position == 'left' ? 'top-left' : null;
-                logoOptions.value.show = res.data.logo_enable == 1 ? true : false;
-                twitterHandle.value = res.data.twitter;
-                playerColor.value = res.data.color;
-                adsUrl.value = res.data.ad_tag_url;
-
-                if(res.data.channel_type == 'Looped (Linear)')
-                    loopPlaylist.value = true;
-
-                getPlaylist();
+                getPlaylist(res.data);
                 contentSettings();
             }
         })
@@ -138,7 +167,7 @@ const getChannelInfo = () => {
         });
 }
 
-const getPlaylist = async () => {
+const getPlaylist = async (chdata) => {
     playlist.value = [];
     ChannelPlaylistCheck.value = 1;
 
@@ -168,16 +197,40 @@ const getPlaylist = async () => {
                 })
             }
             ChannelPlaylistCheck.value = 2;
+            twitterHandle.value = chdata.twitter;
             let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
 
             share.value.title = `Watch "${res.data[0].channel_title}" ${twitter} on `;
             share.value.url = `${window.location.href}`
             share.value.embedCode = `<iframe src='https://${window.location.host}/embed/channel/${route.params.str}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`
             data.value.filename = res.data[0].channel_title;
+
+            logoOptions.value.image = chdata.logo == null ? chdata.logo_link : chdata.logo;
+            logoOptions.value.position = chdata.logo_position == 'left' ? 'top-left' : null;
+            logoOptions.value.show = chdata.logo_enable == 1 ? true : false;
+            playerColor.value = chdata.color;
+            adsUrl.value = chdata.ad_tag_url;
+
+            if(chdata.channel_type == 'Looped (Linear)')
+                loopPlaylist.value = true;
+
+            channelType.value = chdata.channel_type;
+            streamLink.value = `http://tubetargeterapp.com:3070/hls/channels/${chdata.stream_name}.m3u8`
+            if(chdata.channel_type.includes('Linear')) {
+                videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/hls/channels/${res.data.stream_name}.m3u8`;
+                // videoOptionsLinear.sources[0].src = `http://tubetargeterapp.com:3070/m3u8/linear_demo.m3u8`;
+                videoOptionsLinear.poster = res.data[0].thumbnail;
+                videoOptionsLinear.sources[0].type = 'application/x-mpegURL';
+                if(chdata.channel_type.includes('Looped')){ videoOptionsLinear.loop = true; }else{ videoOptionsLinear.loop = false; }
+                videoOptionsLinear.controlBar.fullscreenToggle = false;
+                videoOptionsLinear.controlBar.pictureInPictureToggle = false;
+                videoOptionsLinear.controlBar.remainingTimeDisplay = false;
+                videoOptionsLinear.controlBar.progressControl = false;
+            }
+
         }else {
             ChannelPlaylistCheck.value = 3;
-        }
-      
+        }      
     })
 }
 

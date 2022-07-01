@@ -29,6 +29,9 @@ import WebPageSingle from '../views/websites/web-page-single.vue'
 import Analytics from '../views/analytics/index.vue'
 import Welcome from '../views/Welcome.vue'
 import Welcomev from '../views/Welcomev.vue'
+import Users from '../views/usermanager/users.vue'
+import Reseller from '../views/usermanager/resellers.vue'
+import Roles from '../views/usermanager/roles.vue'
 import store from "../store"
 
 const routes = [
@@ -40,7 +43,7 @@ const routes = [
         meta: {isGuest: true},
         children: [
             { path: '/login', name: 'Login', component: Login },
-            { path: '/register', name: 'Register', component: Register },
+            // { path: '/register', name: 'Register', component: Register },
             { path: '/forgot-password', name: 'ForgetPassword', component: ForgetPassword },
         ]
     },
@@ -67,6 +70,9 @@ const routes = [
             {path: '/analytics', name: 'Analytics', component: Analytics},
             {path: '/welcome', name: 'Welcome', component: Welcome},
             {path: '/welcome', name: 'Welcomev', component: Welcomev},
+            {path: '/users', name: 'Users', component: Users},
+            {path: '/reseller', name: 'Reseller', component: Reseller},
+            {path: '/roles', name: 'Roles', component: Roles},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },

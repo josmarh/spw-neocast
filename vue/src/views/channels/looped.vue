@@ -32,8 +32,7 @@ const videoOptions = {
     currentTimeDisplay: true,
     timeDivider: true,
     durationDisplay: true,
-    progressControl: false,
-    liveControl: true
+    progressControl: false
   }
 };
 

@@ -11,6 +11,7 @@ use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LiveStreamController;
 use App\Http\Controllers\FFmpegConverter;
+use App\Http\Controllers\UserManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+    Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/personal-info', [AuthController::class, 'updateUser']);
     Route::put('/password/update', [AuthController::class, 'updatePassword']);
@@ -76,9 +78,24 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('chart', [ReportController::class, 'chartReport']);
     });
 
+    Route::get('users', [UserManagerController::class, 'index']);
+    Route::get('reseller', [UserManagerController::class, 'resellerIndex']);
+    Route::group(['prefix' => 'user'], function () {
+        Route::put('update/{id}', [UserManagerController::class, 'update']);
+        Route::put('block/{id}', [UserManagerController::class, 'blockUser']);
+        Route::delete('delete/{id}', [UserManagerController::class, 'delete']);
+    });
+
+    Route::get('permissions', [UserManagerController::class, 'permissions']);
+    Route::post('permission/store', [UserManagerController::class, 'permissionStore']);
+    Route::put('permission/update', [UserManagerController::class, 'permissionUpdate']);
+
+    Route::get('roles', [UserManagerController::class, 'roles']);
+    Route::post('role/store', [UserManagerController::class, 'roleStore']);
+    Route::put('role/update', [UserManagerController::class, 'roleUpdate']);
+   
 });
 
-Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::get('video/show/{str}', [VideoController::class, 'show']);
 Route::get('channel/show/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);

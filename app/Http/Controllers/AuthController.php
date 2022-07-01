@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Rules\MatchOldPassword;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 use Auth;
 
@@ -13,6 +15,7 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        $user = $request->user();
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|string|unique:users,email',
@@ -25,14 +28,20 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password'])
+            'password' => bcrypt($data['password']),
+            'is_active' => 1,
+            'created_by' => $user->id,
         ]);
 
         $token = $user->createToken('main')->plainTextToken;
 
+        // return response([
+        //     'user' => $user,
+        //     'token' => $token
+        // ]);
         return response([
-            'user' => $user,
-            'token' => $token
+            'message' => 'User Created.',
+            'status_code' => 201
         ]);
     }
 

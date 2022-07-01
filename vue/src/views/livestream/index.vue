@@ -195,9 +195,7 @@
                   <div class="flex space-x-4">
                     <div class="">
                       <p class="text-sm text-gray-900  dark:text-white">
-                        Embed the live stream directly on a website or send the live feed to one or multiple channels. 
-                        The channel automatically will switch to a live state and once the live ends the channel will 
-                        switch to its normal state.
+                        Embed the live stream directly on a website.
                       </p>
                     </div>
                   </div>

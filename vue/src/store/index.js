@@ -34,6 +34,11 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        users: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -47,7 +52,7 @@ const store = createStore({
         register({ commit }, user){
             return axiosClient.post('/register', user)
                 .then(({data}) => {
-                    commit('setUser', data)
+                    // commit('setUser', data)
                     return data;
                 })
         },
@@ -385,8 +390,44 @@ const store = createStore({
                     return data;
                 })
         },
+        getUsers({ commit }, {url = null} = {}){
+            url = url || '/users'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setUsers', data)
+                    return data;
+                })
+        },
+        searchUsers({ commit }, params){
+            return axiosClient.get(`/users?email=${params}`)
+                .then(({data}) => {
+                    commit('setUsers', data)
+                    return data;
+                })
+        },
+        updateUser({ }, payload){
+            return axiosClient.put(`/user/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        blockUser({ }, id){
+            return axiosClient.put(`/user/block/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteUser({ }, id){
+            return axiosClient.delete(`/user/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
+        setUsers: (state, data) => {
+            state.users = data;
+        },
         setliveStreams: (state, data) => {
             state.liveStream = data;
         },
