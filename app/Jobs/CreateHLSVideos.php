@@ -32,6 +32,7 @@ class CreateHLSVideos implements ShouldQueue
      */
     public function handle()
     {
-        shell_exec('cd '.$this->streamInfo['filePath']. '; C:\ffmpeg\bin\ffmpeg.exe -re -f concat -i '.$this->streamInfo['fileName'].' -b:v 1M -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 '.$this->streamInfo['streamPath']);
+        shell_exec('rm '.$this->streamInfo['streamPath'].'*.ts; rm '.$this->streamInfo['streamPath'].'.m3u8');
+        shell_exec('cd '.$this->streamInfo['filePath']. '; C:\ffmpeg\bin\ffmpeg.exe -re -f concat -i '.$this->streamInfo['fileName'].' -b:v 1M -g 60 -hls_time 2 -hls_list_size 0 -hls_segment_size 500000 '.$this->streamInfo['streamPath'].'.m3u8');
     }
 }

@@ -13,14 +13,15 @@ class DeleteHLSVideos implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $streamInfo;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($streamInfo)
     {
-        //
+        $this->streamInfo = $streamInfo;
     }
 
     /**
@@ -30,6 +31,6 @@ class DeleteHLSVideos implements ShouldQueue
      */
     public function handle()
     {
-        //
+        shell_exec('cd '.$this->streamInfo['filePath']. '; rm '.$this->streamInfo['fileName'].'*.ts; rm '.$this->streamInfo['fileName'].'.m3u8');
     }
 }

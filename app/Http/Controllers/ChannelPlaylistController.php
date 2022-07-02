@@ -78,8 +78,8 @@ class ChannelPlaylistController extends Controller
         $linearCheck = Channels::where('channel_hash', $channelId)->first();
 
         if(strpos($linearCheck->channel_type, 'Linear') !== false) {
-            $streamInfo = $this->makeStreams($channelId, $linearCheck);
-            Log::info($streamInfo);
+            $streamInfo = $this->makeStreams($channelId, $linearCheck); 
+
             dispatch(new CreateHLSVideos($streamInfo))->delay(5);
         }
 
@@ -101,7 +101,13 @@ class ChannelPlaylistController extends Controller
         // check if channel is linear and refresh streams
         $linearCheck = Channels::where('channel_hash', $content->channel_hash)->first();
         if(strpos($linearCheck->channel_type, 'Linear') !== false) {
-            $this->makeStreams($content->channel_hash, $linearCheck);
+            $streamInfo = $this->makeStreams($content->channel_hash, $linearCheck);
+
+            if($streamInfo['type'] == 'createHLS'){
+                dispatch(new CreateHLSVideos($streamInfo))->delay(5);
+            } else {
+                dispatch(new DeleteHLSVideos($streamInfo))->delay(5);
+            }
         }
 
         $content->delete();
@@ -200,20 +206,30 @@ class ChannelPlaylistController extends Controller
             fclose($channelFile);
 
             // send for dispatch: videos url, stream_name
-            return $convertInfo = [
-                'filePath' => 'C:\Users\"BUYPC COMPUTER"\Documents\DevProjects\lara-vue\viloud\public\uploads',
+            $streamInfo = [
+                'filePath' => $absolutePath,
                 'fileName' => $channelId.".txt",
-                'streamPath' => 'C:\Users\"BUYPC COMPUTER"\Documents\DevProjects\lara-vue\viloud\public\m3u8'.$linearCheck->stream_name.'.m3u8'
+                'streamPath' => '/nginx/channels/'.$linearCheck->stream_name,
+                'type' => 'createHLS'
             ];
+
+            return $streamInfo;
+
         }else {
-            // delete all ${channel}.m3u8 
+            // delete all ${channel} .ts .m3u8 
             $dir = 'uploads/';
             $absolutePath = public_path($dir);
             if(File::exists($absolutePath.$channelId.".txt")){
                 unlink($absolutePath.$channelId.".txt");
             }
 
-            return $linearCheck->stream_name;
+            $streamInfo = [
+                'filePath' => '/nginx/channels',
+                'fileName' => $linearCheck->stream_name,
+                'type' => 'deleteHLS'
+            ];
+
+            return $streamInfo;
         }
     }
 
