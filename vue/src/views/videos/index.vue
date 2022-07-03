@@ -1446,7 +1446,7 @@ const downloadContent = async (cont) => {
     .dispatch("downloadContent", cont.id)
     .then((res) => {
       internalInstance.appContext.config.globalProperties.$Progress.finish();
-      let fileExt = cont.file_hash.replace('http://127.0.0.1:8000/uploads/', '');
+      let fileExt = cont.file_hash.replace(`${import.meta.env.VITE_API_BASE_URI}/uploads/`, '');
       forceFileDownload(res, cont.file_name, fileExt.split('.')[1])
     })
     .catch((err) => {

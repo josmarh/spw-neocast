@@ -18,7 +18,7 @@ const videoOptions = {
   loop: true,
   sources: [
     {
-      src: 'http://tubetargeterapp.com:3070/m3u8/linear_demo.m3u8',
+      src: 'https://tubetargeterapp.com:3070/m3u8/linear_demo.m3u8',
       type: 'application/x-mpegURL',
     }
   ],

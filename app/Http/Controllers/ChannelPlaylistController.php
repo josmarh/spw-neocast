@@ -76,7 +76,7 @@ class ChannelPlaylistController extends Controller
 
         // check if channel is linear
         $linearCheck = Channels::where('channel_hash', $channelId)->first();
-
+ 
         if(strpos($linearCheck->channel_type, 'Linear') !== false) {
             $streamInfo = $this->makeStreams($channelId, $linearCheck); 
 

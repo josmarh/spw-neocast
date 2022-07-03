@@ -686,7 +686,7 @@ const getLiveStreamContent = () => {
                 share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
                 share.value.title = `Watch "${model.value.title}" Live on `;
 
-                videoOptions.value.sources[0].src = `http://tubetargeterapp.com:3070/hls/${data.stream_key}.m3u8`;
+                videoOptions.value.sources[0].src = `https://tubetargeterapp.com:3070/hls/${data.stream_key}.m3u8`;
                 checkStreamUri();
             }
         })
@@ -743,7 +743,7 @@ let playingLive2 = ref(0)
 const checkStreamUri = () => {
     let lopper = () => {
         timeoutStream = setTimeout( async () => {
-            await fetch(`http://tubetargeterapp.com:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
+            await fetch(`https://tubetargeterapp.com:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
             .then(res => res)
             .then(data => {
                 if(data.status) {
@@ -756,7 +756,7 @@ const checkStreamUri = () => {
                         model.value.liveStatus = 'live'
                         // check live status if is not there then download video after 10 sec
                         let _liveStatus = document.getElementsByClassName('vjs-seek-to-live-control')[0];
-                        let _liveStatus2 = document.getElementsByClassName('vjs-hidden')[0];
+                        let _liveStatus2 = document.getElementsByClassName('vjs-live-control')[0];
                         
                         if(_liveStatus){
                             if(_liveStatus.getAttribute('title').includes('currently playing live')) {
@@ -768,23 +768,29 @@ const checkStreamUri = () => {
                             }
                         }
 
-                        if (_liveStatus2) {
-                            playingLive2.value = 1
-                        }else if(!_liveStatus2) {
-                            if( playingLive2.value == 1)
-                                saveLiveVideo2.value = 1
+                        if(_liveStatus2) {
+                            if (!_liveStatus2.classList.contains('vjs-hidden')) {
+                                playingLive2.value = 1
+                            }else if(_liveStatus2.classList.contains('vjs-hidden')) {
+                                if( playingLive2.value == 1) {
+                                    saveLiveVideo2.value = 1
+                                }
+                            }
                         }
 
                         if(saveLiveVideo.value == 1 && playingLive.value == 1) {
+                            playingLive.value = 2; saveLiveVideo.value = 2;
                             // run save
                             setTimeout(() => {
                                 storeLiveVideo();
-                            }, 10000);
-                        }else if(saveLiveVideo2.value == 1 && playingLive2.value == 1) {
+                            }, 12000);
+                        }
+                        if(saveLiveVideo2.value == 1 && playingLive2.value == 1) {
+                            playingLive2.value = 2; saveLiveVideo2.value = 2;
                             // run save
                             setTimeout(() => {
                                 storeLiveVideo();
-                            }, 10000);
+                            }, 12000);
                         }
 
                         lopper();
