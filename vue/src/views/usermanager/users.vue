@@ -64,9 +64,9 @@
                                 <th scope="col" class="px-6 py-3">
                                     Email
                                 </th>
-                                <!-- <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="px-6 py-3">
                                     Role
-                                </th> -->
+                                </th>
                                 <!-- <th scope="col" class="px-6 py-3">
                                     Created By
                                 </th> -->
@@ -99,9 +99,9 @@
                                 <td class="px-6 py-4">
                                     {{user.email}}
                                 </td>
-                                <!-- <td class="px-6 py-4">
-                                    
-                                </td> -->
+                                <td class="px-6 py-4">
+                                    {{user.role}}
+                                </td>
                                 <!-- <td class="px-6 py-4">
                                     {{user.created_by.name}}
                                 </td> -->
@@ -342,6 +342,22 @@
                                             >Confirm Password
                                         </label>
                                     </div>
+                                    <!-- roles -->
+                                    <div class="mt-6">
+                                        <label for="select_role" class="sr-only">Select Role</label>
+                                        <select
+                                            v-model="model.role"
+                                            id="select_role"
+                                            class="block py-2 px-0 w-full text-sm text-gray-500
+                                                bg-transparent border-0 border-b-2 border-gray-300
+                                                appearance-none dark:text-gray-400 dark:border-gray-600
+                                                focus:outline-none focus:ring-0 focus:border-gray-200
+                                                peer" required>
+                                            <option selected disabled hidden value="">Select Role</option>
+                                            <option v-for="role in roles.data" :key="role.id" 
+                                                :value="role.name">{{role.name}}</option>
+                                        </select>
+                                    </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                         <button type="button" 
                                             class="mt-3 w-full inline-flex justify-center border 
@@ -512,6 +528,22 @@
                                             >Confirm Password
                                         </label>
                                     </div>
+                                    <!-- update roles -->
+                                    <div class="mt-6">
+                                        <label for="select_role" class="sr-only">Select Role</label>
+                                        <select
+                                            v-model="model.role"
+                                            id="select_role"
+                                            class="block py-2 px-0 w-full text-sm text-gray-500
+                                                bg-transparent border-0 border-b-2 border-gray-300
+                                                appearance-none dark:text-gray-400 dark:border-gray-600
+                                                focus:outline-none focus:ring-0 focus:border-gray-200
+                                                peer">
+                                            <option selected disabled value="">Select Role</option>
+                                            <option v-for="role in roles.data" :key="role.id" 
+                                                :value="role.name">{{role.name}}</option>
+                                        </select>
+                                    </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                         <button type="button" 
                                             class="mt-3 w-full inline-flex justify-center border 
@@ -677,6 +709,7 @@ import { ExclamationIcon } from '@heroicons/vue/outline';
 import { MenuIcon } from '@heroicons/vue/outline'
 
 const users = computed(() => store.state.users);
+const roles = computed(() => store.state.userGuard);
 const internalInstance = getCurrentInstance();
 const openCreateUser = ref(false);
 const openUpdateUser = ref(false);
@@ -691,7 +724,8 @@ let model = ref({
     email: '',
     password: '',
     password_confirmation: '',
-    role: null,
+    role: '',
+    old_role: '',
 });
 let filter = ref({
     name: '',
@@ -703,31 +737,6 @@ watch(filter, (newVal, oldVal) => {
         searchUser();
     }, 2000);
 }, {deep: true});
-
-const formatDate = (value) => {
-    if (value) {
-        return moment(String(value)).format('MM/DD/YYYY')
-    }
-};
-
-const addUserModal = () => {
-    model.value.name = '';
-    model.value.email = '';
-    model.value.password = '';
-    model.value.password_confirmation = '';
-    openCreateUser.value = true
-}
-
-const showPassword = (elm) => {
-    let passElm = document.getElementById(elm);
-    if(passElm.value !== ''){
-        if (passElm.getAttribute('type') == 'password') {
-            passElm.setAttribute('type', 'text');
-        } else {
-            passElm.setAttribute('type', 'password');
-        }
-    }
-}
 
 const getUsers = () => {
     internalInstance.appContext.config.globalProperties.$Progress.start();
@@ -767,6 +776,7 @@ const addUser = () => {
             email: model['_rawValue'].email,
             password: model['_rawValue'].password,
             password_confirmation: model['_rawValue'].password_confirmation,
+            role: model['_rawValue'].role,
         })
         .then((res) => {
             internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
@@ -780,6 +790,24 @@ const addUser = () => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();
             isDisabled.value = false;
             openCreateUser.value = false;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message")) {
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    } else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        })
+}
+
+const getRoles = () => {
+    store
+        .dispatch('getUserRoles')
+        .then((res) => {            
+        })
+        .catch((err) => {            
             if(err.response) {
                 if (err.response.data) {
                     if (err.response.data.hasOwnProperty("message")) {
@@ -821,15 +849,6 @@ const searchUser = () => {
         })
 }
 
-const updateUserModal = (user) => {
-    model.value.id = user.id;
-    model.value.name = user.name;
-    model.value.email = user.email;
-    model.value.password = '';
-    model.value.password_confirmation = '';
-    openUpdateUser.value = true
-}
-
 const updateUser = () => {
     internalInstance.appContext.config.globalProperties.$Progress.start();
     isDisabled.value = true;
@@ -840,6 +859,8 @@ const updateUser = () => {
             email: model['_rawValue'].email,
             password: model['_rawValue'].password,
             password_confirmation: model['_rawValue'].password_confirmation,
+            new_role: model['_rawValue'].role,
+            old_role: model['_rawValue'].old_role,
         })
         .then((res) => {
             internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
@@ -865,20 +886,8 @@ const updateUser = () => {
         })
 }
 
-const blockUserModal = (user) => {
-    model.value.id = user;
-    model.value.name = user.name;
-    openBlockUser.value = true
-}
-
 const blockUser = (id) => {
 
-}
-
-const deleteUserModal = (user) => {
-    model.value.id = user.id;
-    model.value.name = user.name;
-    openDeleteUser.value = true
 }
 
 const deleteUser = (id) => {
@@ -910,6 +919,54 @@ const deleteUser = (id) => {
         })
 }
 
+const addUserModal = () => {
+    model.value.name = '';
+    model.value.email = '';
+    model.value.password = '';
+    model.value.password_confirmation = '';
+    openCreateUser.value = true;
+}
+
+const updateUserModal = (user) => {
+    model.value.id = user.id;
+    model.value.name = user.name;
+    model.value.email = user.email;
+    model.value.password = '';
+    model.value.password_confirmation = '';
+    model.value.role = user.role;
+    model.value.old_role = user.role;
+    openUpdateUser.value = true;
+}
+
+const blockUserModal = (user) => {
+    model.value.id = user;
+    model.value.name = user.name;
+    openBlockUser.value = true
+}
+
+const deleteUserModal = (user) => {
+    model.value.id = user.id;
+    model.value.name = user.name;
+    openDeleteUser.value = true
+}
+
+const formatDate = (value) => {
+    if (value) {
+        return moment(String(value)).format('MM/DD/YYYY')
+    }
+};
+
+const showPassword = (elm) => {
+    let passElm = document.getElementById(elm);
+    if(passElm.value !== ''){
+        if (passElm.getAttribute('type') == 'password') {
+            passElm.setAttribute('type', 'text');
+        } else {
+            passElm.setAttribute('type', 'password');
+        }
+    }
+}
+
 const getForPage = (ev,link) => {
   ev.preventDefault();
   if(!link.url || link.active) {
@@ -921,6 +978,7 @@ const getForPage = (ev,link) => {
 
 onMounted(() => {
     getUsers();
+    getRoles();
 })
 </script>
 

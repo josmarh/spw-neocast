@@ -87,12 +87,17 @@ Route::middleware('auth:sanctum')->group(function(){
     });
 
     Route::get('permissions', [UserManagerController::class, 'permissions']);
-    Route::post('permission/store', [UserManagerController::class, 'permissionStore']);
-    Route::put('permission/update', [UserManagerController::class, 'permissionUpdate']);
-
     Route::get('roles', [UserManagerController::class, 'roles']);
-    Route::post('role/store', [UserManagerController::class, 'roleStore']);
-    Route::put('role/update', [UserManagerController::class, 'roleUpdate']);
+    Route::group(['prefix' => 'guard'], function () {
+        Route::post('permission/store', [UserManagerController::class, 'permissionStore']);
+        Route::put('permission/update/{id}', [UserManagerController::class, 'permissionUpdate']);
+        Route::delete('permission/delete/{id}', [UserManagerController::class, 'permissionDelete']);
+        Route::post('role/store', [UserManagerController::class, 'roleStore']);
+        Route::put('role/update/{id}', [UserManagerController::class, 'roleUpdate']);
+        Route::delete('role/delete/{id}', [UserManagerController::class, 'roleDelete']);
+        Route::get('role-permission/{roleId}', [UserManagerController::class, 'rolePermissions']);
+        Route::post('assign-permissions', [UserManagerController::class, 'permissionAssignRole']);
+    });
    
 });
 

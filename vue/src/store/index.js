@@ -39,6 +39,11 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        userGuard: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -390,6 +395,14 @@ const store = createStore({
                     return data;
                 })
         },
+        getResellerUsers({ commit }, {url = null} = {}){
+            url = url || '/reseller'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setUsers', data)
+                    return data;
+                })
+        },
         getUsers({ commit }, {url = null} = {}){
             url = url || '/users'
             return axiosClient.get(url)
@@ -423,8 +436,76 @@ const store = createStore({
                     return data;
                 })
         },
+        getUserRoles({ commit }, {url = null} = {}){
+            url = url || '/roles'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setGuard', data)
+                    return data;
+                })
+        },
+        storeRole({ }, payload){
+            return axiosClient.post(`/guard/role/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateRole({ }, payload){
+            return axiosClient.put(`/guard/role/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteRole({ }, id){
+            return axiosClient.delete(`/guard/role/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getRolePermission({ }, roleId){
+            return axiosClient.get(`/guard/role-permission/${roleId}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getUserPermissions({ commit }, {url = null} = {}){
+            url = url || '/permissions'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setGuard', data)
+                    return data;
+                })
+        },
+        storePermissions({ }, payload){
+            return axiosClient.post(`/guard/permission/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updatePermission({ }, payload){
+            return axiosClient.put(`/guard/permission/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deletePermission({ }, id){
+            return axiosClient.delete(`/guard/permission/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        permissionsAssignRole({ }, payload){
+            return axiosClient.post(`/guard/assign-permissions`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        
     },
     mutations: {
+        setGuard: (state, data) => {
+            state.userGuard = data;
+        },
         setUsers: (state, data) => {
             state.users = data;
         },

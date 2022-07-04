@@ -33,6 +33,8 @@ class AuthController extends Controller
             'created_by' => $user->id,
         ]);
 
+        $user->assignRole($request->role);
+
         $token = $user->createToken('main')->plainTextToken;
 
         // return response([

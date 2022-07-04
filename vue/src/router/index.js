@@ -32,6 +32,7 @@ import Welcomev from '../views/Welcomev.vue'
 import Users from '../views/usermanager/users.vue'
 import Reseller from '../views/usermanager/resellers.vue'
 import Roles from '../views/usermanager/roles.vue'
+import Permissions from '../views/usermanager/permissions.vue'
 import store from "../store"
 
 const routes = [
@@ -73,6 +74,7 @@ const routes = [
             {path: '/users', name: 'Users', component: Users},
             {path: '/reseller', name: 'Reseller', component: Reseller},
             {path: '/roles', name: 'Roles', component: Roles},
+            {path: '/permissions', name: 'Permissions', component: Permissions},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },

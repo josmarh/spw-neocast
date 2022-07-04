@@ -12,9 +12,13 @@ use App\Models\Websites;
 use App\Models\WebChannels;
 use App\Models\LiveStream;
 use App\Models\LivestreamVideos;
-use App\Http\Resources\UsersResource;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Http\Resources\UsersResource;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\PermissionResource;
+use DB;
+
 
 class UserManagerController extends Controller
 {
@@ -23,14 +27,24 @@ class UserManagerController extends Controller
         $email = $request->query('email');
 
         if(isset($email)) {
-            $users = User::where('email', 'like', '%'.$email.'%')
-                ->orderBy('created_at', 'desc')
+            $users = User::select('users.id','users.name as username', 'users.email as uemail', 'r.name as role', 'users.created_at as joined_date','users.is_active')
+                ->leftjoin('model_has_roles as mr','mr.model_id','=','users.id')
+                ->leftjoin('roles as r','r.id','=','mr.role_id')
+                ->where('users.email','like', '%'.$email.'%')
+                ->orderBy('users.created_at', 'desc')
                 ->with('user')
                 ->paginate(12);
         }else {
-            $users = User::orderBy('created_at', 'desc')
+            $users = User::select('users.id','users.name as username', 'users.email as uemail', 'r.name as role', 'users.created_at as joined_date','users.is_active')
+                ->leftjoin('model_has_roles as mr','mr.model_id','=','users.id')
+                ->leftjoin('roles as r','r.id','=','mr.role_id')
+                ->orderBy('users.created_at', 'desc')
                 ->with('user')
                 ->paginate(12);
+
+            // $users = User::orderBy('created_at', 'desc')
+            //     ->with('user')
+            //     ->paginate(12);
         }
 
         return UsersResource::collection($users);
@@ -42,16 +56,27 @@ class UserManagerController extends Controller
         $email = $request->query('email');
 
         if(isset($email)) {
-            $users = User::where('email', 'like', '%'.$email.'%')
-                ->where('created_by', $user->id)
-                ->orderBy('created_at', 'desc')
+            $users = User::select('users.id','users.name as username', 'users.email as uemail', 'r.name as role', 'users.created_at as joined_date','users.is_active')
+                ->leftjoin('model_has_roles as mr','mr.model_id','=','users.id')
+                ->leftjoin('roles as r','r.id','=','mr.role_id')
+                ->where('users.created_by', $user->id)
+                ->where('users.email','like', '%'.$email.'%')
+                ->orderBy('users.created_at', 'desc')
                 ->with('user')
                 ->paginate(12);
         }else {
-            $users = User::where('created_by', $user->id)
-                ->orderBy('created_at', 'desc')
+            $users = User::select('users.id','users.name as username', 'users.email as uemail', 'r.name as role', 'users.created_at as joined_date','users.is_active')
+                ->leftjoin('model_has_roles as mr','mr.model_id','=','users.id')
+                ->leftjoin('roles as r','r.id','=','mr.role_id')
+                ->where('users.created_by', $user->id)
+                ->orderBy('users.created_at', 'desc')
                 ->with('user')
                 ->paginate(12);
+
+            // $users = User::where('created_by', $user->id)
+            //     ->orderBy('created_at', 'desc')
+            //     ->with('user')
+            //     ->paginate(12);
         }
 
         return UsersResource::collection($users);
@@ -87,34 +112,52 @@ class UserManagerController extends Controller
             ]);
         }
 
+        if($data['old_role'] != $data['new_role'] && $data['old_role'] != null) {
+            $user->removeRole($data['old_role']);
+            $user->assignRole($data['new_role']);
+        }else{
+            $user->assignRole($data['new_role']);
+        }
+
         return response([
             'message' => 'User updated.',
             'status_code' => 200,
         ]);
     }
 
-    public function blockUser($id)
+    public function blockUser(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
+        if ($request->type == 1) {
+            $message = 'User Unblocked';
+        } else {
+            $message = 'User Blocked';
+        }
+
         $user->update([
-            'is_active' => 0
+            'is_active' => $request->type
         ]);
 
         return response([
-            'message' => 'User blocked.',
+            'message' => $message,
             'status_code' => 200,
         ]);
     }
 
-    public function permissions()
+    public function permissions(Request $request)
     {
-        return Permission::paginate(12);
-    }
+        $name = $request->query('name');
 
-    public function roles()
-    {
-        return Role::paginate(12);
+        if(isset($name)) {
+            $permissions = Permission::where('name', 'like', '%'.$name.'%')
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
+        }else {
+            $permissions = Permission::orderBy('created_at', 'desc')->paginate(12);
+        }
+
+        return PermissionResource::collection($permissions);
     }
 
     public function permissionStore(Request $request)
@@ -132,7 +175,7 @@ class UserManagerController extends Controller
         ]);
     }
 
-    public function permissionUpdate($id)
+    public function permissionUpdate(Request $request, $id)
     {
         $permission = Permission::findOrFail($id);
         
@@ -143,9 +186,20 @@ class UserManagerController extends Controller
         $permission->update(['name' => $data['name']]);
 
         return response([
-            'data' => $permission,
+            'data' => new PermissionResource($permission),
             'message' => 'Permission updated',
             'status_code' => 201,
+        ]);
+    }
+
+    public function permissionDelete($id)
+    {
+        $role = Permission::findOrFail($id);
+
+        // check all users with that role in role has permissions table and detach
+
+        return response([
+
         ]);
     }
 
@@ -173,6 +227,21 @@ class UserManagerController extends Controller
         ]);
     }
 
+    public function roles(Request $request)
+    {
+        $name = $request->query('name');
+
+        if(isset($name)) {
+            $roles = Role::where('name', 'like', '%'.$name.'%')
+                ->orderBy('created_at', 'desc')
+                ->paginate(12);
+        }else {
+            $roles = Role::orderBy('created_at', 'desc')->paginate(12);
+        }
+
+        return RoleResource::collection($roles);
+    }
+
     public function roleStore(Request $request)
     {
         $data = $request->validate([
@@ -188,7 +257,7 @@ class UserManagerController extends Controller
         ]);
     }
 
-    public function roleUpdate($id)
+    public function roleUpdate(Request $request, $id)
     {
         $role = Role::findOrFail($id);
         
@@ -199,9 +268,21 @@ class UserManagerController extends Controller
         $role->update(['name' => $data['name']]);
 
         return response([
-            'data' => $role,
+            'data' => new RoleResource($role),
             'message' => 'Role updated',
             'status_code' => 201,
+        ]);
+    }
+
+    public function rolePermissions(Request $request, $roleId)
+    {
+        $permissions =  DB::select( DB::raw("SELECT p.id, p.name, rp.role_id FROM permissions p
+            left join role_has_permissions rp on p.id=rp.permission_id and rp.role_id = '$roleId'
+            order by 1") );
+
+        return response([
+            'data' => $permissions,
+            'status_code' => 200
         ]);
     }
 
@@ -217,6 +298,17 @@ class UserManagerController extends Controller
         return response([
             'message' => 'Role Assigned',
             'status_code' => 200,
+        ]);
+    }
+
+    public function roleDelete($id)
+    {
+        $role = Role::findOrFail($id);
+
+        // check all users with that role in role has permissions table and detach
+
+        return response([
+
         ]);
     }
 
@@ -256,6 +348,7 @@ class UserManagerController extends Controller
         $videos = FileUploads::where('user_id', $id)->delete();
 
         // user
+        // $user->removeRole(['User', 'Admin', 'Super Admin']);
         $user->delete();
 
         return response([

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-component title="Uploads">
+    <page-component title="Uploads" :class="[upload.files.length < 2 ? 'h-screen bg-gray-100': '']">
       <notification />
       <div id="file-drag-drop">
         <form @submit="uploadFiles" enctype="multipart/form-data" id="fileform">
