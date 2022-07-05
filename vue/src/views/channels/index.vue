@@ -112,7 +112,7 @@
                   peer-placeholder-shown:translate-y-0
                   peer-focus:scale-75 peer-focus:-translate-y-6
                 "
-                >Search by channel name
+                >Search by name
               </label>
             </div>
           </div>

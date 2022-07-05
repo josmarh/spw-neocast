@@ -78,25 +78,29 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::get('chart', [ReportController::class, 'chartReport']);
     });
 
-    Route::get('users', [UserManagerController::class, 'index']);
-    Route::get('reseller', [UserManagerController::class, 'resellerIndex']);
-    Route::group(['prefix' => 'user'], function () {
-        Route::put('update/{id}', [UserManagerController::class, 'update']);
-        Route::put('block/{id}', [UserManagerController::class, 'blockUser']);
-        Route::delete('delete/{id}', [UserManagerController::class, 'delete']);
-    });
+    Route::middleware('can:view_user_manager')->group(function(){
+        Route::get('users', [UserManagerController::class, 'index'])->middleware(['can:view_users']);
+        Route::get('reseller', [UserManagerController::class, 'resellerIndex'])->middleware(['can:create_user']);
+        Route::group(['prefix' => 'user', 'middleware' => ['can:create_user', 'can:view_users']], function () {
+            Route::put('update/{id}', [UserManagerController::class, 'update']);
+            Route::put('block/{id}', [UserManagerController::class, 'blockUser']);
+            Route::delete('delete/{id}', [UserManagerController::class, 'delete']);
+        });
 
-    Route::get('permissions', [UserManagerController::class, 'permissions']);
-    Route::get('roles', [UserManagerController::class, 'roles']);
-    Route::group(['prefix' => 'guard'], function () {
-        Route::post('permission/store', [UserManagerController::class, 'permissionStore']);
-        Route::put('permission/update/{id}', [UserManagerController::class, 'permissionUpdate']);
-        Route::delete('permission/delete/{id}', [UserManagerController::class, 'permissionDelete']);
-        Route::post('role/store', [UserManagerController::class, 'roleStore']);
-        Route::put('role/update/{id}', [UserManagerController::class, 'roleUpdate']);
-        Route::delete('role/delete/{id}', [UserManagerController::class, 'roleDelete']);
-        Route::get('role-permission/{roleId}', [UserManagerController::class, 'rolePermissions']);
-        Route::post('assign-permissions', [UserManagerController::class, 'permissionAssignRole']);
+        Route::get('permissions', [UserManagerController::class, 'permissions'])->middleware(['can:view_permissions']);
+        Route::get('roles', [UserManagerController::class, 'roles'])->middleware(['can:view_roles']);
+        Route::group(['prefix' => 'guard'], function () {
+            Route::post('permission/store', [UserManagerController::class, 'permissionStore'])->middleware(['can:view_permissions']);
+            Route::put('permission/update/{id}', [UserManagerController::class, 'permissionUpdate'])->middleware(['can:view_permissions']);
+            Route::delete('permission/delete/{id}', [UserManagerController::class, 'permissionDelete'])->middleware(['can:view_permissions']);
+
+            Route::post('role/store', [UserManagerController::class, 'roleStore'])->middleware(['can:view_roles']);
+            Route::put('role/update/{id}', [UserManagerController::class, 'roleUpdate'])->middleware(['can:view_roles']);
+            Route::delete('role/delete/{id}', [UserManagerController::class, 'roleDelete'])->middleware(['can:view_roles']);
+
+            Route::get('role-permission/{roleId}', [UserManagerController::class, 'rolePermissions'])->middleware(['can:create_user']);
+            Route::post('assign-permissions', [UserManagerController::class, 'permissionAssignRole'])->middleware(['can:view_permissions']);
+        });
     });
    
 });

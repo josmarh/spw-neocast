@@ -109,7 +109,7 @@
                                     {{formatDate(user.created_at)}}
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{user.active == 1 ? 'active' : 'Blocked'}}
+                                    {{user.active == 1 ? 'Active' : 'Blocked'}}
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex">
@@ -128,17 +128,24 @@
                                             </button>
                                         </div>
                                         <!-- block -->
-                                        <!-- <div class="">
+                                        <div class="">
                                             <button type="button" @click="blockUserModal(user)"
                                                 class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                                 focus:outline-none focus:ring-gray-100 
                                                 font-medium text-sm px-5 py-2.5 text-center 
                                                 inline-flex items-center dark:focus:ring-gray-500 mr-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                                </svg>
+                                                <span v-if="user.active == 1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                                    </svg>
+                                                </span>
+                                                <span v-else>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                                    </svg>
+                                                </span>
                                             </button>
-                                        </div> -->
+                                        </div>
                                         <!-- delete -->
                                         <div class="">
                                             <button type="button" @click="deleteUserModal(user)"
@@ -354,8 +361,11 @@
                                                 focus:outline-none focus:ring-0 focus:border-gray-200
                                                 peer" required>
                                             <option selected disabled hidden value="">Select Role</option>
-                                            <option v-for="role in roles.data" :key="role.id" 
-                                                :value="role.name">{{role.name}}</option>
+                                            <option v-for="role in roles.data"
+                                                :key="role.id"
+                                                :value="role.name">
+                                                {{role.name}}
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
@@ -539,7 +549,6 @@
                                                 appearance-none dark:text-gray-400 dark:border-gray-600
                                                 focus:outline-none focus:ring-0 focus:border-gray-200
                                                 peer">
-                                            <option selected disabled value="">Select Role</option>
                                             <option 
                                                 v-for="role in roles.data"
                                                 :key="role.id"
@@ -599,33 +608,52 @@
                                 <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
                                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                         <div class="sm:flex sm:items-start">
-                                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                            <ExclamationIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
-                                        </div>
-                                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                            <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Block - {{model.name}} </DialogTitle>
-                                            <div class="mt-2">
-                                            <p class="text-sm text-gray-500">
-                                                Are you sure you want to block this user? This user would not be able to login permanently till you unblock.
-                                            </p>
+                                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+                                                :class="[model.is_active == 1 ? 'bg-red-100' : 'bg-blue-100']">
+                                                <ExclamationIcon v-if="model.is_active == 1" class="h-6 w-6 text-red-600" aria-hidden="true" />
+                                                
+                                                <svg v-if="model.is_active == 0" 
+                                                    xmlns="http://www.w3.org/2000/svg" 
+                                                    class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                                        d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                                </svg>
                                             </div>
-                                        </div>
+                                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                <DialogTitle as="h3" v-if="model.is_active == 1" class="text-lg leading-6 font-medium text-gray-900"> Block - {{model.name}} </DialogTitle>
+                                                <DialogTitle as="h3" v-else class="text-lg leading-6 font-medium text-gray-900"> Unblock - {{model.name}} </DialogTitle>
+                                                <div class="mt-2">
+                                                    <p v-if="model.is_active == 1" class="text-sm text-gray-500">
+                                                        Are you sure you want to block this user? This user would not be able to login permanently till you unblock.
+                                                    </p>
+                                                    <p v-else class="text-sm text-gray-500">
+                                                        Are you sure you want to unblock this user?
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                        <button type="button" 
-                                            class="w-full inline-flex justify-center border 
-                                            border-transparent shadow-sm px-4 py-2 bg-red-600 text-base 
-                                            font-medium text-white hover:bg-red-700 sm:ml-3 
-                                            sm:w-auto sm:text-sm" 
-                                            @click="blockUser(model.id)" :disabled="isDisabled">Block
-                                        </button>
                                         <button type="button" 
                                         class="mt-3 w-full inline-flex justify-center 
                                         border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
                                         font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
                                         sm:ml-3 sm:w-auto sm:text-sm" 
                                         @click="openBlockUser = false" ref="cancelButtonRef">Cancel
+                                        </button>
+                                        <button type="button" v-if="model.is_active == 1"
+                                            class="w-full inline-flex justify-center border 
+                                            border-transparent shadow-sm px-4 py-2 bg-red-600 text-base 
+                                            font-medium text-white hover:bg-red-700 sm:ml-3 
+                                            sm:w-auto sm:text-sm" 
+                                            @click="blockUser" :disabled="isDisabled">Block
+                                        </button>
+                                        <button type="button"  v-else
+                                            class="w-full inline-flex justify-center border 
+                                            border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base 
+                                            font-medium text-white hover:bg-indigo-700 sm:ml-3 
+                                            sm:w-auto sm:text-sm" 
+                                            @click="blockUser" :disabled="isDisabled">Unblock
                                         </button>
                                     </div>
                                 </DialogPanel>
@@ -729,6 +757,7 @@ let model = ref({
     password_confirmation: '',
     role: '',
     old_role: '',
+    is_active: null,
 });
 let filter = ref({
     name: '',
@@ -787,7 +816,7 @@ const addUser = () => {
             store.dispatch("setSuccessNotification", res.message);
             isDisabled.value = false;
             openCreateUser.value = false;
-            store.dispatch('getUsers');
+            store.dispatch('getResellerUsers');
         })
         .catch((err) => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -871,7 +900,7 @@ const updateUser = () => {
             store.dispatch("setSuccessNotification", res.message);
             isDisabled.value = false;
             openUpdateUser.value = false;
-            store.dispatch('getUsers');
+            store.dispatch('getResellerUsers');
         })
         .catch((err) => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -889,8 +918,36 @@ const updateUser = () => {
         })
 }
 
-const blockUser = (id) => {
-
+const blockUser = () => {
+    internalInstance.appContext.config.globalProperties.$Progress.start();
+    isDisabled.value = true;
+     store
+        .dispatch('blockUser', {
+            id: model['_rawValue'].id,
+            type: model['_rawValue'].is_active == 1 ? 0 : 1,
+        })
+        .then((res) => {
+            internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+            internalInstance.appContext.config.globalProperties.$Progress.finish();
+            store.dispatch("setSuccessNotification", res.message);
+            isDisabled.value = false;
+            openBlockUser.value = false;
+            store.dispatch('getResellerUsers');
+        })
+        .catch((err) => {
+            internalInstance.appContext.config.globalProperties.$Progress.fail();
+            isDisabled.value = false;
+            openBlockUser.value = false;
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message")) {
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    } else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        })
 }
 
 const deleteUser = (id) => {
@@ -904,7 +961,7 @@ const deleteUser = (id) => {
             store.dispatch("setSuccessNotification", res.message);
             isDisabled.value = false;
             openDeleteUser.value = false;
-            store.dispatch('getUsers');
+            store.dispatch('getResellerUsers');
         })
         .catch((err) => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -942,8 +999,9 @@ const updateUserModal = (user) => {
 }
 
 const blockUserModal = (user) => {
-    model.value.id = user;
+    model.value.id = user.id;
     model.value.name = user.name;
+    model.value.is_active = user.active;
     openBlockUser.value = true
 }
 

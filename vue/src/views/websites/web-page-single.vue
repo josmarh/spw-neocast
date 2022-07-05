@@ -251,17 +251,21 @@ const getWebsiteChannels = async (whash) => {
     store
         .dispatch('getWebsiteChannels', whash)
         .then((res) => {
-            model.value.channels = res.data;
+            if(res.data.length){
+                model.value.channels = res.data;
 
-            // assign menus
-            for(let m of model.value.channels) {
-                model.value.menuNavigation.push({
-                    name: m.title,
-                    href: `/w/${route.params.str}/channel/${m.channel_hash}`
-                })
+                // assign menus
+                for(let m of model.value.channels) {
+                    model.value.menuNavigation.push({
+                        name: m.title,
+                        href: `/w/${route.params.str}/channel/${m.channel_hash}`
+                    })
+                }
+                getChannelInfo();
+                // getPlaylist(route.params.chash);
+            }else {
+                isContentSet.value = 3;
             }
-            getChannelInfo();
-            // getPlaylist(route.params.chash);
         })
         .catch((err) => {
             isContentSet.value = 3;

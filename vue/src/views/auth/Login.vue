@@ -72,7 +72,7 @@
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import store from '../../store';
 import { useRouter } from 'vue-router';
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, inject } from 'vue';
 
 const router = useRouter();
 const internalInstance = getCurrentInstance();
@@ -90,15 +90,23 @@ function login(ev) {
   store
     .dispatch('login', user)
     .then((res) => {
-      internalInstance.appContext.config.globalProperties.$Progress.finish()
-      videos();
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
+      // check if user is active
+      if(res.user.is_active == 1){
+        videos();
+      } else {
+        logout();
+      }
     })
     .catch(err => {
-      internalInstance.appContext.config.globalProperties.$Progress.fail()
-      if (err.response.data.hasOwnProperty('message')){
-        errorMsg.value = err.response.data.message
-      }else {
-        errorMsg.value = err.response.data.error
+      internalInstance.appContext.config.globalProperties.$Progress.fail();
+      console.log(err)
+      if(err.response){
+        if (err.response.data.hasOwnProperty('message')){
+          errorMsg.value = err.response.data.message
+        }else {
+          errorMsg.value = err.response.data.error
+        }
       }
     })
 }
@@ -133,4 +141,13 @@ function channel() {
       
     });
 }
+
+function logout() {
+    store.dispatch('logout')
+    .then(() => {
+      router.push({
+        name: 'Login',
+      });
+    });
+  }
 </script>

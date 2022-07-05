@@ -5,7 +5,8 @@ const store = createStore({
     state: {
         user: {
             data: JSON.parse(localStorage.getItem('userInfo')),
-            token: localStorage.getItem('TOKEN')
+            token: localStorage.getItem('TOKEN'),
+            permissions: localStorage.getItem('can'),
         },
         notifyError: '',
         notifySuccess: '',
@@ -424,8 +425,8 @@ const store = createStore({
                     return data;
                 })
         },
-        blockUser({ }, id){
-            return axiosClient.put(`/user/block/${id}`)
+        blockUser({ }, payload){
+            return axiosClient.put(`/user/block/${payload.id}`, payload)
                 .then(({data}) => {
                     return data;
                 })
@@ -544,8 +545,10 @@ const store = createStore({
         setUser: (state, userData) => {
             state.user.token = userData.token;
             state.user.data = userData.user;
+            state.user.permissions = userData.permissions;
             localStorage.setItem('userInfo', JSON.stringify(userData.user));
             localStorage.setItem('TOKEN', userData.token);
+            localStorage.setItem('can', userData.permissions);
         }
     },
     modules: {}

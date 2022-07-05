@@ -1,6 +1,7 @@
 <template>
   <div>
-    <page-component title="Contents" :class="[contents.data.length < 2 ? 'h-screen bg-gray-100': '']">
+    <page-component title="Contents" 
+      :class="[videoListCheck == 0 || videoListCheck == 1 || contents.data.length < 2 ? 'h-screen bg-gray-100': '']">
       <notification />
       <!-- upload or import via link section -->
       <div class="flex justify-center items-center w-full mb-3">

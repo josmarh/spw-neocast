@@ -68,6 +68,7 @@ class AuthController extends Controller
 
         return response([
             'user' => $user,
+            'permissions' => $user->getAllPermissionsAttribute(),
             'token' => $token
         ]);
     }

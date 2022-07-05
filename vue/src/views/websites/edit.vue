@@ -94,10 +94,10 @@
                             </div>
                             <!-- website urlPath -->
                             <div class="grid xl:grid-cols-12 mt-6">
-                                <div class="xl:col-span-4 md:col-span-4">
+                                <div class="xl:col-span-6 md:col-span-6">
                                     <p class="text-sm py-3">{{model.domain}}</p>
                                 </div>
-                                <div class="xl:col-span-8 md:col-span-8">
+                                <div class="xl:col-span-6 md:col-span-6">
                                     <div class="relative z-0 w-full group">
                                         <input 
                                             type="text" 

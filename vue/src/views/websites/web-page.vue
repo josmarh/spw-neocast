@@ -254,16 +254,20 @@ const getWebsiteChannels = async (whash) => {
     store
         .dispatch('getWebsiteChannels', whash)
         .then((res) => {
-            model.value.channels = res.data;
+            if(res.data.length){
+                model.value.channels = res.data;
 
-            // assign menus
-            for(let m of model.value.channels) {
-                model.value.menuNavigation.push({
-                    name: m.title,
-                    href: `/w/${route.params.str}/channel/${m.channel_hash}`
-                })
+                // assign menus
+                for(let m of model.value.channels) {
+                    model.value.menuNavigation.push({
+                        name: m.title,
+                        href: `/w/${route.params.str}/channel/${m.channel_hash}`
+                    })
+                }
+                getPlaylist(res.data[0]);
+            } else {
+                isContentSet.value = 3;
             }
-            getPlaylist(res.data[0]);
         })
         .catch((err) => {
             isContentSet.value = 3;

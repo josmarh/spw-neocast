@@ -18,7 +18,7 @@
                   'px-3 py-2 rounded-md text-sm font-medium']">{{ item.name }}
                 </router-link>
 
-                <Menu as="div" class="">
+                <Menu as="div" class="" v-if="userPermissions.includes('view_user_manager')">
                   <div>
                     <MenuButton class="">
                       <span class="sr-only">Open user menu</span>
@@ -43,12 +43,13 @@
                       ring-opacity-5 focus:outline-none z-10"
                     >
                       <MenuItem 
-                        v-for="item in userManagerNav" :key="item.name" v-slot="{ active }">
-                        <router-link 
-                          :to="item.to" 
-                          active-class="bg-gray-100"
-                          :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}
-                        </router-link>
+                        v-for="item in userManagerNav" 
+                        :key="item.name" v-slot="{ active }">
+                          <router-link 
+                            :to="item.to" 
+                            active-class="bg-gray-100"
+                            :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}
+                          </router-link>
                       </MenuItem>
                     </MenuItems>
                   </transition>
@@ -192,7 +193,9 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import store from '../store'
 
+const userPermissions = computed(() => store.state.user.permissions)
 const navigation = [
   { name: 'Channels', to: {name: 'Channels'} },
   { name: 'Videos', to: {name: 'Videos'} },
@@ -242,6 +245,7 @@ export default {
       navigation,
       userNavigation,
       userManagerNav,
+      userPermissions,
       logout
     }
   },
