@@ -190,6 +190,7 @@ let adsUrl = ref('')
 let twitterHandle = ref('');
 let streamLink = ref('');
 let channelType = ref('');
+let resMessage = ref('No content found');
 
 const _getContent = async () => {
     isContentSet.value = 1;

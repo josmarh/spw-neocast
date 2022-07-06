@@ -3811,6 +3811,13 @@
     "vue" "^3.2.6"
     "vue-types" "^4.1.0"
 
+"vue3-timepicker@^1.0.0-beta.2":
+  "integrity" "sha512-j4IVU7PPLrO5HADspv1E+tXTkMc9gWfCu/ruwJqJdX7qugAaVk3yNF7Mj4icRGlU4uKeSohlXWA8/Uj1ePiTxQ=="
+  "resolved" "https://registry.npmjs.org/vue3-timepicker/-/vue3-timepicker-1.0.0-beta.2.tgz"
+  "version" "1.0.0-beta.2"
+  dependencies:
+    "vue" "^3.0.5"
+
 "vuetify-loader@^1.7.3":
   "integrity" "sha512-1Kt6Rfvuw3i9BBlxC9WTMnU3WEU7IBWQmDX+fYGAVGpzWCX7oHythUIwPCZGShHSYcPMKSDbXTPP8UvT5RNw8Q=="
   "resolved" "https://registry.npmjs.org/vuetify-loader/-/vuetify-loader-1.7.3.tgz"

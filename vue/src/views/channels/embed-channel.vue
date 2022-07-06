@@ -10,7 +10,7 @@
       </div>
       <div v-if="ChannelPlaylistCheck == 3" class="flex justify-center items-center mt-12">
         <div class="p-4 text-center sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <h5 class="text-2xl text-gray-900 dark:text-white">No content found</h5>
+          <h5 class="text-2xl text-gray-900 dark:text-white">{{resMessage}}</h5>
           <div class="justify-center items-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4">
               <img src="../../assets/no_content.png" class="xl:w-82 xl:h-82" />
           </div>
@@ -142,12 +142,13 @@ let twitterHandle = ref('');
 let loopPlaylist = ref(false);
 let streamLink = ref('');
 let channelType = ref('');
+let resMessage = ref('No content found');
 
 const getChannelInfo = () => {
     store
         .dispatch('externalChannel', route.params.str)
         .then((res) => {
-            if(res.data) {
+            if(res.message == 'success') {
               if(res.data.privacy == 'domain'){
                 let currentDomain = window.location.host;
 
@@ -161,6 +162,7 @@ const getChannelInfo = () => {
                 contentSettings();
               }
             } else {
+              resMessage.value = res.message
               ChannelPlaylistCheck.value == 3;
             }
         })

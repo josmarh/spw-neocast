@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('schedule_duration', 10)->nullable();
+            $table->text('schedule_daytime')->nullable();
             $table->string('start_time', 10)->nullable();
             $table->unSignedBigInteger('timezone')->nullable();
             $table->smallInteger('logo_enable')->nullable();

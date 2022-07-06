@@ -21,6 +21,7 @@ class ChannelResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'schedule_duration' => $this->schedule_duration,
+            'schedule_daytime' => $this->schedule_daytime,
             'start_time' => $this->start_time,
             'timezone' => $this->timezone,
             'logo_enable' => $this->logo_enable,

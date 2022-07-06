@@ -74,19 +74,11 @@
                                         <select
                                             v-model="channelModel.schedule"
                                             id="select_schedule"
-                                            class="
-                                                block
-                                                py-2
-                                                px-0
-                                                w-full
-                                                text-sm text-gray-500
-                                                bg-transparent
-                                                border-0 border-b-2 border-gray-300
-                                                appearance-none
-                                                dark:text-gray-400 dark:border-gray-600
-                                                focus:outline-none focus:ring-0 focus:border-gray-200
-                                                peer"
-                                        >
+                                            class="block py-2 px-0 w-full text-sm text-gray-500
+                                            bg-transparent border-0 border-b-2 border-gray-300
+                                            appearance-none dark:text-gray-400 dark:border-gray-600
+                                            focus:outline-none focus:ring-0 focus:border-gray-200
+                                            peer">
                                             <option selected value="weekly">Weekly</option>
                                             <option value="daily">Daily</option>
                                         </select>
@@ -100,6 +92,35 @@
                                         </p>
                                     </div>
                                 </div>
+                                <div v-if="channelModel.schedule == 'weekly'" class="mt-6">
+                                    <div class="grid xl:grid-cols-7 xl:gap-4">
+                                        <label v-for="(day, index) in weekday" 
+                                            :key="index"
+                                            :for="day.day"
+                                            @click="selectday(day.day, day.time)"
+                                            class="flex col-span-1 justify-between p-3
+                                            space-x- text-gray-500  bg-white
+                                            divide-gray-200 rounded-lg shadow-md
+                                            dark:text-gray-400 dark:divide-gray-700 
+                                            space-x dark:bg-gray-800 cursor-pointer 
+                                            hover:bg-gray-300 focus:bg-gray-300 mb-2" 
+                                            role="alert">
+                                            <div class="text-sm font-normal">{{day.day}} <br>{{day.time}}</div>
+                                            <div class="flex items-center mb-4">
+                                                <input :id="day.day" type="checkbox" 
+                                                :value="day.day"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 
+                                                rounded focus:ring-blue-500 dark:focus:ring-blue-600 
+                                                dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 
+                                                dark:border-gray-600"
+                                                :checked="selectedday.filter(e => e.day === day.day).length > 0 ? true : false">
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div v-else class="mt-4">
+                                    <vue-timepicker v-model="selectdaymodal.time"></vue-timepicker>
+                                </div>
                             </div>
                         </div>
                         <div v-if="channelModel.channelType.includes('Looped')">
@@ -109,26 +130,17 @@
                             <div 
                                 class="justify-between items-center p-4 bg-white 
                                 rounded-lg border border-gray-200 shadow-sm 
-                                dark:bg-gray-700 dark:border-gray-600 "
-                            >
+                                dark:bg-gray-700 dark:border-gray-600">
                                 <div class="flex">
                                     <div class="">
                                         <select
                                             v-model="channelModel.looptimeH"
                                             id="select_schedule"
-                                            class="
-                                                block
-                                                py-2
-                                                w-full
-                                                text-sm text-gray-500
-                                                bg-transparent
-                                                border-0 border-b-2 border-gray-300
-                                                appearance-none
-                                                dark:text-gray-400 dark:border-gray-600
-                                                focus:outline-none focus:ring-0 focus:border-gray-200
-                                                peer"
-                                        >
-
+                                            class="block py-2 w-full text-sm text-gray-500
+                                            bg-transparent border-0 border-b-2 border-gray-300
+                                            appearance-none dark:text-gray-400 dark:border-gray-600
+                                            focus:outline-none focus:ring-0 focus:border-gray-200
+                                            peer">
                                             <option v-for="hr in lhours" :key="hr" :value="hr" >{{hr}}</option>
                                         </select>
                                     </div>
@@ -137,18 +149,11 @@
                                         <select
                                             v-model="channelModel.looptimeM"
                                             id="select_schedule"
-                                            class="
-                                                block
-                                                py-2
-                                                w-full
-                                                text-sm text-gray-500
-                                                bg-transparent
-                                                border-0 border-b-2 border-gray-300
-                                                appearance-none
-                                                dark:text-gray-400 dark:border-gray-600
-                                                focus:outline-none focus:ring-0 focus:border-gray-200
-                                                peer"
-                                        >
+                                            class="block py-2 w-full text-sm text-gray-500
+                                            bg-transparent border-0 border-b-2 border-gray-300
+                                            appearance-none dark:text-gray-400 dark:border-gray-600
+                                            focus:outline-none focus:ring-0 focus:border-gray-200
+                                            peer">
                                             <option v-for="min in lmins" :key="min" :value="min">{{min}}</option>
                                         </select>
                                     </div>
@@ -504,6 +509,11 @@
                                             :loopPlaylist="loopPlaylist"
                                         />
                                     </div>
+                                    <div v-if="ChannelPlaylistCheck == 3">
+                                        <div class="p-20 w-full bg-black border shadow-md sm:p-36 dark:bg-gray-800 dark:border-gray-700 text-center">
+                                            <span class="text-white font-medium font-bold text-2xl capitalize">no video available</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -524,6 +534,70 @@
                     >Cancel</router-link>
                 </form>
             </div>
+            <!-- scheduled time modal -->
+            <TransitionRoot as="template" :show="openScheduledTime">
+                <Dialog as="div" class="relative z-10" @close="openScheduledTime = false">
+                    <TransitionChild as="template" 
+                        enter="ease-out duration-300" 
+                        enter-from="opacity-0" 
+                        enter-to="opacity-100" 
+                        leave="ease-in duration-200" 
+                        leave-from="opacity-100" 
+                        leave-to="opacity-0">
+                        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                    </TransitionChild>
+
+                    <div class="fixed z-10 inset-0 overflow-y-auto">
+                        <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+                            <TransitionChild as="template" 
+                                enter="ease-out duration-300" 
+                                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                                enter-to="opacity-100 translate-y-0 sm:scale-100" 
+                                leave="ease-in duration-200" 
+                                leave-from="opacity-100 translate-y-0 sm:scale-100" 
+                                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                        <div class="sm:flex sm:items-start">
+                                            <!-- <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                                <ExclamationIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
+                                            </div> -->
+                                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Scheduled Time </DialogTitle>
+                                                <div class="mt-2">
+                                                    <p class="text-sm text-gray-500 font-medium">
+                                                        Day - {{selectdaymodal.day}}
+                                                    </p>
+                                                    <p class="text-sm text-gray-500 mt-4 mb-20">
+                                                        <span class="font-medium mb-4 ">Start Time</span><br>
+                                                        <vue-timepicker v-model="selectdaymodal.time"></vue-timepicker>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                        <button type="button" 
+                                            class="mt-3 w-full inline-flex justify-center border 
+                                            border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                            font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
+                                            sm:ml-3 sm:w-auto sm:text-sm" 
+                                            @click="openScheduledTime = false" ref="cancelButtonRef">Cancel
+                                        </button>
+                                        <button type="button" 
+                                            class="w-full inline-flex justify-center border 
+                                            border-transparent shadow-sm px-4 py-2 bg-indigo-600 
+                                            text-base font-medium text-white hover:bg-indigo-700
+                                            sm:ml-3 sm:w-auto sm:text-sm" 
+                                            @click="acceptedday(selectdaymodal.day, selectdaymodal.time)">Accept
+                                        </button>
+                                    </div>
+                                </DialogPanel>
+                            </TransitionChild>
+                        </div>
+                    </div>
+                </Dialog>
+            </TransitionRoot>
         </channel-header>
     </div>  
 </template>
@@ -534,6 +608,9 @@ import Notification from '../../components/Notification.vue';
 import VideoPlayer from '../../components/VideoPlayerChannel.vue';
 import VideoPlayerLinear from '../../components/VideoPlayerLinearMain.vue';
 import store from '../../store';
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import VueTimepicker from 'vue3-timepicker';
+import 'vue3-timepicker/dist/VueTimepicker.css';
 import { ref, onMounted, getCurrentInstance } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { ColorPicker } from 'vue-color-kit';
@@ -542,6 +619,7 @@ import 'vue-color-kit/dist/vue-color-kit.css';
 const router = useRouter();
 const route = useRoute();
 const internalInstance = getCurrentInstance();
+const openScheduledTime = ref(false);
 const channelModel = ref({
     name: 'Untitled Channel',
     logo: false,
@@ -623,6 +701,66 @@ while (m <= 45){
     m = m + 15
 }
 
+let weekday = ref([
+    {day: 'Monday', time: '00:00'},
+    {day: 'Tuesday', time: '00:00'},
+    {day: 'Wednesday', time: '00:00'},
+    {day: 'Thursday', time: '00:00'},
+    {day: 'Friday', time: '00:00'},
+    {day: 'Saturday', time: '00:00'},
+    {day: 'Sunday', time: '00:00'},
+]);
+let selectedday = ref([]);
+let selectdaymodal = ref({
+    day: '',
+    time: '00:00',
+});
+
+const selectday = (day, starttime) => {
+    let currentcheck = document.getElementById(day);
+
+    if(currentcheck.checked){
+        selectdaymodal.value.day = day;
+        selectdaymodal.value.time = starttime;
+        openScheduledTime.value = true;
+    }else {
+        let filtered = selectedday['_rawValue'].filter(data => data.day != day);
+
+        selectedday.value = [];
+
+        for (let f of filtered) {
+            selectedday.value.push(f);
+        }
+        openScheduledTime.value = false;
+
+        // update weekday array
+        let weekdayIndex = weekday['_rawValue'].findIndex((obj => obj.day == day));
+        weekday['_rawValue'][weekdayIndex].time = '00:00';
+    }
+}
+
+const acceptedday = (day, time) => {
+    selectedday.value.push({
+        day: day,
+        starttime: time
+    });
+
+    let filtered = selectedday['_rawValue'].filter((v,i,a)=>a.findIndex(v2=>(v2.day===v.day))===i); 
+
+    selectedday.value = [];
+
+    for (let f of filtered) {
+        selectedday.value.push(f)
+    }
+    openScheduledTime.value = false;
+
+    // update weekday array
+    //Find index of specific object using findIndex method.    
+    let weekdayIndex = weekday['_rawValue'].findIndex((obj => obj.day == day));
+    //Update object's name property.
+    weekday['_rawValue'][weekdayIndex].time = time;
+}
+
 const editChannel = () => {
     store
         .dispatch('editChannel', route.params.hash)
@@ -648,7 +786,8 @@ const updateChannel = async () => {
             id: channelModel.value.id,
             title: channelModel.value.name,
             schedule: channelModel.value.schedule,
-            starttime: channelModel.value.looptimeH+':'+channelModel.value.looptimeM,
+            scheduleDaytime: selectedday.value,
+            starttime: channelModel.value.channelType.includes('Looped') ? channelModel.value.looptimeH+':'+channelModel.value.looptimeM : selectdaymodal.value.time,
             timezone: channelModel.value.timezone,
             logoEnable: channelModel.value.logo,
             logo: channelModel.value.image,
@@ -777,6 +916,15 @@ const dataPlacement = async (data) => {
     channelModel.value.color = data.color
     channelModel.value.cType = data.channel_type
     channelModel.value.id = data.id
+    selectdaymodal.value.time = data.start_time
+    selectedday.value = JSON.parse(data.schedule_daytime);
+
+    for(let d of JSON.parse(data.schedule_daytime)) {
+        let weekdayIndex = weekday['_rawValue'].findIndex((obj => obj.day == d.day));
+        //Update object's name property.
+        weekday['_rawValue'][weekdayIndex].time = d.starttime;
+    }
+    
 
     playlist.value = [];
     ChannelPlaylistCheck.value = 1;
@@ -838,6 +986,8 @@ const dataPlacement = async (data) => {
                     videoOptionsLinear.controlBar.progressControl = false;
                 }
                 ChannelPlaylistCheck.value = 2;
+            } else {
+                ChannelPlaylistCheck.value = 3;
             }
         });
     

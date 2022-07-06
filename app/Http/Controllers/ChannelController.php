@@ -59,6 +59,7 @@ class ChannelController extends Controller
         Channels::create([
             'title' => $request->title,
             'schedule_duration' => $request->schedule,
+            'schedule_daytime' => json_encode($request->scheduleDaytime),
             'start_time' => $request->starttime,
             'timezone' => $request->timezone,
             'logo' => $relativePath,
@@ -88,15 +89,56 @@ class ChannelController extends Controller
         $currentDateTime = Carbon::now();
         $channel = Channels::where('channel_hash', $hash)->first();
 
-        // if($channel->type == 'Looped (Linear)') {
-
-        // } elseif ($channel->type == 'Scheduled (Linear)') {
-
-        // } else {
-
-        // }
-
         return new ChannelResource($channel);
+    }
+
+    public function external($hash)
+    {
+        $now = Carbon::now('UTC');
+        $time  = $now->format('H:i');
+        $day  = $now->format('l');
+        $channel = Channels::where('channel_hash', $hash)->first();
+
+        if($channel->channel_type == 'Looped (Linear)') {
+            if ($time >= $channel->start_time) {
+                $channelInfo = new ChannelResource($channel);
+                $message = 'success';
+            }else {
+                $channelInfo = [];
+                $message = 'This channel is not available at the moment, please check beck later.';
+            }
+
+        } elseif ($channel->channel_type == 'Scheduled (Linear)') {
+            if($channel->schedule_duration == 'weekly') {
+                $schedules = json_decode($channel->schedule_daytime);
+                $message = '';
+
+                foreach($schedules as $schedule){
+                    if($day == $schedule->day && $time >= $schedule->starttime) {
+                        $channelInfo = new ChannelResource($channel);
+                        $message = 'success';
+                        break;
+                    }
+                }
+                if($message == '') {
+                    $channelInfo = [];
+                    $message = 'This channel is not available at the moment, please check beck later.';
+                }
+            } else {
+                if ($time >= $channel->start_time) {
+                    $channelInfo = new ChannelResource($channel);
+                    $message = 'success';
+                }else {
+                    $channelInfo = [];
+                    $message = 'This channel is not available at the moment, please check beck later.';
+                }
+            }
+        } else {
+            $channelInfo = new ChannelResource($channel);
+            $message = 'success';
+        }
+
+        return response(['data' => $channelInfo, 'message' => $message]);
     }
 
     public function update(Request $request, $id)
@@ -117,6 +159,7 @@ class ChannelController extends Controller
         $channel->update([
             'title' => $request->title,
             'schedule_duration' => $request->schedule,
+            'schedule_daytime' => json_encode($request->scheduleDaytime),
             'start_time' => $request->starttime,
             'timezone' => $request->timezone,
             'logo_enable' => $request->logoEnable,
@@ -147,6 +190,7 @@ class ChannelController extends Controller
         $newChannel = Channels::create([
             'title' => $request->title,
             'schedule_duration' => $channel->schedule_duration,
+            'schedule_daytime' => $channel->schedule_daytime,
             'start_time' => $channel->start_time,
             'timezone' => $channel->timezone,
             'logo_enable' => $channel->logo_enable,

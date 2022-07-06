@@ -108,7 +108,7 @@ Route::middleware('auth:sanctum')->group(function(){
 Route::post('login', [AuthController::class, 'login']);
 Route::get('video/show/{str}', [VideoController::class, 'show']);
 Route::get('channel/show/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
-Route::get('channel/info/{chash}', [ChannelController::class, 'edit']);
+Route::get('channel/info/{chash}', [ChannelController::class, 'external']);
 Route::put('channel/video/track-views/{chash}', [ChannelPlaylistController::class, 'videoPlayAnalysis']);
 Route::get('video/info', [VideoController::class, 'index']);
 Route::get('website/content/{urlPath}', [WebsiteController::class, 'webContent']);

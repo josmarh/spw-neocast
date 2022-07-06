@@ -14,6 +14,7 @@ class Channels extends Model
     protected $fillable = [
         'title',
         'schedule_duration',
+        'schedule_daytime',
         'start_time',
         'timezone',
         'logo_enable',
