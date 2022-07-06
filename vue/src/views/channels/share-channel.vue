@@ -215,7 +215,7 @@ const getPlaylist = async (chdata) => {
             playerColor.value = chdata.color;
             adsUrl.value = chdata.ad_tag_url;
 
-            if(chdata.channel_type == 'Looped (Linear)')
+            if(chdata.channel_type.includes('Linear'))
                 loopPlaylist.value = true;
 
             channelType.value = chdata.channel_type;
