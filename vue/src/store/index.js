@@ -203,6 +203,14 @@ const store = createStore({
                     return data;
                 })
         },
+        rokuChannel({ commit }, chash){
+            return axiosClient.get(`/channel/w/${chash}`, {
+                params: {format: 'roku_json'}
+            })
+                .then(({data}) => {
+                    return data;
+                })
+        },
         getVideos({ commit }, chash){
             return axiosClient.get(`/channel/videos/${chash.chash}`)
             .then(({data}) => {

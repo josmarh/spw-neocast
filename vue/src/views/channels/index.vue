@@ -199,10 +199,22 @@
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                           .M3U8
+                        </button>
+                      </div>
+                      <div v-if="c.channel_type.includes('Linear')" class="">
+                        <button type="button" @click="rokuLinkModal(c.channel_hash)"
+                          class="text-gray-500 bg-gray-100 hover:bg-gray-200 
+                          focus:outline-none focus:ring-gray-100 
+                          font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
+                          inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                          </svg>
+                          TV Apps
                         </button>
                       </div>
                       <div class="">
@@ -1043,6 +1055,88 @@
           </div>
         </Dialog>
       </TransitionRoot>
+      <!-- roku link modal  -->
+      <TransitionRoot as="template" :show="openRokuLink">
+        <Dialog as="div" class="relative z-10" @close="openRokuLink = false">
+          <TransitionChild as="template" 
+            enter="ease-out duration-300" 
+            enter-from="opacity-0" 
+            enter-to="opacity-100" 
+            leave="ease-in duration-200" 
+            leave-from="opacity-100" 
+            leave-to="opacity-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </TransitionChild>
+          <div class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <TransitionChild as="template" 
+                enter="ease-out duration-300" 
+                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                enter-to="opacity-100 translate-y-0 sm:scale-100" 
+                leave="ease-in duration-200" 
+                leave-from="opacity-100 translate-y-0 sm:scale-100" 
+                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full">
+                  <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                      <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" 
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                        </svg>
+                      </div>
+                      <div class=" text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <DialogTitle as="h3" class="text-lg mt-2 leading-6 font-medium text-gray-900"> TV Apps </DialogTitle>
+                      </div>
+                    </div>
+                    <div class="mt-8">
+                      <p class="text-bold font-medium">Roku</p>
+                      <p class="text-gray-500 bg-gray-100 p-2 mt-2">
+                        Send your live linear channel feed to a custom Roku channel.
+                      </p>
+                      <div class="flex mt-4">
+                        <div class="relative w-full">
+                          <!-- <label for="stream-link" 
+                            class="block mb-2 text-sm font-medium 
+                            text-gray-900 dark:text-gray-300 font-bold">Stream Link
+                          </label> -->
+                          <input type="text" id="roku-link" v-model="streamLink"
+                            class="block p-2.5 w-full z-20 text-sm text-gray-900 
+                            bg-gray-50 border border-gray-300 
+                            dark:placeholder-gray-400 dark:text-white 
+                            dark:focus:border-indigo-500" 
+                            placeholder="" required="" readonly>
+                          <div class="tooltip">
+                            <button type="button" @click="copyDataLink(streamLink,'roku-link','roku-tip')"
+                              class="absolute top-0 right-0 p-2.5 text-sm font-medium 
+                              text-white bg-indigo-600 border border-indigo-700 
+                              hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
+                              <span class="tooltiptext" id="roku-tip">Copy</span>
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-6" fill="none" 
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" 
+                      class="mt-3 w-full inline-flex justify-center border border-gray-300 
+                      shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
+                      hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                      @click="openRokuLink = false" ref="cancelButtonRef">Cancel
+                    </button>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
       
     </page-component>
   </div>
@@ -1165,7 +1259,8 @@ let adsUrl = ref('')
 let twitterHandle = ref('');
 let loopPlaylist = ref(false);
 let streamLink = ref('');
-let channelType = ref('')
+let openRokuLink = ref(false);
+let channelType = ref('');
 
 const code = ref('')
 const embedSrc = ref('')
@@ -1532,6 +1627,11 @@ const embedCode = (item) => {
 const streamLinkModal = (stream_name) => {
   streamLink.value = `https://tubetargeterapp.com:3070/channels/${stream_name}.m3u8`
   openStreamLink.value = true;
+}
+
+const rokuLinkModal = (chash) => {
+  streamLink.value = `${import.meta.env.VITE_API_BASE_URI}/channel/${chash}?format=roku_json`
+  openRokuLink.value = true;
 }
 
 const confirmDelete = (c) => {

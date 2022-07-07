@@ -13,6 +13,7 @@ use App\Http\Resources\PlaylistResource;
 use App\Http\Controllers\UploadsController;
 use Carbon\Carbon;
 use DB;
+use URL;
 
 
 class ChannelController extends Controller
@@ -254,6 +255,57 @@ class ChannelController extends Controller
         }
 
         return 'completed';
+    }
+
+    public function roku(Request $request, $chash)
+    {
+        $format = $request->query('format');
+
+        $channel = Channels::where('channel_hash', $chash)->first();
+
+        if(isset($format)) {
+            if($format == 'roku_json' && str_contains($channel->channel_type, 'Linear')) {
+                return response([
+                    'providerName' => 'Vicentric',
+                    'lastUpdated' => $channel->updated_at,
+                    'language' => 'en',
+                    'liveFeeds' => [
+                        [
+                            'id' => $channel->channel_hash,
+                            'title' => explode('(Linear)', $channel->channel_type)[0] . 'Channel',
+                            'content' => [
+                                'dateAdded' => $channel->created_at,
+                                'videos' => [
+                                    [
+                                        'url' => URL::to('channels/'.$channel->stream_name.'.m3u8'),
+                                        'quality' => 'FHD',
+                                        'videoType' => 'HLS'
+                                    ]
+                                ],
+                                'language' => 'en',
+                            ],
+                            'language' => 'en',
+                            'thumbnail' => URL::to('customs/default.jpg'),
+                            'brandedThumbnail' => URL::to('customs/default.jpg'),
+                            'shortDescription' => explode('(Linear)', $channel->channel_type)[0] . 'Channel',
+                            'longDescription' => explode('(Linear)', $channel->channel_type)[0] . 'Channel',
+                            'rating' => [
+                                'rating' => 'PG',
+                                'ratingSource' => 'USA_PR',
+                            ],
+                            'tags' => [
+                                'live'
+                            ]
+                        ]
+                    ],
+                ]);
+            }else {
+                return response([
+                    'message' => 'The selected format is invalid.',
+                    'error' => 0,
+                ]);
+            }
+        }
     }
 
     private function extractUrl($file)

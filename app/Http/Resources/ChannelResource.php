@@ -36,6 +36,7 @@ class ChannelResource extends JsonResource
             'channel_type' => $this->channel_type,
             'channel_hash' => $this->channel_hash,
             'stream_name' => $this->stream_name,
+            'roku_link' => URL::to('channel/w/'. $this->channel_hash . '?format=roku_json'),
             'total_vidoes' => $this->total_vidoes,
             'total_views' => $this->total_views,
             'thumbnail' => $this->video_thumbnail ? URL::to($this->video_thumbnail) : null,
