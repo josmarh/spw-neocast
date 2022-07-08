@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\IPNController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,4 @@ Route::get('/', function () {
 });
 
 Route::get('channel/{chash}', [ChannelController::class, 'roku']);
+Route::post('/ipn/jvzoo', [IPNController::class, 'JVZoo'])->name('jvzoo');

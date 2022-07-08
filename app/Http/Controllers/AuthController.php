@@ -111,6 +111,18 @@ class AuthController extends Controller
         ]);         
     }
 
+    public function resetPassword(Request $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+
+        
+
+        return response([
+
+        ]);
+    }
+
     public function logout()
     {
         $user = Auth::user();

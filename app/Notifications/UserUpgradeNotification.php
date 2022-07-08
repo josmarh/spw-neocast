@@ -16,9 +16,9 @@ class UserUpgradeNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($userInfo)
     {
-        //
+        $this->userInfo = $userInfo;
     }
 
     /**
@@ -41,9 +41,10 @@ class UserUpgradeNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('Account Upgrade')
+            ->line($this->userInfo['username'].',')
+            ->line('You have successfully upgraded your plan to '.$this->userInfo['product'].'.')
+            ->action('Login', url('/'));
     }
 
     /**

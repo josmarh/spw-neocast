@@ -16,9 +16,9 @@ class UserCreationNotification extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($userInfo)
     {
-        //
+        $this->userInfo = $userInfo;
     }
 
     /**
@@ -41,9 +41,12 @@ class UserCreationNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('Account Creation')
+            ->line($this->userInfo['username'].',')
+            ->line('You have successfully subscribed to '.$this->userInfo['product'].'.')
+            ->line('Email: '.$this->userInfo['email'])
+            ->line('Password: '.$this->userInfo['password'])
+            ->action('Login', url('/'));
     }
 
     /**

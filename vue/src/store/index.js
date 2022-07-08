@@ -69,6 +69,12 @@ const store = createStore({
                     return data;
                 })
         },
+        resetPassword({ }, user){
+            return axiosClient.post('/reset-password', user)
+                .then(({data}) => {
+                    return data;
+                })
+        },
         logout({ commit }){
             return axiosClient.post('/logout')
                 .then(response => {

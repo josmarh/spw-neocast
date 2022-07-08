@@ -100,7 +100,6 @@ function login(ev) {
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();
-      console.log(err)
       if(err.response){
         if (err.response.data.hasOwnProperty('message')){
           errorMsg.value = err.response.data.message
