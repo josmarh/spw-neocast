@@ -3,14 +3,14 @@
   <div>
     <div>
       <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Reset Password</h2>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Forgot Password</h2>
       <p class="mt-2 text-center text-sm text-gray-600">
         <!-- Or
         {{ ' ' }}
         <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> start your 14-day free trial </a> -->
       </p>
     </div>
-    <form class="mt-8 space-y-6" @submit.prevent="resetPassword">
+    <form class="mt-12 space-y-6" @submit.prevent="resetPassword">
       <div v-if="config.errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
         {{config.errorMsg}}
         <span @click="config.errorMsg = ''" 
@@ -47,6 +47,15 @@
               </label>
           </div>
       </div>
+      <div>
+        <button type="submit"
+          class="group relative w-full flex justify-center py-2 px-4 border 
+          border-transparent text-sm font-medium text-white 
+          bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
+          :disabled="config.isDisabled">
+          Submit
+        </button>
+      </div>
       <div class="flex items-center justify-between">
         <div class="flex items-center">
         </div>
@@ -58,16 +67,6 @@
           </router-link>
         </div>
       </div>
-
-      <div>
-        <button type="submit"
-          class="group relative w-full flex justify-center py-2 px-4 border 
-          border-transparent text-sm font-medium text-white 
-          bg-indigo-600 hover:bg-indigo-700 focus:outline-none"
-          :disabled="config.isDisabled">
-          Reset
-        </button>
-      </div>
     </form>
   </div>
 </template>
@@ -75,7 +74,9 @@
 <script setup>
 import store from '../../store';
 import { ref, getCurrentInstance } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 let email = ref('');
 
 const config = ref({
@@ -90,11 +91,14 @@ const resetPassword = () => {
   internalInstance.appContext.config.globalProperties.$Progress.start();
 
   store
-    .dispatch('resetPassword', {email: email['_rawValue']})
+    .dispatch('forgotPassword', {email: email['_rawValue']})
     .then((res) => {
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
       config.value.successMsg = res.message;
       config.value.isDisabled = false;
-      email.value = '';
+      setTimeout(() => {
+        router.push({name: 'ResetPassword', params: {email: email.value}});
+      }, 3000);
     })
     .catch((err) => {
       config.value.isDisabled = false;

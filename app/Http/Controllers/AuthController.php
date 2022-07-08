@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Rules\MatchOldPassword;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
+use App\Models\User;
+use App\Models\PasswordResets;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ForgotPasswordNotification;
+use App\Notifications\ResetPasswordNotification;
+use Carbon\Carbon;
 
 use Auth;
 
@@ -111,15 +116,76 @@ class AuthController extends Controller
         ]);         
     }
 
-    public function resetPassword(Request $request)
+    public function forgotPassword(Request $request)
     {
-        $email = $request->email;
-        $user = User::where('email', $email)->first();
+        $data = $request->validate([
+            'email' => 'required|email|string|exists:users,email',
+        ]);
 
-        
+        $user = User::where('email', $data['email'])->first();
+        $rand = rand(111111, 999999);
+
+        $setToken = PasswordResets::create([
+            'email' => $data['email'],
+            'token' => $rand
+        ]);
+
+        if($setToken) {
+            $userInfo = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'token' => $rand
+            ];
+
+            Notification::send($user, new ForgotPasswordNotification($userInfo));
+        }
 
         return response([
+            'message' => 'Verification code has been sent to your email.'
+        ]);
+    }
 
+    public function resetPassword(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email|string|exists:users,email',
+            'password' => [
+                'required', 'confirmed',
+                Password::min(8)->mixedCase()->numbers()->symbols()
+            ]
+        ]);
+        $token = $request->verification_code;
+        
+        $user = User::where('email', $data['email'])->first();
+        $tokenValid = PasswordResets::where('token', $token)->where('email', $data['email'])->first();
+
+        if(!$tokenValid) {
+            return response([
+                'error' => 'Invalid Code.'
+            ], 422);
+        } else {
+            $now = Carbon::now();
+            $expiredTime = Carbon::create($tokenValid->created_at)->add('1 hour');
+
+            if($now > $expiredTime) {
+                return response([
+                    'error' => 'Verification code has expired.'
+                ], 422);
+            }else {
+                $user->update([
+                    'password' => bcrypt($data['password'])
+                ]);
+
+                $userInfo = [
+                    'name' => $user->name,
+                ];
+    
+                Notification::send($user, new ResetPasswordNotification($userInfo));
+            }
+        }
+
+        return response([
+            'message' => 'Password reset successfully.'
         ]);
     }
 

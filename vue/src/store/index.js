@@ -69,6 +69,12 @@ const store = createStore({
                     return data;
                 })
         },
+        forgotPassword({ }, user){
+            return axiosClient.post('/forgot-password', user)
+                .then(({data}) => {
+                    return data;
+                })
+        },
         resetPassword({ }, user){
             return axiosClient.post('/reset-password', user)
                 .then(({data}) => {

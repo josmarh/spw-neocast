@@ -4,6 +4,7 @@ import GuestLayout from '../components/GuestLayout.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import ForgetPassword from '../views/auth/ForgetPassword.vue'
+import ResetPassword from '../views/auth/ResetPassword.vue'
 import Profile from '../views/auth/UserProfile.vue'
 import Channels from '../views/channels/index.vue'
 import Channel from '../views/channels/create.vue'
@@ -47,6 +48,7 @@ const routes = [
             { path: '/login', name: 'Login', component: Login },
             // { path: '/register', name: 'Register', component: Register },
             { path: '/forgot-password', name: 'ForgetPassword', component: ForgetPassword },
+            { path: '/reset-password/:email', name: 'ResetPassword', component: ResetPassword },
         ]
     },
     {
