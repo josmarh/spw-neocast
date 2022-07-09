@@ -10,6 +10,7 @@ use App\Models\ChannelPlaylist;
 use App\Models\FileUploads;
 use App\Http\Resources\ChannelResource;
 use App\Http\Resources\PlaylistResource;
+use App\Http\Resources\MiniPlaylistResource;
 use App\Http\Controllers\UploadsController;
 use Carbon\Carbon;
 use DB;
@@ -262,6 +263,15 @@ class ChannelController extends Controller
         $format = $request->query('format');
 
         $channel = Channels::where('channel_hash', $chash)->first();
+        $playlist = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash', 'ch.title', 'cp.id as cpId')
+            ->join('channel_playlists as cp', 'cp.video_id', '=', 'file_uploads.id')
+            ->join('channels as ch', 'ch.channel_hash', '=', 'cp.channel_hash')
+            ->whereIn('file_uploads.id', function($query)use($chash){
+                $query->select('video_id')->from('channel_playlists');
+            })
+            ->where('cp.channel_hash', $chash)
+            ->orderBy('file_uploads.created_at', 'desc')
+            ->get();
 
         if(isset($format)) {
             if($format == 'roku_json' && str_contains($channel->channel_type, 'Linear')) {
@@ -305,6 +315,17 @@ class ChannelController extends Controller
                     'error' => 0,
                 ]);
             }
+        } else {
+            return response([
+                'id' => $chash,
+                'name' => $channel->title,
+                'type' => str_contains($channel->channel_type, 'Linear') ? 'LOP' : 'SCH',
+                'period' => str_contains($channel->channel_type, 'Linear') ? $channel->schedule_duration : null,
+                'color' => $channel->color,
+                'domain_restriction' => $channel->privacy == 'anywhere' ? 0 : json_decode($channel->privacy_domain),
+                'thumbnail' => count($playlist) > 0 ? URL::to($playlist[0]->thumbnail) : null,
+                'content' => MiniPlaylistResource::collection($playlist)
+            ]);
         }
     }
 
