@@ -16,7 +16,6 @@ use Carbon\Carbon;
 use DB;
 use URL;
 
-
 class ChannelController extends Controller
 {
     public function index(Request $request)
@@ -51,7 +50,8 @@ class ChannelController extends Controller
         $relativePath = null;
 
         $request->validate([
-            'title' => 'required|string|unique:channels,title'
+            'title' => 'required|string|unique:channels,title',
+            'description' => 'required|string|max:200'
         ]);
 
         if (isset($request->logo)) {
@@ -60,6 +60,7 @@ class ChannelController extends Controller
 
         Channels::create([
             'title' => $request->title,
+            'description' => $request->description,
             'schedule_duration' => $request->schedule,
             'schedule_daytime' => json_encode($request->scheduleDaytime),
             'start_time' => $request->starttime,
@@ -148,6 +149,11 @@ class ChannelController extends Controller
         $channel = Channels::findOrFail($id);
         $relativePath = $request->logo;
 
+        $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string|max:200'
+        ]);
+
         if (isset($request->logo)) {
             // check content type
             $host = $request->getSchemeAndHttpHost();
@@ -160,6 +166,7 @@ class ChannelController extends Controller
 
         $channel->update([
             'title' => $request->title,
+            'description' => $request->description,
             'schedule_duration' => $request->schedule,
             'schedule_daytime' => json_encode($request->scheduleDaytime),
             'start_time' => $request->starttime,
@@ -191,6 +198,7 @@ class ChannelController extends Controller
 
         $newChannel = Channels::create([
             'title' => $request->title,
+            'description' => $channel->description,
             'schedule_duration' => $channel->schedule_duration,
             'schedule_daytime' => $channel->schedule_daytime,
             'start_time' => $channel->start_time,
@@ -275,14 +283,17 @@ class ChannelController extends Controller
 
         if(isset($format)) {
             if($format == 'roku_json' && str_contains($channel->channel_type, 'Linear')) {
+                $channelTitle = explode('(Linear)', $channel->channel_type)[0] . 'Channel';
+                
                 return response([
                     'providerName' => 'Vicentric',
                     'lastUpdated' => $channel->updated_at,
                     'language' => 'en',
+                    'description' => $channel->description,
                     'liveFeeds' => [
                         [
                             'id' => $channel->channel_hash,
-                            'title' => explode('(Linear)', $channel->channel_type)[0] . 'Channel',
+                            'title' => $channelTitle,
                             'content' => [
                                 'dateAdded' => $channel->created_at,
                                 'videos' => [
@@ -297,8 +308,8 @@ class ChannelController extends Controller
                             'language' => 'en',
                             'thumbnail' => URL::to('customs/default.jpg'),
                             'brandedThumbnail' => URL::to('customs/default.jpg'),
-                            'shortDescription' => explode('(Linear)', $channel->channel_type)[0] . 'Channel',
-                            'longDescription' => explode('(Linear)', $channel->channel_type)[0] . 'Channel',
+                            'shortDescription' => $channelTitle,
+                            'longDescription' => $channelTitle,
                             'rating' => [
                                 'rating' => 'PG',
                                 'ratingSource' => 'USA_PR',
@@ -309,7 +320,55 @@ class ChannelController extends Controller
                         ]
                     ],
                 ]);
-            }else {
+            } elseif ($format == 'amazon_fire' && str_contains($channel->channel_type, 'Linear')) {
+                $email = $channel->users->email;
+                $channelLogo = $channel->logo == null ? '' : URL::to($channel->logo);
+                $shareLink = 'https://test.tubetargeterapp.com/watch/channel/'.$chash;
+                $playlistData = '';
+
+                foreach($playlist as $item) {
+                    $playlistData .=
+        '<item>
+            <title>'.$item->file_name.'</title>
+            <pubDate>'.$item->created_at.'</pubDate>
+            <link>'.URL::to($item->file_hash).'</link>
+            <guid isPermaLink="false">'.URL::to($item->file_hash).'</guid>
+            <media:category>All</media:category>
+            <media:content url="'.URL::to($item->file_hash).'" language="en-US" fileSize="'.$item->file_size.'" duration="'.$item->duration_seconds.'" medium="video" isDefault="true">
+                <media:title type="plain">'.$item->file_name.'</media:title>
+                <media:thumbnail url="'.URL::to($item->thumbnail).'"></media:thumbnail>
+                <media:credit role="author" scheme="urn:ebu">'.$channel->users->name.'</media:credit>
+            </media:content>
+        </item>';
+                }
+
+                $xmlstr = 
+'<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
+    <channel>
+        <title>'.$channel->title.'</title>
+        <link>'.$shareLink.'</link>
+        <language>en-us</language>
+        <pubDate>'.$channel->created_at.'</pubDate>
+        <lastBuildDate>'.$channel->updated_at.'</lastBuildDate>
+        <managingEditor>'.$email.'</managingEditor>
+        <description>'.$channel->description.'</description>
+        <image>
+            <link>'.$shareLink.'</link>
+            <title>'.$channel->title.'</title>
+            <url>'.$channelLogo.'</url>
+            <height>114</height>
+            <width>114</width>
+        </image>
+        <atom:link href="'.$shareLink.'" rel="self" type="application/rss+xml"></atom:link>
+        '. $playlistData .'
+    </channel>
+';
+
+                // $note = new \SimpleXMLElement($xmlstr);
+
+                return response($xmlstr, 200)->header('Content-Type', 'text/plain');
+            } else {
                 return response([
                     'message' => 'The selected format is invalid.',
                     'error' => 0,

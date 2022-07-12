@@ -35,30 +35,49 @@
                             
                         </div>
                     </div>
-                    <div class="relative z-0 w-full mb-6 mt-6 group">
-                        <input 
-                            type="text" 
-                            name="channel_name" 
-                            class="block py-2.5 px-0 w-full text-sm 
-                            text-gray-900 bg-transparent border-0 
-                            border-b-2 border-gray-300 appearance-none 
-                            dark:text-white dark:border-gray-600 
-                            dark:focus:border-blue-500 focus:outline-none 
-                            focus:ring-0 focus:border-blue-600 peer" 
-                            placeholder=" " required=""
-                            v-model="channelModel.name"
-                        >
-                        <label 
-                            for="channel_name" 
-                            class="peer-focus:font-medium absolute 
-                            text-sm text-gray-500 dark:text-gray-400 
-                            duration-300 transform -translate-y-6 scale-75 
-                            top-3 -z-10 origin-[0] peer-focus:left-0 
-                            peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
-                            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                            peer-focus:scale-75 peer-focus:-translate-y-6"
-                        >Channel Name
-                        </label>
+                    <div class="xl:flex">
+                        <div class="relative z-0 xl:w-1/2 mb-6 mt-12 mr-6 group">
+                            <input 
+                                type="text" 
+                                name="channel_name" 
+                                class="block py-2.5 px-0 w-full text-sm 
+                                text-gray-900 bg-transparent border-0 
+                                border-b-2 border-gray-300 appearance-none 
+                                dark:text-white dark:border-gray-600 
+                                dark:focus:border-blue-500 focus:outline-none 
+                                focus:ring-0 focus:border-blue-600 peer" 
+                                placeholder=" " required=""
+                                v-model="channelModel.name"
+                            >
+                            <label 
+                                for="channel_name" 
+                                class="peer-focus:font-medium absolute 
+                                text-sm text-gray-500 dark:text-gray-400 
+                                duration-300 transform -translate-y-6 scale-75 
+                                top-3 -z-10 origin-[0] peer-focus:left-0 
+                                peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
+                                peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                                peer-focus:scale-75 peer-focus:-translate-y-6"
+                            >Channel Name
+                            </label>
+                        </div>
+                        <div class="xl:w-1/2">
+                            <label for="description" 
+                                class="block text-sm font-medium text-gray-900 dark:text-gray-400">
+                            </label>
+                            <textarea id="description" rows="4"
+                            v-model="channelModel.description"
+                            class="block p-2.5 w-full text-sm text-gray-900 
+                            bg-gray-50 rounded-lg border border-gray-300 
+                            focus:ring-blue-500 focus:border-blue-500 
+                            dark:bg-gray-700 dark:border-gray-600 
+                            dark:placeholder-gray-400 dark:text-white 
+                            dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="Description" maxlength="200" required=""></textarea>
+                            <span class="float-right text-sm text-gray-500">{{channelModel.description.length}}/200</span>
+                        </div>
+                    </div>
+                    <div>
                         <div v-if="channelModel.channelType.includes('Scheduled')">
                             <h3 class="flex items-center mb-1 mt-4 text-md font-semibold text-gray-900 dark:text-white">
                                 Scheduler duration:
@@ -69,12 +88,12 @@
                                 dark:bg-gray-700 dark:border-gray-600 "
                             >
                                 <div class="grid xl:grid-cols-12 xl:gap-4">
-                                    <div class="xl:col-span-1 md:col-span-3 sm:col-span-3">
+                                    <div class="xl:col-span-1">
                                         <label for="select_schedule" class="sr-only">Select schedule</label>
                                         <select
                                             v-model="channelModel.schedule"
                                             id="select_schedule"
-                                            class="block py-2 px-0 w-full text-sm text-gray-500
+                                            class="block py-2 px-0 w-[5rem] text-sm text-gray-500
                                             bg-transparent border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-gray-400 dark:border-gray-600
                                             focus:outline-none focus:ring-0 focus:border-gray-200
@@ -179,7 +198,7 @@
                                     <h3 class="flex items-center mb-1 text-md font-semibold text-gray-900 dark:text-white">
                                         Player Customization
                                     </h3>
-                                    <div class="grid grid-cols-3 gap-4 mt-5">
+                                    <div class="grid xl:grid-cols-3 gap-4 mt-5">
                                         <div class="">
                                             <label for="default-toggle" class="relative inline-flex items-center mb-4 cursor-pointer">
                                                 <input type="checkbox" id="default-toggle" class="sr-only peer" v-model="channelModel.logo">
@@ -291,7 +310,7 @@
                                         </div>
                                     </div>
                                     <!-- main color / twitter -->
-                                    <div class="grid grid-cols-3 gap-2 mt-5">
+                                    <div class="grid xl:grid-cols-3 gap-2 mt-5">
                                         <div >
                                             <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Main color</span>
                                             <div class="flex">
@@ -521,10 +540,10 @@
                     <button type="submit" 
                         class="text-white bg-blue-700 hover:bg-blue-800 
                         focus:outline-none focus:ring-blue-300 
-                        font-medium text-sm w-full sm:w-auto px-5 py-2.5 
+                        font-medium text-sm sm:w-auto px-5 py-2.5 
                         text-center dark:bg-blue-600 dark:hover:bg-blue-700 
-                        dark:focus:ring-blue-800" :disabled="isDisabled"
-                    >Accept</button>
+                        dark:focus:ring-blue-800" :disabled="isDisabled">Accept
+                    </button>
                     <router-link :to="{name: 'Channels'}"
                         class="ml-4 text-white bg-gray-400 hover:bg-gray-800 
                         focus:outline-none focus:ring-gray-300 
@@ -639,6 +658,7 @@ const channelModel = ref({
     color: '',
     cType: '', // checks purpose
     id: null,
+    description: '',
 })
 
 let bgPicker = ref({
@@ -677,6 +697,7 @@ let playerColor = ref('#6366F1');
 let loopPlaylist = ref(false);
 let streamLink = ref('');
 let channelType = ref('');
+let isDisabled = ref(false)
 
 const playlist = ref([]);
 const ChannelPlaylistCheck = ref(0)
@@ -781,6 +802,7 @@ const editChannel = () => {
 }
 
 const updateChannel = async () => {
+    isDisabled.value = true;
     await store
         .dispatch('updateChannel', {
             id: channelModel.value.id,
@@ -798,7 +820,8 @@ const updateChannel = async () => {
             privacy: channelModel.value.privacy,
             privacydomain: channelModel.value.privacy == 'anywhere' ? null : channelModel.value.domains.toString(),
             adtagurl: channelModel.value.monetization,
-            channeltype: channelModel.value.channelType
+            channeltype: channelModel.value.channelType,
+            description: channelModel.value.description,
         })
         .then((res) => {
             router.push({name: 'Channels'})
@@ -806,9 +829,9 @@ const updateChannel = async () => {
         .catch((err) => {
             if (err.response.data) {
                 if (err.response.data.hasOwnProperty('message')){
-                store.dispatch("setErrorNotification", err.response.data.message);
+                    store.dispatch("setErrorNotification", err.response.data.message);
                 }else {
-                store.dispatch("setErrorNotification", err.response.data.error);
+                    store.dispatch("setErrorNotification", err.response.data.error);
                 }
             }
         });
@@ -916,15 +939,17 @@ const dataPlacement = async (data) => {
     channelModel.value.color = data.color
     channelModel.value.cType = data.channel_type
     channelModel.value.id = data.id
+    channelModel.value.description = data.description == null ? '' : data.description
     selectdaymodal.value.time = data.start_time
-    selectedday.value = JSON.parse(data.schedule_daytime);
+    selectedday.value = data.schedule_daytime ? JSON.parse(data.schedule_daytime) : [];
 
-    for(let d of JSON.parse(data.schedule_daytime)) {
-        let weekdayIndex = weekday['_rawValue'].findIndex((obj => obj.day == d.day));
-        //Update object's name property.
-        weekday['_rawValue'][weekdayIndex].time = d.starttime;
+    if(data.schedule_daytime){
+        for(let d of JSON.parse(data.schedule_daytime)) {
+            let weekdayIndex = weekday['_rawValue'].findIndex((obj => obj.day == d.day));
+            //Update object's name property.
+            weekday['_rawValue'][weekdayIndex].time = d.starttime;
+        }
     }
-    
 
     playlist.value = [];
     ChannelPlaylistCheck.value = 1;

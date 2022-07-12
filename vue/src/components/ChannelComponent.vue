@@ -14,31 +14,49 @@
                     </h3>
                     <div class="mt-8">
                         <form @submit.prevent="postChannel">
-                            <div class="relative z-0 w-full mb-6 group">
-                                <input 
-                                    type="text" 
-                                    name="channel_name" 
-                                    class="block py-2.5 px-0 w-full text-sm 
-                                    text-gray-900 bg-transparent border-0 
-                                    border-b-2 border-gray-300 appearance-none 
-                                    dark:text-white dark:border-gray-600 
-                                    dark:focus:border-blue-500 focus:outline-none 
-                                    focus:ring-0 focus:border-blue-600 peer" 
-                                    placeholder="" required=""
-                                    v-model="channelModel.name"
-                                >
-                                <label 
-                                    for="channel_name" 
-                                    class="peer-focus:font-medium absolute 
-                                    text-sm text-gray-500 dark:text-gray-400 
-                                    duration-300 transform -translate-y-6 scale-75 
-                                    top-3 -z-10 origin-[0] peer-focus:left-0 
-                                    peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
-                                    peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-                                    peer-focus:scale-75 peer-focus:-translate-y-6"
-                                >Channel Name
-                                </label>
-
+                            <div class="xl:flex">
+                                <div class="relative z-0 xl:w-1/2 mb-6 mt-12 mr-6 group">
+                                    <input 
+                                        type="text" 
+                                        name="channel_name" 
+                                        class="block py-2.5 px-0 w-full text-sm 
+                                        text-gray-900 bg-transparent border-0 
+                                        border-b-2 border-gray-300 appearance-none 
+                                        dark:text-white dark:border-gray-600 
+                                        dark:focus:border-blue-500 focus:outline-none 
+                                        focus:ring-0 focus:border-blue-600 peer" 
+                                        placeholder="" required=""
+                                        v-model="channelModel.name"
+                                    >
+                                    <label 
+                                        for="channel_name" 
+                                        class="peer-focus:font-medium absolute 
+                                        text-sm text-gray-500 dark:text-gray-400 
+                                        duration-300 transform -translate-y-6 scale-75 
+                                        top-3 -z-10 origin-[0] peer-focus:left-0 
+                                        peer-focus:text-blue-600 peer-focus:dark:text-blue-500 
+                                        peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+                                        peer-focus:scale-75 peer-focus:-translate-y-6"
+                                    >Channel Name
+                                    </label>
+                                </div>
+                                <div class="xl:w-1/2">
+                                    <label for="description" 
+                                        class="block text-sm font-medium text-gray-900 dark:text-gray-400">
+                                    </label>
+                                    <textarea id="description" rows="4" 
+                                    v-model="channelModel.description"
+                                    class="block p-2.5 w-full text-sm text-gray-900 
+                                    bg-gray-50 rounded-lg border border-gray-300 
+                                    focus:ring-blue-500 focus:border-blue-500 
+                                    dark:bg-gray-700 dark:border-gray-600 
+                                    dark:placeholder-gray-400 dark:text-white 
+                                    dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                    placeholder="Description" maxlength="200" required=""></textarea>
+                                    <span class="float-right text-sm text-gray-500">{{channelModel.description.length}}/200</span>
+                                </div>
+                            </div>
+                            <div>
                                 <div v-if="title.includes('Scheduled')">
                                     <h3 class="flex items-center mb-1 mt-4 text-md font-semibold text-gray-900 dark:text-white">
                                         Scheduler duration:
@@ -54,7 +72,7 @@
                                                 <select
                                                     v-model="channelModel.schedule"
                                                     id="select_schedule"
-                                                    class="block py-2 px-0 xl:w-full sm:w-42
+                                                    class="block py-2 px-0 w-[5rem] sm:w-42
                                                     text-sm text-gray-500 bg-transparent
                                                     border-0 border-b-2 border-gray-300
                                                     appearance-none dark:text-gray-400 
@@ -74,9 +92,9 @@
                                             </div>
                                         </div>
                                         <div v-if="channelModel.schedule == 'weekly'" class="mt-6">
-                                            <div class="grid xl:grid-cols-7 xl:gap-4">
-                                                <label v-for="(day, index) in weekday" 
-                                                    :key="index"
+                                            <div class="grid xl:grid-cols-7 gap-4">
+                                                <label v-for="day in weekday" 
+                                                    :key="day"
                                                     :for="day.day"
                                                     @click="selectday(day.day, day.time)"
                                                     class="flex col-span-1 justify-between p-3
@@ -160,7 +178,7 @@
                                                 <h3 class="flex items-center mb-1 text-md font-semibold text-gray-900 dark:text-white">
                                                     Player Customization
                                                 </h3>
-                                                <div class="grid grid-cols-3 gap-4 mt-5">
+                                                <div class="grid xl:grid-cols-3 gap-4 mt-5">
                                                     <div class="">
                                                         <label for="default-toggle" class="relative inline-flex items-center mb-4 cursor-pointer">
                                                             <input type="checkbox" id="default-toggle" class="sr-only peer" v-model="channelModel.logo">
@@ -273,7 +291,7 @@
                                                     </div>
                                                 </div>
                                                 <!-- main color / twitter -->
-                                                <div class="grid grid-cols-3 gap-2 mt-5">
+                                                <div class="grid xl:grid-cols-3 gap-2 mt-5">
                                                     <div >
                                                         <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Main color</span>
                                                         <div class="flex">
@@ -470,7 +488,7 @@
                                                     <video-player 
                                                         v-if="title.includes('Playlist (On demand)')"
                                                         :options="videoOptions" 
-                                                        :playlistOptions="playlist" 
+                                                        :playlistOptions="props.playlist" 
                                                         :shareOptions="share"
                                                         :loopPlaylist="loopPlaylist"
                                                     />
@@ -483,7 +501,7 @@
                             <button type="submit" 
                                 class="text-white bg-blue-700 hover:bg-blue-800 
                                 focus:outline-none focus:ring-blue-300 
-                                font-medium text-sm w-full sm:w-auto px-5 py-2.5 
+                                font-medium text-sm sm:w-auto px-5 py-2.5 
                                 text-center dark:bg-blue-600 dark:hover:bg-blue-700 
                                 dark:focus:ring-blue-800" :disabled="isDisabled"
                             >Accept</button>
@@ -610,14 +628,15 @@ const channelModel = ref({
     timezone: null,
     colorPicker: '#000000',
     colorHex: '#000000',
+    description: '',
 })
 let bgPicker = ref({
-  color: '#f3f3f3',
-  colorHex: '#f3f3f3',
-  suckerCanvas: null,
-  suckerArea: [],
-  isSucking: false,
-  show: false
+    color: '#f3f3f3',
+    colorHex: '#f3f3f3',
+    suckerCanvas: null,
+    suckerArea: [],
+    isSucking: false,
+    show: false
 });
 
 const changeColor = (color) => {
@@ -719,9 +738,9 @@ const acceptedday = (day, time) => {
 
 let isDisabled = ref(false);
 
-watch(channelModel, (after, before) => {
-  channelModel.value.domains = channelModel.value.privacy == 'anywhere' ? [] : channelModel.value.domains
-}, {deep: true})
+// watch(channelModel, (after, before) => {
+//   channelModel.value.domains = channelModel.value.privacy == 'anywhere' ? [] : channelModel.value.domains
+// }, {deep: true})
 
 const passDomain = (ev) => {
     ev.preventDefault();
@@ -795,6 +814,7 @@ const postChannel = async () => {
             privacydomain: channelModel.value.privacy == 'anywhere' ? null : channelModel.value.domains.toString(),
             adtagurl: channelModel.value.monetization,  
             channeltype: channelModel.value.channelType,
+            description: channelModel.value.description,
         })
         .then((res) => {
             internalInstance.appContext.config.globalProperties.$Progress.decrease(40);

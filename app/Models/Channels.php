@@ -13,6 +13,7 @@ class Channels extends Model
 
     protected $fillable = [
         'title',
+        'description',
         'schedule_duration',
         'schedule_daytime',
         'start_time',

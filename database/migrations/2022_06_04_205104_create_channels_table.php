@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('channels', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('description');
             $table->string('schedule_duration', 10)->nullable();
             $table->text('schedule_daytime')->nullable();
             $table->string('start_time', 10)->nullable();

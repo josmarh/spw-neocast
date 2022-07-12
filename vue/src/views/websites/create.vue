@@ -276,7 +276,7 @@
                             <!-- player options -->
                             <div class="mt-10">
                                 <h5 class="mb-4 text-2md font-bold text-gray-900 dark:text-white">Player options</h5>
-                                <div class="flex">
+                                <div class="xl:flex">
                                     <div>
                                         <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Playback options</span>
                                         <div class="flex items-center mt-5">
@@ -287,7 +287,7 @@
                                                 dark:border-gray-600">
                                             <label for="autoplay" class="ml-2 text-sm text-gray-900 dark:text-gray-300">Autoplay (if possible)</label>
                                         </div>
-                                        <div class="flex items-center mt-3">
+                                        <div class="flex items-center mt-3 mb-4">
                                             <input id="volume" type="checkbox" v-model="model.volume"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 
                                                 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 

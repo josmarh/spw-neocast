@@ -20,6 +20,7 @@ class ChannelResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'description' => $this->description,
             'schedule_duration' => $this->schedule_duration,
             'schedule_daytime' => $this->schedule_daytime,
             'start_time' => $this->start_time,

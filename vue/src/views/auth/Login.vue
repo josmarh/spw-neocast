@@ -72,7 +72,7 @@
 import { LockClosedIcon } from '@heroicons/vue/solid'
 import store from '../../store';
 import { useRouter } from 'vue-router';
-import { ref, getCurrentInstance, inject } from 'vue';
+import { ref, getCurrentInstance } from 'vue';
 
 const router = useRouter();
 const internalInstance = getCurrentInstance();
