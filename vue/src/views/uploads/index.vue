@@ -151,11 +151,11 @@ const uploadFiles = (ev) => {
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
-      internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+      internalInstance.appContext.config.globalProperties.$Progress.pause();
       upload.value.files = []; 
       isDisabled.value = false;
-      internalInstance.appContext.config.globalProperties.$Progress.finish();
       store.dispatch("setSuccessNotification", res.status);
+      internalInstance.appContext.config.globalProperties.$Progress.finish();
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();

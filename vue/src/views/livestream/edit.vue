@@ -575,7 +575,7 @@ let model = ref({
     bsignal: false,
     record_stream: null,
     streamKey: '',
-    rtmpUrl: 'rtmp://tubetargeterapp.com:2446/app',
+    rtmpUrl: `${import.meta.env.VITE_RTMP_URI}/app`,
     liveStatus: '',
     latestStreams: []
 });
@@ -686,7 +686,7 @@ const getLiveStreamContent = () => {
                 share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
                 share.value.title = `Watch "${model.value.title}" Live on `;
 
-                videoOptions.value.sources[0].src = `https://tubetargeterapp.com:3070/hls/${data.stream_key}.m3u8`;
+                videoOptions.value.sources[0].src = `${import.meta.env.VITE_STREAM_URI}/hls/${data.stream_key}.m3u8`;
                 checkStreamUri();
             }
         })
@@ -743,7 +743,7 @@ let playingLive2 = ref(0)
 const checkStreamUri = () => {
     let lopper = () => {
         timeoutStream = setTimeout( async () => {
-            await fetch(`https://tubetargeterapp.com:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
+            await fetch(`${import.meta.env.VITE_STREAM_URI}/hls/${model['_rawValue'].streamKey}.m3u8`)
             .then(res => res)
             .then(data => {
                 if(data.status) {

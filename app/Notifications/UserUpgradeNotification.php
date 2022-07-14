@@ -44,7 +44,7 @@ class UserUpgradeNotification extends Notification
             ->subject('Account Upgrade')
             ->line($this->userInfo['username'].',')
             ->line('You have successfully upgraded your plan to '.$this->userInfo['product'].'.')
-            ->action('Login', url('/'));
+            ->action('Login', env('FE_APP_URI'));
     }
 
     /**

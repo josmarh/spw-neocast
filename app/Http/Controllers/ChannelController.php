@@ -286,7 +286,7 @@ class ChannelController extends Controller
                 $channelTitle = explode('(Linear)', $channel->channel_type)[0] . 'Channel';
                 
                 return response([
-                    'providerName' => 'Vicentric',
+                    'providerName' => env('APP_NAME'),
                     'lastUpdated' => $channel->updated_at,
                     'language' => 'en',
                     'description' => $channel->description,
@@ -323,7 +323,7 @@ class ChannelController extends Controller
             } elseif ($format == 'amazon_fire' && str_contains($channel->channel_type, 'Linear')) {
                 $email = $channel->users->email;
                 $channelLogo = $channel->logo == null ? '' : URL::to($channel->logo);
-                $shareLink = 'https://test.tubetargeterapp.com/watch/channel/'.$chash;
+                $shareLink = env('FE_APP_URI').'/watch/channel/'.$chash;
                 $playlistData = '';
 
                 foreach($playlist as $item) {

@@ -134,7 +134,7 @@ const getLiveStreamContent = async () => {
                 share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
                 share.value.title = `Watch "${model.value.title}" Live on `;
 
-                videoOptions.value.sources[0].src = `https://tubetargeterapp.com:3070/hls/${data.stream_key}.m3u8`;
+                videoOptions.value.sources[0].src = `${import.meta.env.VITE_STREAM_URI}/hls/${data.stream_key}.m3u8`;
                 checkStreamUri();
             } else {
                 streamStatus.value = 4;
@@ -158,7 +158,7 @@ let saveLiveVideo = ref(0) // 0: default, 1: ready to save, 2: save is ongoing, 
 const checkStreamUri = () => {
     let lopper = () => {
         timeoutStream = setTimeout( async () => {
-            await fetch(`https://tubetargeterapp.com:3070/hls/${model['_rawValue'].streamKey}.m3u8`)
+            await fetch(`${import.meta.env.VITE_STREAM_URI}/hls/${model['_rawValue'].streamKey}.m3u8`)
             .then(res => res)
             .then(data => {
                 if(data.status) {

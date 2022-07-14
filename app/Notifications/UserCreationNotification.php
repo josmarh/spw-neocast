@@ -46,7 +46,7 @@ class UserCreationNotification extends Notification
             ->line('You have successfully subscribed to '.$this->userInfo['product'].'.')
             ->line('Email: '.$this->userInfo['email'])
             ->line('Password: '.$this->userInfo['password'])
-            ->action('Login', url('/'));
+            ->action('Login', env('FE_APP_URI'));
     }
 
     /**

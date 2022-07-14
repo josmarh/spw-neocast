@@ -1619,8 +1619,8 @@ const embedChannel = async (hash, title, data) => {
 
         channelType.value = data.channel_type
         if(data.channel_type.includes('Linear')) {
-          videoOptionsLinear.sources[0].src = `https://tubetargeterapp.com:3070/channels/${data.stream_name}.m3u8`;
-          // videoOptionsLinear.sources[0].src = `https://tubetargeterapp.com:3070/m3u8/linear_demo.m3u8`;
+          videoOptionsLinear.sources[0].src = `${import.meta.env.VITE_STREAM_URI}/channels/${data.stream_name}.m3u8`;
+          // videoOptionsLinear.sources[0].src = `${import.meta.env.VITE_STREAM_URI}/m3u8/linear_demo.m3u8`;
           videoOptionsLinear.poster = res.data[0].thumbnail;
           videoOptionsLinear.sources[0].type = 'application/x-mpegURL';
           if(data.channel_type.includes('Looped')){ videoOptionsLinear.loop = true; }else{ videoOptionsLinear.loop = false; }
@@ -1654,7 +1654,7 @@ const embedCode = (item) => {
 }
 
 const streamLinkModal = (stream_name) => {
-  streamLink.value = `https://tubetargeterapp.com:3070/channels/${stream_name}.m3u8`
+  streamLink.value = `${import.meta.env.VITE_STREAM_URI}/channels/${stream_name}.m3u8`
   openStreamLink.value = true;
 }
 
