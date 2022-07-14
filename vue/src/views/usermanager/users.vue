@@ -2,7 +2,7 @@
     <div>
         <div v-if="userPermissions.includes('view_users')">
             <page-component-vue title="Users" 
-                :class="[usersListCheck == 0 || usersListCheck == 1 || users.data.length < 3 ? 'h-screen bg-gray-100' : '' ]">
+                :class="[usersListCheck == 0 || usersListCheck == 1 || users.data.length <= 3 ? 'h-screen bg-gray-100' : '' ]">
                 <notification-vue />
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <div class="p-4">

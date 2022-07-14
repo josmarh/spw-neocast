@@ -222,7 +222,7 @@ const getPlaylist = async (chdata) => {
             ]
           })
         }
-        ChannelPlaylistCheck.value = 2;
+        
         twitterHandle.value = chdata.twitter;
         let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
         share.value.title = `Watch "${res.data[0].channel_title}" ${twitter} on `;
@@ -256,6 +256,7 @@ const getPlaylist = async (chdata) => {
           videoOptionsLinear.controlBar.remainingTimeDisplay = false;
           videoOptionsLinear.controlBar.progressControl = false;
         }
+        ChannelPlaylistCheck.value = 2;
       }else {
         ChannelPlaylistCheck.value = 3;
       }

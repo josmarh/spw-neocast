@@ -200,7 +200,7 @@ const getPlaylist = async (chdata) => {
                     ]
                 })
             }
-            ChannelPlaylistCheck.value = 2;
+            
             twitterHandle.value = chdata.twitter;
             let twitter = twitterHandle.value != null ? `via @${twitterHandle.value}` : '';
 
@@ -221,7 +221,7 @@ const getPlaylist = async (chdata) => {
             channelType.value = chdata.channel_type;
             streamLink.value = `https://tubetargeterapp.com:3070/channels/${chdata.stream_name}.m3u8`
             if(chdata.channel_type.includes('Linear')) {
-                videoOptionsLinear.sources[0].src = `https://tubetargeterapp.com:3070/channels/${res.data.stream_name}.m3u8`;
+                videoOptionsLinear.sources[0].src = `https://tubetargeterapp.com:3070/channels/${chdata.stream_name}.m3u8`;
                 // videoOptionsLinear.sources[0].src = `https://tubetargeterapp.com:3070/m3u8/linear_demo.m3u8`;
                 videoOptionsLinear.poster = res.data[0].thumbnail;
                 videoOptionsLinear.sources[0].type = 'application/x-mpegURL';
@@ -231,7 +231,7 @@ const getPlaylist = async (chdata) => {
                 videoOptionsLinear.controlBar.remainingTimeDisplay = false;
                 videoOptionsLinear.controlBar.progressControl = false;
             }
-
+            ChannelPlaylistCheck.value = 2;
         }else {
             ChannelPlaylistCheck.value = 3;
         }      
