@@ -93,12 +93,13 @@
                   <td class="px-6 py-4">
                     <div class="flex">
                       <!-- visit site -->
-                      <div class="">
+                      <div class="tooltip">
                         <button type="button" @click="_visitWebsite(item.url_path)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                          <span class="tooltiptext">Visit Website</span>
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
@@ -107,12 +108,13 @@
                         </button>
                       </div>
                       <!-- edit -->
-                      <div class="">
+                      <div class="tooltip-delete">
                         <button type="button" @click="_edit(item.whash)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                          <span class="tooltiptext">Edit</span>
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
@@ -121,12 +123,13 @@
                         </button>
                       </div>
                       <!-- delete -->
-                      <div class="">
+                      <div class="tooltip-delete">
                         <button type="button" @click="deleteConfirm(item)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                          <span class="tooltiptext">Delete</span>
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
@@ -405,5 +408,70 @@ onMounted(() => {
 </script>
 
 <style>
-
+.tooltip {
+  position: relative;
+}
+.tooltip-delete {
+  position: relative;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 100px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 80%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-delete .tooltiptext {
+  visibility: hidden;
+  min-width: 55px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 120%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip-delete .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.tooltip-delete:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
 </style>

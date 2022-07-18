@@ -114,12 +114,13 @@
                                 <td class="px-6 py-4">
                                     <div class="flex">
                                         <!-- edit -->
-                                        <div class="">
+                                        <div class="tooltip-delete">
                                             <button type="button" @click="updateUserModal(user)"
                                                 class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                                 focus:outline-none focus:ring-gray-100 
                                                 font-medium text-sm px-5 py-2.5 text-center 
                                                 inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                                <span class="tooltiptext">Edit</span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" 
@@ -128,18 +129,20 @@
                                             </button>
                                         </div>
                                         <!-- block -->
-                                        <div class="">
+                                        <div class="tooltip-delete">
                                             <button type="button" @click="blockUserModal(user)"
                                                 class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                                 focus:outline-none focus:ring-gray-100 
                                                 font-medium text-sm px-5 py-2.5 text-center 
                                                 inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                                <span class="tooltiptext">Block</span>
                                                 <span v-if="user.active == 1">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                                                     </svg>
                                                 </span>
                                                 <span v-else>
+                                                    <span class="tooltiptext">Unblock</span>
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                                                     </svg>
@@ -147,12 +150,13 @@
                                             </button>
                                         </div>
                                         <!-- delete -->
-                                        <div class="">
+                                        <div class="tooltip-delete">
                                             <button type="button" @click="deleteUserModal(user)"
                                                 class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                                                 focus:outline-none focus:ring-gray-100 
                                                 font-medium text-sm px-5 py-2.5 text-center 
                                                 inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                                                <span class="tooltiptext">Delete</span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" 
@@ -229,7 +233,7 @@
                         leave="ease-in duration-200" 
                         leave-from="opacity-100 translate-y-0 sm:scale-100" 
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                        <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                        <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg w-full">
                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div class="sm:flex sm:items-start">
                                 <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -248,7 +252,7 @@
                                             type="text"
                                             id="name"
                                             v-model="model.name"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -271,7 +275,7 @@
                                             type="email"
                                             id="email"
                                             v-model="model.email"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -294,7 +298,7 @@
                                             type="password"
                                             id="password"
                                             v-model="model.password"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -324,7 +328,7 @@
                                             type="password"
                                             id="password_confirmation"
                                             v-model="model.password_confirmation"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -369,19 +373,20 @@
                                         </select>
                                     </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                        <button type="button" 
-                                            class="mt-3 w-full inline-flex justify-center border 
-                                            border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
-                                            text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
-                                            sm:w-auto sm:text-sm" 
-                                            @click="openCreateUser = false" ref="cancelButtonRef">Cancel
-                                        </button>
+                                        
                                         <button type="submit"
                                             class="mt-3 w-full inline-flex justify-center border 
                                             shadow-sm px-6 py-2 bg-indigo-600 hover:bg-indigo-700
                                             text-sm font-medium text-white  
                                             sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                             :disabled="isDisabled">Save
+                                        </button>
+                                        <button type="button" 
+                                            class="mt-3 w-full inline-flex justify-center border 
+                                            border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
+                                            text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
+                                            sm:w-auto sm:text-sm" 
+                                            @click="openCreateUser = false" ref="cancelButtonRef">Cancel
                                         </button>
                                     </div>
                                 </form>
@@ -415,7 +420,7 @@
                         leave="ease-in duration-200" 
                         leave-from="opacity-100 translate-y-0 sm:scale-100" 
                         leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                        <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                        <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg w-full">
                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div class="sm:flex sm:items-start">
                                 <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -437,7 +442,7 @@
                                             type="text"
                                             id="name"
                                             v-model="model.name"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -460,7 +465,7 @@
                                             type="email"
                                             id="email"
                                             v-model="model.email"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -483,7 +488,7 @@
                                             type="password"
                                             id="password"
                                             v-model="model.password"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -513,7 +518,7 @@
                                             type="password"
                                             id="password_confirmation"
                                             v-model="model.password_confirmation"
-                                            class="block py-2 px-0 xl:w-full sm:w-full
+                                            class="block py-2 px-0 xl:w-full w-full
                                             text-sm text-gray-900 bg-transparent
                                             border-0 border-b-2 border-gray-300
                                             appearance-none dark:text-white dark:border-gray-600
@@ -557,13 +562,6 @@
                                         </select>
                                     </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                        <button type="button" 
-                                            class="mt-3 w-full inline-flex justify-center border 
-                                            border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
-                                            text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
-                                            sm:w-auto sm:text-sm" 
-                                            @click="openUpdateUser = false" ref="cancelButtonRef">Cancel
-                                        </button>
                                         <button type="submit"
                                             class="mt-3 w-full inline-flex justify-center border 
                                             shadow-sm px-6 py-2 bg-indigo-600 hover:bg-indigo-700
@@ -571,6 +569,14 @@
                                             sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                             :disabled="isDisabled">Save
                                         </button>
+                                        <button type="button" 
+                                            class="mt-3 w-full inline-flex justify-center border 
+                                            border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
+                                            text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
+                                            sm:w-auto sm:text-sm" 
+                                            @click="openUpdateUser = false" ref="cancelButtonRef">Cancel
+                                        </button>
+                                        
                                     </div>
                                 </form>
                             </div>
@@ -634,13 +640,7 @@
                                         </div>
                                     </div>
                                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                        <button type="button" 
-                                        class="mt-3 w-full inline-flex justify-center 
-                                        border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
-                                        font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
-                                        sm:ml-3 sm:w-auto sm:text-sm" 
-                                        @click="openBlockUser = false" ref="cancelButtonRef">Cancel
-                                        </button>
+                                        
                                         <button type="button" v-if="model.is_active == 1"
                                             class="w-full inline-flex justify-center border 
                                             border-transparent shadow-sm px-4 py-2 bg-red-600 text-base 
@@ -654,6 +654,13 @@
                                             font-medium text-white hover:bg-indigo-700 sm:ml-3 
                                             sm:w-auto sm:text-sm" 
                                             @click="blockUser" :disabled="isDisabled">Unblock
+                                        </button>
+                                        <button type="button" 
+                                        class="mt-3 w-full inline-flex justify-center 
+                                        border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                        font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
+                                        sm:ml-3 sm:w-auto sm:text-sm" 
+                                        @click="openBlockUser = false" ref="cancelButtonRef">Cancel
                                         </button>
                                     </div>
                                 </DialogPanel>

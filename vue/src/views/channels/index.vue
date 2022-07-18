@@ -183,13 +183,12 @@
                         </button>
                       </div>
                       <div v-if="c.channel_type.includes('Linear')">
-                        <div class="tooltip">
+                        <div class="">
                           <button type="button" @click="streamLinkModal(c.stream_name)"
                             class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                             focus:outline-none focus:ring-gray-100 
                             font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
                             inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
-                            <span class="tooltiptext">Copy to clipboard</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                               <path stroke-linecap="round" 
                                 stroke-linejoin="round" 
@@ -212,12 +211,13 @@
                           TV Apps
                         </button>
                       </div>
-                      <div class="">
+                      <div class="tooltip-duplicate">
                         <button type="button" @click="duplicateModal(c.channel_hash, c.title)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                          <span class="tooltiptext">Duplicate</span>
                           <svg xmlns="http://www.w3.org/2000/svg" 
                             class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -225,12 +225,13 @@
                           </svg>
                         </button>
                       </div>
-                      <div class="">
+                      <div class="tooltip-edit">
                         <button type="button" @click="editChannel(c.channel_hash)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                          <span class="tooltiptext">Edit</span>
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
@@ -238,12 +239,13 @@
                           </svg>
                         </button>
                       </div>
-                      <div class="">
+                      <div class="tooltip-edit">
                         <button type="button" @click="confirmDelete(c)"
                           class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-sm px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2">
+                          <span class="tooltiptext">Delete</span>
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" 
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" 
@@ -369,7 +371,7 @@
           <div class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] sm:w-full">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] w-full">
                   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                       <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
@@ -418,7 +420,7 @@
                           />
                         </div>
                         <!-- embed settings -->
-                        <div class="grid grid-cols-3 gap-3 mt-4">
+                        <div class="grid xl:grid-cols-3 gap-3 mt-4">
                           <div>
                             <h3 class="font-bold text-md text-gray-900">Size</h3>
                             <div class="flex mt-3">
@@ -451,7 +453,7 @@
                               <select
                                 v-model="embedFilters.ratio"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                                focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 
+                                focus:ring-blue-500 focus:border-blue-500 block w-1/2 p-2.5 dark:bg-gray-700 
                                 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
                                 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                               >
@@ -595,7 +597,7 @@
                         <div class="mt-5">
                           <button type="button" 
                             class="group relative flex justify-center py-2 px-4 border 
-                            border-transparent text-sm font-medium text-white 
+                            border-transparent text-sm font-medium text-white w-full
                             bg-indigo-600 hover:bg-indigo-700 focus:outline-none
                             sm:w-auto sm:text-sm"
                             @click="copyData(code, 'code')"
@@ -645,7 +647,7 @@
                 leave="ease-in duration-200" 
                 leave-from="opacity-100 translate-y-0 sm:scale-100" 
                 leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] sm:w-full">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] w-full">
                   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                       <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -886,14 +888,6 @@
                   </div>
                   <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" 
-                      class="mt-3 w-full inline-flex justify-center border 
-                      border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
-                      text-gray-700 hover:bg-gray-50 focus:outline-none 
-                      focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
-                      @click="openAddVideo = false" 
-                      ref="cancelButtonRef">Cancel
-                    </button>
-                    <button type="button" 
                       class="text-white bg-blue-700 hover:bg-blue-800 
                       focus:outline-none focus:ring-blue-300 
                       font-medium text-sm w-full sm:w-auto px-5 py-2.5 
@@ -901,6 +895,15 @@
                       dark:focus:ring-blue-800" :disabled="isDisabled"
                       @click="addVideoAction"
                     >Accept</button>
+                    <button type="button" 
+                      class="mt-3 mr-3 w-full inline-flex justify-center border 
+                      border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
+                      text-gray-700 hover:bg-gray-50 focus:outline-none 
+                      focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                      @click="openAddVideo = false" 
+                      ref="cancelButtonRef">Cancel
+                    </button>
+                    
                   </div>
                 </DialogPanel>
               </TransitionChild>
@@ -918,7 +921,7 @@
           <div class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg w-full">
                   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                       <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -959,12 +962,6 @@
                   </div>
                   <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" 
-                      class="mt-3 w-full inline-flex justify-center border border-gray-300 
-                      shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
-                      hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
-                      @click="openDup = false" ref="cancelButtonRef">Cancel
-                    </button>
-                    <button type="button" 
                       class="text-white bg-blue-700 hover:bg-blue-800 
                       focus:outline-none focus:ring-blue-300 
                       font-medium text-sm w-full sm:w-auto px-5 py-2.5 
@@ -972,6 +969,13 @@
                       dark:focus:ring-blue-800" :disabled="isDisabled"
                       @click="duplicateChannel">Accept
                     </button>
+                    <button type="button" 
+                      class="mt-3 mr-3 w-full inline-flex justify-center border border-gray-300 
+                      shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 
+                      hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" 
+                      @click="openDup = false" ref="cancelButtonRef">Cancel
+                    </button>
+                    
                   </div>
                 </DialogPanel>
               </TransitionChild>
@@ -1021,7 +1025,7 @@
                             placeholder="" required="" readonly>
                           <div class="tooltip">
                             <button type="button" @click="copyDataLink(streamLink,'stream-link','stream-tip')"
-                              class="absolute top-0 right-0 p-2.5 text-sm font-medium 
+                              class="absolute bottom-0 right-0 p-2.5 text-sm font-medium 
                               text-white bg-indigo-600 border border-indigo-700 
                               hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
                               <span class="tooltiptext" id="stream-tip">Copy</span>
@@ -1103,7 +1107,7 @@
                             placeholder="" required="" readonly>
                           <div class="tooltip">
                             <button type="button" @click="copyDataLink(streamLink,'roku-link','roku-tip')"
-                              class="absolute top-0 right-0 p-2.5 text-sm font-medium 
+                              class="absolute bottom-0 right-0 p-2.5 text-sm font-medium 
                               text-white bg-indigo-600 border border-indigo-700 
                               hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
                               <span class="tooltiptext" id="roku-tip">Copy</span>
@@ -1136,7 +1140,7 @@
                             placeholder="" required="" readonly>
                           <div class="tooltip">
                             <button type="button" @click="copyDataLink(streamLinkAma,'amazon-link','amazon-tip')"
-                              class="absolute top-7 right-0 p-2.5 text-sm font-medium 
+                              class="absolute bottom-0 right-0 p-2.5 text-sm font-medium 
                               text-white bg-indigo-600 border border-indigo-700 
                               hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
                               <span class="tooltiptext" id="amazon-tip">Copy</span>
@@ -1714,7 +1718,46 @@ onMounted(() => {
 });
 
 </script>
+
 <style scoped>
+.tooltip-duplicate {
+  position: relative;
+}
+.tooltip-edit {
+  position: relative;
+}
+.tooltip-duplicate .tooltiptext {
+  visibility: hidden;
+  min-width: 40px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 90%;
+  margin-left: -68px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-edit .tooltiptext {
+  visibility: hidden;
+  min-width: 55px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 120%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 .tooltip .tooltiptext {
   visibility: hidden;
   min-width: 40px;
@@ -1747,6 +1790,27 @@ onMounted(() => {
   opacity: 0;
   transition: opacity 0.3s;
 }
+
+.tooltip-duplicate .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip-edit .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
@@ -1766,6 +1830,15 @@ onMounted(() => {
   border-width: 5px;
   border-style: solid;
   border-color: #555 transparent transparent transparent;
+}
+
+.tooltip-duplicate:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.tooltip-edit:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }
 .tooltip:hover .tooltiptext {
   visibility: visible;

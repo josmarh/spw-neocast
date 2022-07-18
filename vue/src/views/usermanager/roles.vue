@@ -187,7 +187,7 @@
                             leave="ease-in duration-200" 
                             leave-from="opacity-100 translate-y-0 sm:scale-100" 
                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                            <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg w-full">
                             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div class="sm:flex sm:items-start">
                                     <div class="mt-3 text-center sm:mt-2 sm:ml-0 sm:text-left">
@@ -201,7 +201,7 @@
                                                 type="text"
                                                 id="name"
                                                 v-model="model.name"
-                                                class="block py-2 px-0 xl:w-full sm:w-full
+                                                class="block py-2 px-0 xl:w-full w-full
                                                 text-sm text-gray-900 bg-transparent
                                                 border-0 border-b-2 border-gray-300
                                                 appearance-none dark:text-white dark:border-gray-600
@@ -220,19 +220,20 @@
                                             </label>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                            <button type="button" 
-                                                class="mt-3 w-full inline-flex justify-center border 
-                                                border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
-                                                text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
-                                                sm:w-auto sm:text-sm" 
-                                                @click="openCreateRole = false" ref="cancelButtonRef">Cancel
-                                            </button>
+                                            
                                             <button type="submit"
                                                 class="mt-3 w-full inline-flex justify-center border 
                                                 shadow-sm px-6 py-2 bg-indigo-600 hover:bg-indigo-700
                                                 text-sm font-medium text-white  
                                                 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                                 :disabled="isDisabled">Save
+                                            </button>
+                                            <button type="button" 
+                                                class="mt-3 w-full inline-flex justify-center border 
+                                                border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
+                                                text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
+                                                sm:w-auto sm:text-sm" 
+                                                @click="openCreateRole = false" ref="cancelButtonRef">Cancel
                                             </button>
                                         </div>
                                     </form>
@@ -266,7 +267,7 @@
                             leave="ease-in duration-200" 
                             leave-from="opacity-100 translate-y-0 sm:scale-100" 
                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                            <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                            <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg w-full">
                             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div class="sm:flex sm:items-start">
                                     <div class="mt-3 text-center sm:mt-2 sm:ml-0 sm:text-left">
@@ -283,7 +284,7 @@
                                                 type="text"
                                                 id="name"
                                                 v-model="model.name"
-                                                class="block py-2 px-0 xl:w-full sm:w-full
+                                                class="block py-2 px-0 xl:w-full w-full
                                                 text-sm text-gray-900 bg-transparent
                                                 border-0 border-b-2 border-gray-300
                                                 appearance-none dark:text-white dark:border-gray-600
@@ -302,19 +303,20 @@
                                             </label>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                            <button type="button" 
-                                                class="mt-3 w-full inline-flex justify-center border 
-                                                border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
-                                                text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
-                                                sm:w-auto sm:text-sm" 
-                                                @click="openUpdateRole = false" ref="cancelButtonRef">Cancel
-                                            </button>
+                                            
                                             <button type="submit"
                                                 class="mt-3 w-full inline-flex justify-center border 
                                                 shadow-sm px-6 py-2 bg-indigo-600 hover:bg-indigo-700
                                                 text-sm font-medium text-white  
                                                 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                                                 :disabled="isDisabled">Save
+                                            </button>
+                                            <button type="button" 
+                                                class="mt-3 w-full inline-flex justify-center border 
+                                                border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium 
+                                                text-gray-700 hover:bg-gray-50  sm:mt-0 sm:ml-3 
+                                                sm:w-auto sm:text-sm" 
+                                                @click="openUpdateRole = false" ref="cancelButtonRef">Cancel
                                             </button>
                                         </div>
                                     </form>
@@ -367,19 +369,20 @@
                                             </div>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                            <button type="button" 
-                                                class="mt-3 w-full inline-flex justify-center 
-                                                border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
-                                                font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
-                                                sm:ml-3 sm:w-auto sm:text-sm" 
-                                                @click="openDeleteRole = false" ref="cancelButtonRef">Cancel
-                                            </button>
+                                            
                                             <button type="button" 
                                                 class="w-full inline-flex justify-center border 
                                                 border-transparent shadow-sm px-4 py-2 bg-red-600 text-base 
                                                 font-medium text-white hover:bg-red-700 sm:ml-3 
                                                 sm:w-auto sm:text-sm" 
                                                 @click="deleteRole(model.id)" :disabled="isDisabled">Delete
+                                            </button>
+                                            <button type="button" 
+                                                class="mt-3 w-full inline-flex justify-center 
+                                                border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                                font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
+                                                sm:ml-3 sm:w-auto sm:text-sm" 
+                                                @click="openDeleteRole = false" ref="cancelButtonRef">Cancel
                                             </button>
                                         </div>
                                     </DialogPanel>
@@ -413,7 +416,7 @@
                                     leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                                 >
                                     <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl 
-                                        transform transition-all sm:my-8 sm:max-w-2xl sm:w-full">
+                                        transform transition-all sm:my-8 sm:max-w-2xl w-full">
                                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                             <div class="sm:flex sm:items-start">
                                                 <div class="mt-3 text-center sm:mt-0 sm:ml-0 sm:text-left">
@@ -459,13 +462,7 @@
                                             </div>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                            <button type="button" 
-                                            class="mt-3 w-full inline-flex justify-center 
-                                            border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
-                                            font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
-                                            sm:ml-3 sm:w-auto sm:text-sm" 
-                                            @click="openPermitRole = false" ref="cancelButtonRef">Cancel
-                                            </button>
+                                            
                                             <button type="button" v-if="rolePermissions.length"
                                                 class="w-full inline-flex justify-center border 
                                                 border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base 
@@ -473,6 +470,13 @@
                                                 sm:w-auto sm:text-sm"
                                                 @click="assignPermissions"
                                                 :disabled="isDisabled">Assign
+                                            </button>
+                                            <button type="button" 
+                                            class="mt-3 w-full inline-flex justify-center 
+                                            border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
+                                            font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 
+                                            sm:ml-3 sm:w-auto sm:text-sm" 
+                                            @click="openPermitRole = false" ref="cancelButtonRef">Cancel
                                             </button>
                                             <span class="mr-3">{{modelPermits.message}}</span>
                                         </div>

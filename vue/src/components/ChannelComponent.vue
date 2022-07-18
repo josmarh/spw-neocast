@@ -195,6 +195,15 @@
                                                                 peer-checked:bg-blue-600"
                                                             ></div>
                                                             <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Logo</span>
+                                                            <div class="tooltip-logo m-1">
+                                                                <span class="tooltiptext text-xs">114x114 channel logo .png image in your Fire TV channel. Not used by Roku.</span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" 
+                                                                    class="h-4 w-4 text-gray-500 cursor-pointer" fill="none" 
+                                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" 
+                                                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                                </svg>
+                                                            </div>
                                                         </label>
                                                         <!-- channel logo -->
                                                         <div>
@@ -376,6 +385,15 @@
                                                             v-model="channelModel.privacy"
                                                         >
                                                         <label for="default-radio-1" class="ml-4 text-sm text-gray-900 dark:text-gray-300">Anywhere</label>
+                                                        <div class="tooltip-privacy">
+                                                            <span class="tooltiptext text-xs">Enable people to embed this channel on any site.</span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                                                class="h-4 w-4 text-gray-500 ml-2 cursor-pointer" fill="none" 
+                                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                     <div class="flex items-center">
                                                         <input id="default-radio-2" type="radio" value="domain" name="default-radio" 
@@ -386,6 +404,15 @@
                                                             v-model="channelModel.privacy"
                                                         >
                                                         <label for="default-radio-2" class="ml-4 text-sm text-gray-900 dark:text-gray-300">Only on domains I choose</label>
+                                                        <div class="tooltip-privacy">
+                                                            <span class="tooltiptext text-xs">A whitelist with sites on which people can embed this channel.</span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                                                class="h-4 w-4 text-gray-500 ml-2 cursor-pointer" fill="none" 
+                                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </div>
                                                     </div>
                                                     <div v-if="channelModel.privacy == 'domain'" class="grid xl:grid-cols-12 mt-3">
                                                         <div class="relative z-0 col-span-9">
@@ -448,6 +475,15 @@
                                                 <div>
                                                     <h3 class="flex items-center mb-1 mt-6 text-md font-semibold text-gray-900 dark:text-white">
                                                         Ads Monetization
+                                                        <div class="tooltip-privacy">
+                                                            <span class="tooltiptext text-xs">We support key standards for video advertising: VAST.</span>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" 
+                                                                class="h-4 w-4 text-gray-500 ml-2 cursor-pointer" fill="none" 
+                                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" 
+                                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                        </div>
                                                     </h3>
                                                     <div class="relative z-0 mt-3">
                                                         <input
@@ -838,3 +874,73 @@ const postChannel = async () => {
 }
 
 </script>
+
+<style scoped>
+.tooltip-privacy {
+  position: relative;
+}
+.tooltip-privacy .tooltiptext {
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 5%;
+  margin-left: -83px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-privacy .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip-privacy:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-logo {
+  position: relative;
+}
+.tooltip-logo .tooltiptext {
+  visibility: hidden;
+  min-width: 280px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 5%;
+  margin-left: -133px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-logo .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip-logo:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+</style>

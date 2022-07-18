@@ -37,28 +37,43 @@
                                 </div>
                                 <ul 
                                     class="hidden text-md font-medium text-center text-gray-500 rounded-lg
-                                    divide-x divide-gray-200 shadow sm:flex dark:divide-gray-700 dark:text-gray-400"
+                                    divide-x divide-gray-200 shadow sm:flex"
                                 >
                                     <li class="w-full">
-                                        <a href="#" @click="toogleTypes($event, 'linear')"
-                                            class="inline-block p-8 w-full rounded-l-lg focus:outline-none 
-                                            dark:text-white" aria-current="page"
-                                            :class="[
-                                                channelType.linear == 'active' 
-                                                ? 'active bg-gray-300 text-gray-900 dark:bg-gray-700'
-                                                : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
-                                            ]"
-                                        >Linear</a>
+                                        <div class="tooltip-linear">
+                                            <a href="#" @click="toogleTypes($event, 'linear')"
+                                                class="inline-block p-8 w-full rounded-l-lg focus:outline-none" aria-current="page"
+                                                :class="[
+                                                    channelType.linear == 'active' 
+                                                    ? 'active bg-gray-300 text-gray-900 dark:bg-gray-700'
+                                                    : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
+                                                ]"
+                                            >
+                                                <span class="tooltiptext">
+                                                    All viewers will watch the same content
+                                                    at the same time as in the traditional television.
+                                                </span>
+                                                Linear
+                                            </a>
+                                        </div>
                                     </li>
                                     <li class="w-full">
-                                        <a href="#" @click="toogleTypes($event, 'demand')"
-                                            class="inline-block p-8 w-full rounded-r-lg focus:outline-none "
-                                            :class="[
-                                                channelType.onDemand == 'active' 
-                                                ? 'active  bg-gray-300 text-gray-900 dark:bg-gray-700'
-                                                : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
-                                            ]"
-                                        >On demand</a>
+                                        <div class="tooltip-linear">
+                                            <a href="#" @click="toogleTypes($event, 'ondemand')"
+                                                class="inline-block p-8 w-full rounded-r-lg focus:outline-none "
+                                                :class="[
+                                                    channelType.onDemand == 'active' 
+                                                    ? 'active  bg-gray-300 text-gray-900 dark:bg-gray-700'
+                                                    : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
+                                                ]"
+                                            >
+                                                <span class="tooltiptext">
+                                                    Viewers can interact with the player controls and jump
+                                                    to the next or previous video in the playlist.
+                                                </span>
+                                                On demand
+                                            </a>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -93,28 +108,38 @@
                                     divide-x divide-gray-200 shadow sm:flex dark:divide-gray-700 dark:text-gray-400"
                                 >
                                     <li class="w-full">
-                                        <a href="#" @click="toogleTypes($event, 'scheduled')"
-                                            class="inline-block p-8 w-full rounded-l-lg focus:outline-none "
-                                            :class="[
-                                                channelType.scheduled == 'active' 
-                                                ? 'active  bg-gray-300 text-gray-900 dark:bg-gray-700'
-                                                : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
-                                            ]"
-                                        >
-                                            Scheduled
-                                        </a>
+                                        <div class="tooltip-linear">
+                                            <a href="#" @click="toogleTypes($event, 'scheduled')"
+                                                class="inline-block p-8 w-full rounded-l-lg focus:outline-none "
+                                                :class="[
+                                                    channelType.scheduled == 'active' 
+                                                    ? 'active  bg-gray-300 text-gray-900 dark:bg-gray-700'
+                                                    : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
+                                                ]"
+                                            >
+                                                <span class="tooltiptext">
+                                                    You can schedule the content to a fixed time.
+                                                </span>
+                                                Scheduled
+                                            </a>
+                                        </div>
                                     </li>
                                     <li class="w-full">
-                                        <a href="#" @click="toogleTypes($event, 'looped')"
-                                            class="inline-block p-8 w-full rounded-r-lg focus:outline-none "
-                                            :class="[
-                                                channelType.looped == 'active' 
-                                                ? 'active  bg-gray-300 text-gray-900 dark:bg-gray-700'
-                                                : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
-                                            ]"
-                                        >
-                                            Looped
-                                        </a>
+                                        <div class="tooltip-linear">
+                                            <a href="#" @click="toogleTypes($event, 'looped')"
+                                                class="inline-block p-8 w-full rounded-r-lg focus:outline-none "
+                                                :class="[
+                                                    channelType.looped == 'active' 
+                                                    ? 'active  bg-gray-300 text-gray-900 dark:bg-gray-700'
+                                                    : 'bg-white hover:text-gray-700 hover:bg-gray-50 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700'
+                                                ]"
+                                            >
+                                                <span class="tooltiptext">
+                                                    Content would be showed in a loop mode.
+                                                </span>
+                                                Looped
+                                            </a>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -161,7 +186,7 @@ const channelType = ref({
 
 const toogleTypes = (ev, type) => {
     ev.preventDefault();
-    if(type == 'demand') {
+    if(type == 'ondemand') {
         channelType.value.onDemand = 'active'
         channelType.value.linear = ''
     }else if(type == 'linear') {
@@ -191,3 +216,39 @@ const setUpChannel = () => {
     }
 }
 </script>
+
+<style scoped>
+.tooltip-linear {
+  position: relative;
+}
+.tooltip-linear .tooltiptext {
+  visibility: hidden;
+  min-width: 55px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 20%;
+  /* margin-left: -65px; */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-linear .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip-linear:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+</style>

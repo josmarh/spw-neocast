@@ -322,7 +322,7 @@ class ChannelController extends Controller
                 ]);
             } elseif ($format == 'amazon_fire' && str_contains($channel->channel_type, 'Linear')) {
                 $email = $channel->users->email;
-                $channelLogo = $channel->logo == null ? '' : URL::to($channel->logo);
+                $channelLogo = $channel->logo == null ? $channel->logo_link : URL::to($channel->logo);
                 $shareLink = env('FE_APP_URI').'/watch/channel/'.$chash;
                 $playlistData = '';
 

@@ -9,22 +9,11 @@
           <div class="mb-3">
             <router-link
               :to="{ name: 'Uploads' }"
-              class="
-                group
-                relative
-                flex
-                justify-center
-                py-3
-                px-4
-                border border-transparent
-                text-sm
-                font-medium
-                text-white
-                bg-indigo-600
-                hover:bg-indigo-700
-                focus:outline-none
-              "
-            >
+              class="group relative flex justify-center
+                py-3 px-4 border border-transparent
+                text-sm font-medium text-white
+                bg-indigo-600 hover:bg-indigo-700
+                focus:outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-4 w-6"
@@ -49,21 +38,12 @@
                 v-model="externalLink"
                 type="url"
                 id="video-url"
-                class="
-                  block
-                  py-3
-                  px-0
-                  w-full
-                  text-sm text-gray-900
-                  bg-transparent
-                  border-0 border-b-2 border-gray-300
-                  appearance-none
-                  dark:text-white
-                  dark:border-gray-600
-                  dark:focus:border-blue-500
-                  focus:outline-none focus:ring-0 focus:border-blue-600
-                  peer
-                "
+                class="block py-3 px-0 w-full text-sm 
+                text-gray-900 bg-transparent border-0 
+                border-b-2 border-gray-300 appearance-none
+                dark:text-white dark:border-gray-600
+                dark:focus:border-blue-500 focus:outline-none 
+                focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
               />
               <label
@@ -72,13 +52,9 @@
                   absolute
                   text-sm text-gray-500
                   dark:text-gray-400
-                  duration-300
-                  transform
-                  -translate-y-6
-                  scale-75
-                  top-3
-                  -z-10
-                  origin-[0]
+                  duration-300 transform
+                  -translate-y-6 scale-75
+                  top-3 -z-10 origin-[0]
                   peer-focus:left-0
                   peer-focus:text-blue-600
                   peer-focus:dark:text-blue-500
@@ -363,8 +339,10 @@
                   
                   <div class="flex mb-2 justify-center">
                     <!-- Edit video btn -->
-                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip-default">
+                    <div class="rounded-full transition-color cursor-pointer 
+                      bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip">
                       <span class="w-1/6 text-white" @click="editVideo(cont)">
+                      <span class="tooltiptext">Edit</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           class="h-6 w-5"
@@ -382,8 +360,10 @@
                       </span>
                     </div>
                     <!-- Embed video btn -->
-                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
+                    <div class="rounded-full transition-color cursor-pointer 
+                      bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip">
                       <span class="w-1/6 text-white" @click="embedContent(cont)">
+                      <span class="tooltiptext">Embed</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           class="h-6 w-5"
@@ -401,8 +381,10 @@
                       </span>
                     </div>
                     <!-- Download video btn -->
-                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3">
+                    <div class="rounded-full transition-color cursor-pointer 
+                      bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 mr-3 tooltip-download">
                       <span class="w-1/6 text-white" @click.prevent="downloadContent(cont)">
+                        <span class="tooltiptext">Download</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           class="h-6 w-5"
@@ -420,8 +402,10 @@
                       </span>
                     </div>
                     <!-- Delete video btn -->
-                    <div class="rounded-full transition-color cursor-pointer bg-[rgb(88,80,236)] hover:bg-gray-900 p-1">
+                    <div class="rounded-full transition-color cursor-pointer 
+                      bg-[rgb(88,80,236)] hover:bg-gray-900 p-1 tooltip">
                       <span class="w-1/6 text-white" @click.prevent="confirmDelete(cont)">
+                      <span class="tooltiptext">Delete</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           class="h-6 w-5"
@@ -501,7 +485,7 @@
           <div class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-xl sm:w-full">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-xl w-full">
                   <div class="bg-white px-4 pt-5 pb-4 sm:p-4 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                       <div class="mx-auto flex-shrink-0 flex items-center justify-center h-9 w-9 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
@@ -738,20 +722,21 @@
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                           <button type="submit" 
-                            class="group relative flex justify-center py-2 px-4 border 
+                            class="justify-center py-2 px-4 border 
                             border-transparent text-sm font-medium text-white 
                             bg-indigo-600 hover:bg-indigo-700 focus:outline-none
-                            sm:ml-3 sm:w-auto sm:text-sm"
+                            sm:ml-3 sm:w-auto sm:text-sm w-full"
                             @click="updateContent"
                           >Save</button>
                           <button type="button" 
-                            class="mt-3 w-full inline-flex justify-center  
+                            class="mt-3 w-full justify-center  
                             border border-gray-300 shadow-sm px-4 py-2 bg-white text-base 
                             font-medium text-gray-700 hover:bg-gray-50 focus:outline-none 
                             focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 
                             sm:ml-3 sm:w-auto sm:text-sm" 
                             @click="open = false" ref="cancelButtonRef"
                           >Cancel</button>
+                          
                         </div>
                     </div>
                   </div>
@@ -896,7 +881,7 @@
           <div class="fixed z-10 inset-0 overflow-y-auto">
             <div class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200" leave-from="opacity-100 translate-y-0 sm:scale-100" leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] sm:w-full">
+                <DialogPanel class="relative bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-[50rem] w-full">
                   <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div class="sm:flex sm:items-start">
                       <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-200 sm:mx-0 sm:h-10 sm:w-10">
@@ -951,7 +936,7 @@
                           </div>
                         </div>
                         <!-- embed settings/twerks -->
-                        <div class="grid grid-cols-3 gap-3 mt-4">
+                        <div class="grid xl:grid-cols-3 gap-3 mt-4">
                           <div>
                             <h3 class="font-bold text-lg text-gray-900">Size</h3>
                             <div class="flex mt-3">
@@ -986,10 +971,8 @@
                               <select
                                 v-model="embedFilters.ratio"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm 
-                                focus:ring-blue-500 focus:border-blue-500 block xl:w-1/2 p-2.5 dark:bg-gray-700 
-                                dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                                dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              >
+                                focus:ring-blue-500 focus:border-blue-500 block xl:w-1/2 p-2.5  
+                                w-1/2">
                                 <option value="56.25%">16:9</option>
                                 <option value="75%">4:3</option>
                                 <option value="100%">1:1</option>
@@ -1131,7 +1114,7 @@
                             class="group relative flex justify-center py-2 px-4 border 
                             border-transparent text-sm font-medium text-white 
                             bg-indigo-600 hover:bg-indigo-700 focus:outline-none
-                            sm:w-auto sm:text-sm"
+                            sm:w-auto sm:text-sm w-full"
                             @click="copyData(code, 'code')"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1606,5 +1589,70 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+.tooltip {
+  position: relative;
+}
+.tooltip-download {
+  position: relative;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 55px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 220%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip-download .tooltiptext {
+  visibility: hidden;
+  min-width: 55px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 130%;
+  left: 170%;
+  margin-left: -75px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip-download .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+.tooltip-download:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
 </style>

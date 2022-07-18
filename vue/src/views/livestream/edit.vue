@@ -59,7 +59,7 @@
                                     placeholder="" required="" readonly>
                                 <div class="tooltip">
                                     <button type="button" @click="copyData(model.rtmpUrl,'rtmp-url','rtmp-tip')"
-                                        class="absolute top-7 right-0 p-2.5 text-sm font-medium 
+                                        class="absolute bottom-0 right-0 p-2.5 text-sm font-medium 
                                         text-white bg-indigo-600 border border-indigo-700 
                                         hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
                                         <span class="tooltiptext" id="rtmp-tip">Copy</span>
@@ -86,7 +86,7 @@
                                     placeholder="" required="" readonly>
                                 <div class="tooltip">
                                     <button type="button" @click="copyData(model.streamKey,'stream-key','stream-tip')"
-                                        class="absolute top-7 right-0 p-2.5 text-sm font-medium 
+                                        class="absolute bottom-0 right-0 p-2.5 text-sm font-medium 
                                         text-white bg-indigo-600 border border-indigo-700 
                                         hover:bg-indigo-800 dark:bg-indigo-600 dark:hover:bg-indigo-700">
                                         <span class="tooltiptext" id="stream-tip">Copy</span>
@@ -521,7 +521,7 @@
                                                     sm:w-auto sm:text-sm"
                                                     @click="copyData(code, 'code', 'embed-tip')"
                                                 >
-                                                    <span class="tooltiptext" id="embed-tip">Copy</span>
+                                                    <!-- <span class="tooltiptext" id="embed-tip">Copy</span> -->
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                                                     </svg>&nbsp;
@@ -963,7 +963,7 @@ onUnmounted(() => {
 .tooltip .tooltiptext {
   visibility: hidden;
   min-width: 40px;
-  background-color: #555;
+  background-color: #000000;
   color: #fff;
   text-align: center;
   border-radius: 6px;
@@ -980,7 +980,7 @@ onUnmounted(() => {
 .tooltip-embed .tooltiptext {
   visibility: hidden;
   min-width: 40px;
-  background-color: #555;
+  background-color: #000000;
   color: #fff;
   text-align: center;
   border-radius: 6px;
@@ -1002,7 +1002,7 @@ onUnmounted(() => {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #555 transparent transparent transparent;
+  border-color: #000000 transparent transparent transparent;
 }
 
 .tooltip-embed .tooltiptext::after {
@@ -1013,7 +1013,7 @@ onUnmounted(() => {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #555 transparent transparent transparent;
+  border-color: #000000 transparent transparent transparent;
 }
 
 .tooltip:hover .tooltiptext {
