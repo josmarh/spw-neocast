@@ -121,55 +121,83 @@ class ChannelPlaylistController extends Controller
 
     public function videoPlayAnalysis(Request $request, $chash)
     {
-        $videoUrl = explode('#', $request->videoUrl);
-        $host = $request->getSchemeAndHttpHost();
-        $relativePath = str_ireplace($host.'/', '', $videoUrl[0]);
         $todate = Carbon::now();
 
-        // check video exists
-        $getVideoId = FileUploads::where('file_hash', $relativePath)->first();
+        if(isset($request->videoUrl)) {
+            $videoUrl = explode('#', $request->videoUrl);
+            $host = $request->getSchemeAndHttpHost();
+            $relativePath = str_ireplace($host.'/', '', $videoUrl[0]);
 
-        if($getVideoId) {
-            // check the video tallies with the channel
-            $videoViews = ChannelPlaylist::where('channel_hash', $chash)
-                ->where('video_id', $getVideoId->id)
-                ->first();
+            // check video exists
+            $getVideoId = FileUploads::where('file_hash', $relativePath)->first();
 
-            if($videoViews) {
-                ChannelPlaylist::where('channel_hash', $chash)
+            if($getVideoId) {
+                // check the video tallies with the channel
+                $videoViews = ChannelPlaylist::where('channel_hash', $chash)
                     ->where('video_id', $getVideoId->id)
-                    ->update([
-                        'views' => $videoViews->views + 1
-                    ]);
-                
-                // update report table
-                $viewsToday = ChannelReport::where('channel_hash', $chash)
-                    ->where('video_id', $getVideoId->id)
-                    ->where(DB::raw('date(created_at)'), $todate->toDateString())
                     ->first();
-                
-                if($viewsToday) {
-                    ChannelReport::where('channel_hash', $chash)
+
+                if($videoViews) {
+                    ChannelPlaylist::where('channel_hash', $chash)
+                        ->where('video_id', $getVideoId->id)
+                        ->update([
+                            'views' => $videoViews->views + 1
+                        ]);
+                    
+                    // update report table
+                    $viewsToday = ChannelReport::where('channel_hash', $chash)
                         ->where('video_id', $getVideoId->id)
                         ->where(DB::raw('date(created_at)'), $todate->toDateString())
-                        ->update([
-                            'views' => $viewsToday->views + 1
+                        ->first();
+                    
+                    if($viewsToday) {
+                        $viewsToday->update([
+                                'views' => $viewsToday->views + 1
+                            ]);
+                    } else {
+                        ChannelReport::create([
+                            'channel_hash' => $chash,
+                            'video_id' => $getVideoId->id,
+                            'views' => 1
                         ]);
-                } else {
-                    ChannelReport::create([
-                        'channel_hash' => $chash,
-                        'video_id' => $getVideoId->id,
-                        'views' => 1
-                    ]);
+                    }
                 }
-            
-                return response([
-                    'message' => 'views added',
-                    'status' => 'success',
-                    'status_code' => 200
-                ]);
+            }
+        } else {
+            // select all video that belongs to the chash
+            $videos = ChannelPlaylist::where('channel_hash', $chash)->get();
+
+            if($videos) {
+                foreach($videos as $video) {
+                    ChannelPlaylist::where('channel_hash', $chash)
+                        ->where('video_id', $video->video_id)
+                        ->update([ 'views' => $video->views + 1 ]);
+
+                    $viewsToday = ChannelReport::where('channel_hash', $chash)
+                        ->where('video_id', $video->video_id)
+                        ->where(DB::raw('date(created_at)'), $todate->toDateString())
+                        ->first();
+
+                    if($viewsToday) {
+                        $viewsToday->update([
+                                'views' => $viewsToday->views + 1
+                            ]);
+                    } else {
+                        ChannelReport::create([
+                            'channel_hash' => $chash,
+                            'video_id' => $video->video_id,
+                            'views' => 1
+                        ]);
+                    }
+                }        
             }
         }
+
+        return response([
+            'message' => 'views added',
+            'status' => 'success',
+            'status_code' => 200
+        ]);
     }
 
     public function makeStreams($channelId, $linearCheck)

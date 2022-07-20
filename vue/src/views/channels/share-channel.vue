@@ -39,7 +39,7 @@
                 />
                 <video-player-linear 
                     v-else
-                    :options="videoOptionsLinear" 
+                    :options="videoOptionsLinear"
                     :shareOptions="share"
                     :showShare="true"
                     :showTitle="false"
@@ -47,6 +47,7 @@
                     :playerColor="playerColor"
                     :adsTag="adsUrl"
                     :loopPlaylist="loopPlaylist"
+                    @playedVideo="sendPlayEventLinear"
                 />
             </div>
         </div>
@@ -259,6 +260,13 @@ const contentSettings = () => {
 const sendPlayEvent = async (data) => {
   store.dispatch('sendVideoViews', {
     videoUrl: data,
+    chash: route.params.str
+  })
+}
+
+const sendPlayEventLinear = () => {
+  store.dispatch('sendVideoViews', {
+    videoUrl: '',
     chash: route.params.str
   })
 }

@@ -183,12 +183,13 @@
                         </button>
                       </div>
                       <div v-if="c.channel_type.includes('Linear')">
-                        <div class="">
+                        <div class="tooltiptv">
                           <button type="button" @click="streamLinkModal(c.stream_name)"
                             class="text-gray-500 bg-gray-100 hover:bg-gray-200 
                             focus:outline-none focus:ring-gray-100 
                             font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
                             inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
+                            <span class="tooltiptext">Get HLS (.M3U8) link</span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                               <path stroke-linecap="round" 
                                 stroke-linejoin="round" 
@@ -204,7 +205,7 @@
                           focus:outline-none focus:ring-gray-100 
                           font-medium text-xs sm:text-xs px-5 py-2.5 text-center 
                           inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2">
-                          <span class="tooltiptext">TV Apps</span>
+                          <span class="tooltiptext">Distribute the channel on TV Apps</span>
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
                           </svg>
@@ -401,11 +402,11 @@
                             :shareOptions="share"
                             :showShare="true"
                             :showTitle="true"
-                            @playedVideo="sendPlayEvent"
                             :logoOptions="logoOptions"
                             :playerColor="playerColor"
                             :adsTag="adsUrl"
                             :loopPlaylist="loopPlaylist"
+                            @playedVideo="sendPlayEvent"
                           />
                           <video-player-linear
                             v-else
@@ -417,6 +418,7 @@
                             :playerColor="playerColor"
                             :adsTag="adsUrl"
                             :loopPlaylist="loopPlaylist"
+                            @playedVideo="sendPlayEventLinear"
                           />
                         </div>
                         <!-- embed settings -->
@@ -1091,7 +1093,12 @@
                     <div class="mt-8">
                       <p class="text-bold font-medium">Roku</p>
                       <p class="text-gray-500 bg-gray-100 p-2 mt-2">
-                        Send your live linear channel feed to a custom Roku channel.
+                        Send your live linear channel feed to a custom Roku channel. 
+                        <router-link :to="{name: 'Article', params: {name: '1-App-TV'}}"
+                          class="text-extrabold font-medium text-blue-500 underline"
+                          target="_blank">
+                          Learn More
+                        </router-link>
                       </p>
                       <div class="flex mt-4">
                         <div class="relative w-full">
@@ -1638,11 +1645,20 @@ const embedChannel = async (hash, title, data) => {
     ChannelPlaylistCheck.value = 2;    
 }
 
-const sendPlayEvent = async (data) => {
+const sendPlayEvent = (data) => {
   let chash = videoToAddChecks.value.channelId;
 
   store.dispatch('sendVideoViews', {
     videoUrl: data,
+    chash: chash
+  })
+}
+
+const sendPlayEventLinear = () => {
+  let chash = videoToAddChecks.value.channelId;
+
+  store.dispatch('sendVideoViews', {
+    videoUrl: '',
     chash: chash
   })
 }
@@ -1774,23 +1790,6 @@ onMounted(() => {
   opacity: 0;
   transition: opacity 0.3s;
 }
-.tooltiptv .tooltiptext {
-  visibility: hidden;
-  min-width: 40px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 8px;
-  position: absolute;
-  z-index: 1;
-  bottom: 120%;
-  left: 80%;
-  margin-left: -68px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
 .tooltip-duplicate .tooltiptext::after {
   content: "";
   position: absolute;
@@ -1821,17 +1820,6 @@ onMounted(() => {
   border-style: solid;
   border-color: #555 transparent transparent transparent;
 }
-.tooltiptv .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #555 transparent transparent transparent;
-}
-
 .tooltip-duplicate:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
@@ -1847,5 +1835,35 @@ onMounted(() => {
 .tooltiptv:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+.tooltiptv {
+  position: relative;
+}
+.tooltiptv .tooltiptext {
+  visibility: hidden;
+  min-width: 130px;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 50%;
+  margin-left: -68px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltiptv .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000000 transparent transparent transparent;
 }
 </style>

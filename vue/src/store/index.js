@@ -45,6 +45,11 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        articles: {
+            data: [],
+            links: {},
+            meta: {}
         }
     },
     getters: {},
@@ -521,9 +526,49 @@ const store = createStore({
                     return data;
                 })
         },
-        
+        getArticles({ commit }, {url = null} = {}){
+            url = url || '/articles'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setArticles', data)
+                    return data;
+                })
+        },
+        storeArticle({ }, payload){
+            return axiosClient.post('/article/store', payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        editArticle({ }, id){
+            return axiosClient.get(`/article/edit/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        updateArticle({ }, payload){
+            return axiosClient.put(`/article/update/${payload.id}`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        deleteArticle({ }, id){
+            return axiosClient.delete(`/article/delete/${id}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        article({ }, name){
+            return axiosClient.get(`/article/${name}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
+        setArticles: (state, data) => {
+            state.articles = data;
+        },
         setGuard: (state, data) => {
             state.userGuard = data;
         },

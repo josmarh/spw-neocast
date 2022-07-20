@@ -146,7 +146,7 @@ export default {
     this.player.on('tracking:firstplay', (e, data) => {
       // console.log(data)
       this.videoTitle = 'Demo (Linear)';
-      this.$emit('playedVideo', this.videoTitle)
+      this.$emit('playedVideo')
 
       let arr = this.videoTitle.split('/');
       let len = arr.length -1;

@@ -23,7 +23,6 @@ const options = {
   location: "top",
   inverse: false,
 };
-// loadFonts()
 
 createApp(App)
   .use(VuePlyr, {

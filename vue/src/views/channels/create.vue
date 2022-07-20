@@ -24,15 +24,17 @@
                                 dark:bg-gray-700 dark:border-gray-600"
                             >
                                 <div class="sm:hidden">
-                                    <label for="tabs" class="sr-only">Select channel playback type</label>
-                                    <select id="tabs" 
+                                    <label for="channel_type" class="sr-only">Select channel playback type</label>
+                                    <select id="channel_type" 
+                                        v-model="model.type"
+                                        @change="toogleTypes($event, model.type)"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm 
                                         rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 
                                         p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
                                         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     >
-                                        <option>Linear</option>
-                                        <option>On demand</option>
+                                        <option value="linear">Linear</option>
+                                        <option value="ondemand">On demand</option>
                                     </select>
                                 </div>
                                 <ul 
@@ -92,15 +94,17 @@
                                 dark:bg-gray-700 dark:border-gray-600"
                             >
                                 <div class="sm:hidden">
-                                    <label for="tabs" class="sr-only">Select channel playback type</label>
-                                    <select id="tabs" 
+                                    <label for="linear" class="sr-only">Select channel playback type</label>
+                                    <select id="linear" 
+                                        v-model="model.linear"
+                                        @change="toogleTypes($event, model.linear)"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm 
                                         rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full 
                                         p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
                                         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     >
-                                        <option>Scheduled</option>
-                                        <option>Looped</option>
+                                        <option value="scheduled">Scheduled</option>
+                                        <option value="looped">Looped</option>
                                     </select>
                                 </div>
                                 <ul 
@@ -182,6 +186,11 @@ const channelType = ref({
     onDemand: '',
     scheduled: 'active',
     looped: ''
+})
+
+let model = ref({
+    type: 'linear',
+    linear: 'scheduled'
 })
 
 const toogleTypes = (ev, type) => {

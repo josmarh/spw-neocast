@@ -12,6 +12,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LiveStreamController;
 use App\Http\Controllers\FFmpegConverter;
 use App\Http\Controllers\UserManagerController;
+use App\Http\Controllers\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,16 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::post('assign-permissions', [UserManagerController::class, 'permissionAssignRole'])->middleware(['can:view_permissions']);
         });
     });
+
+    Route::middleware('can:view_articles')->group(function(){
+        Route::get('articles', [ArticleController::class, 'index']);
+        Route::group(['prefix' => 'article'], function () {
+            Route::post('store', [ArticleController::class, 'store']);
+            Route::get('edit/{id}', [ArticleController::class, 'edit']);
+            Route::put('update/{id}', [ArticleController::class, 'update']);
+            Route::delete('delete/{id}', [ArticleController::class, 'delete']);
+        });
+    });
    
 });
 
@@ -119,3 +130,4 @@ Route::get('website/channels/{whash}', [WebsiteController::class, 'websiteChanne
 Route::get('live/watch/{lhash}', [LiveStreamController::class, 'edit']);
 Route::get('converter', [FFmpegConverter::class, 'mp4ToM3u8']);
 Route::get('channel/linear/{chash}', [ChannelController::class, 'streamVideo']);
+Route::get('article/{name}', [ArticleController::class, 'show']);

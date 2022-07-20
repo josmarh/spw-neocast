@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AppLayout from '../components/AppLayout.vue'
 import GuestLayout from '../components/GuestLayout.vue'
+import ArticleComponent from '../components/ArticleComponent.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import ForgetPassword from '../views/auth/ForgetPassword.vue'
@@ -35,6 +36,10 @@ import Users from '../views/usermanager/users.vue'
 import Reseller from '../views/usermanager/resellers.vue'
 import Roles from '../views/usermanager/roles.vue'
 import Permissions from '../views/usermanager/permissions.vue'
+import Articles from '../views/article/Index.vue'
+import ArticleCreate from '../views/article/Create.vue'
+import ArticleEdit from '../views/article/Edit.vue'
+import Article from '../views/article/Articles.vue'
 import store from "../store"
 
 const routes = [
@@ -78,6 +83,9 @@ const routes = [
             {path: '/reseller', name: 'Reseller', component: Reseller},
             {path: '/roles', name: 'Roles', component: Roles},
             {path: '/permissions', name: 'Permissions', component: Permissions},
+            {path: '/articles', name: 'Articles', component: Articles},
+            {path: '/article/create', name: 'ArticleCreate', component: ArticleCreate},
+            {path: '/article/edit/:id', name: 'ArticleEdit', component: ArticleEdit},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },
@@ -93,6 +101,7 @@ const routes = [
     { path: '/w/:str/channel/:chash', name: 'WebPageSingle', component: WebPageSingle },
     { path: '/embed/live/:lhash', name: 'LiveEmbed', component: LiveEmbed },
     { path: '/watch/live/:lhash', name: 'LiveShare', component: LiveShare },
+    { path: '/article/:name', name: 'Article', component: Article },
 ];
 
 const router = createRouter({

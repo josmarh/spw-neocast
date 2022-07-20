@@ -212,6 +212,7 @@ const userManagerNav = [
   { name: 'Reseller', to: {name: 'Reseller'} },
   { name: 'Roles', to: {name: 'Roles'} },
   { name: 'Permissions', to: {name: 'Permissions'} },
+  { name: 'Articles', to: {name: 'Articles'} },
 ]
 
 export default {

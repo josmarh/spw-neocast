@@ -53,9 +53,12 @@
     "vue-progressbar": "^0.7.5",
     "vue-router": "^4.0.13",
     "vue-uuid": "^3.0.0",
+    "vue-wysiwyg": "^1.7.2",
     "vue3-charts": "^1.1.31",
     "vue3-colorpicker": "^2.0.4",
+    "vue3-editor": "^0.1.1",
     "vue3-timepicker": "^1.0.0-beta.2",
+    "vueditor": "^0.3.1",
     "vuetify": "^3.0.0-beta.0",
     "vuex": "^4.0.2",
     "webfontloader": "^1.0.0"

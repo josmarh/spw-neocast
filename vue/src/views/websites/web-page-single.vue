@@ -36,6 +36,7 @@
                         :playerColor="playerColor"
                         :adsTag="adsUrl"
                         :loopPlaylist="loopPlaylist"
+                        @playedVideo="sendPlayEventLinear"
                     />
                 </div>
                 <div v-if="model.channelCount > 1" class="">
@@ -404,6 +405,13 @@ const _getPoster = async () => {
 const sendPlayEvent = async (data) => {
   store.dispatch('sendVideoViews', {
     videoUrl: data,
+    chash: route.params.chash
+  })
+}
+
+const sendPlayEventLinear = () => {
+  store.dispatch('sendVideoViews', {
+    videoUrl: '',
     chash: route.params.chash
   })
 }
