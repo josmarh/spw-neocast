@@ -38,7 +38,7 @@
 </template>
 <script setup>
 import store from '../store';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 const errorMsg = computed(() => store.state.notifyError);
 const successMsg = computed(() => store.state.notifySuccess);
@@ -49,4 +49,19 @@ const resetNotification = (type) => {
     else
         store.dispatch('setSuccessNotification','')
 }
+
+watch(errorMsg, (newVal, oldVal) => {
+    if(newVal != '') {
+        setTimeout(() => {
+            store.dispatch('setErrorNotification','')
+        }, 4000)
+    }
+})
+watch(successMsg, (newVal, oldVal) => {
+    if(newVal != '') {
+        setTimeout(() => {
+            store.dispatch('setSuccessNotification','')
+        }, 3000)
+    }
+})
 </script>

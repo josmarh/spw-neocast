@@ -209,7 +209,7 @@ const userNavigation = [
 ]
 const userManagerNav = [
   { name: 'Users', to: {name: 'Users'} },
-  { name: 'Reseller', to: {name: 'Reseller'} },
+  // { name: 'Reseller', to: {name: 'Reseller'} },
   { name: 'Roles', to: {name: 'Roles'} },
   { name: 'Permissions', to: {name: 'Permissions'} },
   { name: 'Articles', to: {name: 'Articles'} },
