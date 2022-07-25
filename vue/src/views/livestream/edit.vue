@@ -599,7 +599,7 @@ const code = ref('')
 const videoOptions = ref({
     autoplay: false,
     controls: true,
-    muted: false,
+    muted: true,
     loop: false,
     sources: [
         {
