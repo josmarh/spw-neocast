@@ -298,7 +298,7 @@ class ChannelController extends Controller
                                 'dateAdded' => $channel->created_at,
                                 'videos' => [
                                     [
-                                        'url' => URL::to('channels/'.$channel->stream_name.'.m3u8'),
+                                        'url' => env('STREAM_URI').'/channels/'.$channel->stream_name.'.m3u8',
                                         'quality' => 'FHD',
                                         'videoType' => 'HLS'
                                     ]
