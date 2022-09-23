@@ -145,13 +145,12 @@ const removeFile = (fname) => {
 const uploadFiles = (ev) => {
   ev.preventDefault();
   let f = {file: upload.value.files};
-  internalInstance.appContext.config.globalProperties.$Progress.start();
+  internalInstance.appContext.config.globalProperties.$Progress.set(30);
   isDisabled.value = true;
 
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
-      internalInstance.appContext.config.globalProperties.$Progress.pause();
       upload.value.files = []; 
       isDisabled.value = false;
       store.dispatch("setSuccessNotification", res.status);

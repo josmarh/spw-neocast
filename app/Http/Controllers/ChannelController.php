@@ -247,6 +247,7 @@ class ChannelController extends Controller
         ]);
     }
 
+    // Redundant
     public function streamVideo($chash)
     {
         $playlist = FileUploads::select('file_uploads.*','cp.views','cp.channel_hash', 'ch.title', 'cp.id as cpId')
@@ -260,7 +261,7 @@ class ChannelController extends Controller
             ->get();
 
         foreach($playlist as $stream) {
-            shell_exec('C:\ffmpeg\bin\ffmpeg.exe -re -i "'.$stream->file_hash.'"-c:v copy -c:a aac -ar 44100 -ac 1 -f flv rtmp://tubetargeterapp.com:2446/app');
+            shell_exec('ffmpeg -re -i "'.$stream->file_hash.'"-c:v copy -c:a aac -ar 44100 -ac 1 -f flv rtmp://tubetargeterapp.com:2446/app');
         }
 
         return 'completed';

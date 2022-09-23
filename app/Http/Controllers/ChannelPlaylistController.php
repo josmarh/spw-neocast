@@ -103,7 +103,7 @@ class ChannelPlaylistController extends Controller
         if(strpos($linearCheck->channel_type, 'Linear') !== false) {
             $streamInfo = $this->makeStreams($content->channel_hash, $linearCheck);
 
-            if($streamInfo['type'] == 'createHLS'){
+            if($streamInfo['type'] == 'createHLS') {
                 dispatch(new CreateHLSVideos($streamInfo))->delay(5);
             } else {
                 dispatch(new DeleteHLSVideos($streamInfo))->delay(5);
