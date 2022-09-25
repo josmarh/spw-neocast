@@ -610,27 +610,27 @@ const videoOptions = ref({
     ]
 })
 const videoOptionsCustom = ref({
-  title: true,
-  share: true
+    title: true,
+    share: true
 })
 const share = ref({
-  socials: ['fbFeed', 'tw'],
+    socials: ['fbFeed', 'tw'],
 
-  url: '',
-  title: '',
-  description: '',
-  image: 'https://dummyimage.com/1200x630',
+    url: '',
+    title: '',
+    description: '',
+    image: 'https://dummyimage.com/1200x630',
 
-  // required for Facebook and Messenger
-  fbAppId: '74883939828939939900',
-  // optional for Facebook
-  redirectUri: window.location.href + '#close',
+    // required for Facebook and Messenger
+    fbAppId: import.meta.env.VITE_FB_APP_ID,
+    // optional for Facebook
+    redirectUri: window.location.href + '#close',
 
-  // optional for VK
-  isVkParse: true,
+    // optional for VK
+    isVkParse: true,
 
-  // optinal embed code
-  embedCode : ''
+    // optinal embed code
+    embedCode : ''
 })
 
 watch(embedFilters, (after, before) => {
@@ -686,7 +686,7 @@ const getLiveStreamContent = () => {
                 share.value.embedCode = `<iframe src='https://${window.location.host+embedUrl.href}?autoplay=0&volume=1&random=0&controls=1&title=1&share=1' width='640' height='360' frameborder='0' allow='autoplay' allowfullscreen></iframe>`;
                 share.value.title = `Watch "${model.value.title}" Live on `;
 
-                videoOptions.value.sources[0].src = `${import.meta.env.VITE_STREAM_URI}/hls/${data.stream_key}.m3u8`;
+                videoOptions.value.sources[0].src = `${import.meta.env.VITE_STREAM_URI}/hls/${data.stream_key}/index.m3u8`;
                 checkStreamUri();
             }
         })
@@ -743,7 +743,7 @@ let playingLive2 = ref(0)
 const checkStreamUri = () => {
     let lopper = () => {
         timeoutStream = setTimeout( async () => {
-            await fetch(`${import.meta.env.VITE_STREAM_URI}/hls/${model['_rawValue'].streamKey}.m3u8`)
+            await fetch(`${import.meta.env.VITE_STREAM_URI}/hls/${model['_rawValue'].streamKey}/index.m3u8`)
             .then(res => res)
             .then(data => {
                 if(data.status) {
@@ -784,8 +784,7 @@ const checkStreamUri = () => {
                             setTimeout(() => {
                                 storeLiveVideo();
                             }, 12000);
-                        }
-                        if(saveLiveVideo2.value == 1 && playingLive2.value == 1) {
+                        }else if(saveLiveVideo2.value == 1 && playingLive2.value == 1) {
                             playingLive2.value = 2; saveLiveVideo2.value = 2;
                             // run save
                             setTimeout(() => {
@@ -808,7 +807,7 @@ const checkStreamUri = () => {
                 console.log(`error ${err}`)
             })
 
-        }, 12000)
+        }, 5000)
     }
     lopper();
 }
