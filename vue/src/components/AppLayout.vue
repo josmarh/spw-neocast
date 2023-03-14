@@ -170,7 +170,7 @@
         </div>
       </DisclosurePanel>
     </Disclosure>
-
+    
     <router-view></router-view>
     <!-- set progressbar -->
     <vue-progress-bar></vue-progress-bar>
@@ -179,7 +179,7 @@
       <footer class="bg-gray-800">
         <div class="py-6 px-4 bg-gray-700 md:flex md:items-center md:justify-between">
           <span class="text-sm text-gray-300 sm:text-center">
-            &copy; {{new Date().getFullYear()}} <a href="#" class="hover:underline">Vicentric</a>.  All Rights Reserved.
+            &copy; {{new Date().getFullYear()}} <a href="#" class="hover:underline">NeoCast</a>.  All Rights Reserved.
           </span>
         </div>
       </footer>
@@ -197,6 +197,7 @@ import store from '../store'
 
 const userPermissions = computed(() => store.state.user.permissions)
 const navigation = [
+  { name: 'Dashboard', to: {name: 'Dashboard'} },
   { name: 'Channels', to: {name: 'Channels'} },
   { name: 'Videos', to: {name: 'Videos'} },
   { name: 'Uploads', to: {name: 'Uploads'} },

@@ -7,6 +7,7 @@ import Register from '../views/auth/Register.vue'
 import ForgetPassword from '../views/auth/ForgetPassword.vue'
 import ResetPassword from '../views/auth/ResetPassword.vue'
 import Profile from '../views/auth/UserProfile.vue'
+import Dashboard from '../views/Dashboard.vue'
 import Channels from '../views/channels/index.vue'
 import Channel from '../views/channels/create.vue'
 import Looped from '../views/channels/looped.vue'
@@ -62,6 +63,7 @@ const routes = [
         component: AppLayout,
         meta: {requiresAuth: true},
         children: [
+            {path: '/dashboard', name: 'Dashboard', component: Dashboard},
             {path: '/user/profile', name: 'Profile', component: Profile},
             {path: '/channels', name: 'Channels', component: Channels},
             {path: '/create-channel', name: 'CreateChannel', component: Channel},

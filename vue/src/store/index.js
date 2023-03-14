@@ -108,7 +108,7 @@ const store = createStore({
                     return data;
                 })
         },
-        uploadFiles({ commit }, files){
+        uploadFiles({ }, files){
             return axiosClient.post(`/uploads`, files)
                 .then(({data}) => {
                     return data;

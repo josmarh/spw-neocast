@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'youtube' => [
+        'key' => env('YOUTUBE_KEY'),
+        'api' => env('YOUTUBE_API'),
+        'converter_api' => env('YOUTUBE_CONVERTER_API')
+    ],
+
 ];

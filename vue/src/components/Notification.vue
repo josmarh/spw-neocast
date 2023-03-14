@@ -54,14 +54,14 @@ watch(errorMsg, (newVal, oldVal) => {
     if(newVal != '') {
         setTimeout(() => {
             store.dispatch('setErrorNotification','')
-        }, 4000)
+        }, 6000)
     }
 })
 watch(successMsg, (newVal, oldVal) => {
     if(newVal != '') {
         setTimeout(() => {
             store.dispatch('setSuccessNotification','')
-        }, 3000)
+        }, 6000)
     }
 })
 </script>

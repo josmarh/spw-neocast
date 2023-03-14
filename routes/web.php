@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\IPNController;
+use App\Http\Controllers\YTubeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,5 @@ Route::get('/', function () {
 });
 
 Route::get('channel/{chash}', [ChannelController::class, 'roku']);
-Route::post('/ipn/jvzoo', [IPNController::class, 'JVZoo'])->name('jvzoo');
+Route::post('ytube/webhook', [YTubeController::class, 'webhook'])->name('ytube.weebhook');
+Route::post('ipn/jvzoo', [IPNController::class, 'JVZoo'])->name('jvzoo');

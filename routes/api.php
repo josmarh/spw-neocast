@@ -13,6 +13,7 @@ use App\Http\Controllers\LiveStreamController;
 use App\Http\Controllers\FFmpegConverter;
 use App\Http\Controllers\UserManagerController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\YTubeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,11 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::get('video/ytube/trending', [YTubeController::class, 'index']);
+    Route::get('video/ytube/search/{videoId}', [YTubeController::class, 'search']);
+    Route::post('video/ytube/add', [YTubeController::class, 'saveVideo']);
+
     Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/personal-info', [AuthController::class, 'updateUser']);

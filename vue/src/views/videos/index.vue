@@ -1337,19 +1337,14 @@ const addExternalContent = async (ev) => {
     isDisabled.value = false;
     return false;
   }
-  internalInstance.appContext.config.globalProperties.$Progress.start();
-  internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+  internalInstance.appContext.config.globalProperties.$Progress.set(30);
   await store
     .dispatch('addExternalContent', {link: externalLink.value})
     .then((res) => {
-      internalInstance.appContext.config.globalProperties.$Progress.increase(10);
-      internalInstance.appContext.config.globalProperties.$Progress.decrease(20);
       externalLink.value = '';
       isDisabled.value = false;
       store.dispatch("setSuccessNotification", res.status);
       store.dispatch("getContents")
-      internalInstance.appContext.config.globalProperties.$Progress.increase(10);
-      internalInstance.appContext.config.globalProperties.$Progress.decrease(20);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
     })
     .catch(err => {
