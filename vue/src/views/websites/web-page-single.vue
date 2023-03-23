@@ -1,6 +1,6 @@
 <template>
     <div>
-        <web-page-component :config="model">
+        <web-page-component :config="model" class="min-h-screen">
             <Notification/>
             <div v-if="isContentSet == 1">
                 <div class="flex justify-center py-40">

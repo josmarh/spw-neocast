@@ -1,6 +1,6 @@
 <template>
   <div>
-    <page-component title="Uploads" :class="[upload.files.length < 2 ? 'h-screen bg-gray-100': '']">
+    <page-component title="Uploads" class="min-h-screen">
       <notification />
       <div id="file-drag-drop">
         <form @submit="uploadFiles" enctype="multipart/form-data" id="fileform">
@@ -12,6 +12,7 @@
                   </svg>
                   <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">MP4, MOV, M4V, WEBM, OGV</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Up to 50mb/upload</p>
                 </div>
                 <input id="dropzone-file" type="file" @change="onFileChoose" class="hidden" 
                   accept=".mp4,.mov,.m4v,.webm,.ogv" multiple />

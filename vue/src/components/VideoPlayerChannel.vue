@@ -14,9 +14,15 @@
         </div>
       </div>
     </div>
-    <div class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth scroller"
+    <!-- <div class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth scroller"
       :class="[playlistOptions.length <= 2 ? 'player-default-height' : 'player-custom-height']"
-    ></div>
+    ></div> -->
+    <div v-if="playlistOptions.length <= 2 || playlistOptions.length == 3"
+    class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth 
+    scroller player-default-height"></div>
+    <div v-else
+    class="vjs-playlist col-span-3 overflow-x-scroll scroll-smooth 
+    scroller player-custom-height"></div>
   </div>
 </template>
 <script>
@@ -239,5 +245,8 @@ export default {
   }
   .player-custom-height {
     height: 75%;
+  }
+  .player-custom-height-2 {
+    height: 100%;
   }
 </style>
