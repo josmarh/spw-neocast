@@ -41,6 +41,7 @@ import Articles from '../views/article/Index.vue'
 import ArticleCreate from '../views/article/Create.vue'
 import ArticleEdit from '../views/article/Edit.vue'
 import Article from '../views/article/Articles.vue'
+import Tutorials from '../views/Tutorials.vue'
 import store from "../store"
 
 const routes = [
@@ -88,6 +89,7 @@ const routes = [
             {path: '/articles', name: 'Articles', component: Articles},
             {path: '/article/create', name: 'ArticleCreate', component: ArticleCreate},
             {path: '/article/edit/:id', name: 'ArticleEdit', component: ArticleEdit},
+            {path: 'tutorials', name: 'Tutorials', component: Tutorials},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },

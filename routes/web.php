@@ -21,5 +21,8 @@ Route::get('/', function () {
 });
 
 Route::get('channel/{chash}', [ChannelController::class, 'roku']);
-Route::post('ytube/webhook', [YTubeController::class, 'webhook'])->name('ytube.weebhook');
+Route::post('ytube/webhook', [YTubeController::class, 'webhook'])->name('ytube.webhook');
 Route::post('ipn/jvzoo', [IPNController::class, 'JVZoo'])->name('jvzoo');
+Route::prefix('monitor/jobs')->group(function () {
+    Route::queueMonitor();
+});

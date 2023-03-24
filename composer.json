@@ -12,6 +12,7 @@
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
         "pbmedia/laravel-ffmpeg": "^8.1",
+        "romanzipp/laravel-queue-monitor": "^2.3",
         "spatie/laravel-permission": "^5.5"
     },
     "require-dev": {

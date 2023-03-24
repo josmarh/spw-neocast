@@ -13,10 +13,11 @@ use App\Helpers;
 use App\Models\FileUploads;
 use App\Models\ChannelPlaylist;
 use App\Models\LivestreamVideos;
+use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class ConvertHLSMp4 implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, IsMonitored;
 
     protected $hlsInfo;
 
@@ -37,6 +38,7 @@ class ConvertHLSMp4 implements ShouldQueue
      */
     public function handle()
     {
+        $this->queueProgress(0);
         $helpers = new Helpers();
 
         $relativePath = $helpers->convertm3u8($this->hlsInfo['link']);
@@ -46,6 +48,8 @@ class ConvertHLSMp4 implements ShouldQueue
         $fileType = explode('.', $linkArr[$arrLen]);
         $fileSize = filesize($relativePath);
         $duration = $helpers->getDuration($relativePath);
+
+        $this->queueProgress(50);
 
         $video = FileUploads::create([
             'file_name' => $linkArr[$arrLen],
@@ -81,5 +85,6 @@ class ConvertHLSMp4 implements ShouldQueue
                 }
             }
         }
+        $this->queueProgress(100);
     }
 }

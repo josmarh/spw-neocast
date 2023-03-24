@@ -34,7 +34,8 @@ return [
     'youtube' => [
         'key' => env('YOUTUBE_KEY'),
         'api' => env('YOUTUBE_API'),
-        'converter_api' => env('YOUTUBE_CONVERTER_API')
+        'converter_api' => env('YOUTUBE_CONVERTER_API'),
+        'm3u8_converter_api' => env('M3U8_CONVERTER_API')
     ],
 
 ];

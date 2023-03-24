@@ -14,6 +14,8 @@ use App\Models\FileUploads;
 use Carbon\Carbon;
 use App\Helpers;
 use App\Jobs\ConvertHLSMp4;
+use App\Jobs\M3u8ToMp4;
+use URL;
 
 class LiveStreamController extends Controller
 {
@@ -119,70 +121,26 @@ class LiveStreamController extends Controller
 
         $helpers = new Helpers();
 
-        $hlsInfo = [
-            'link' => $request->link,
-            'fileType' => 'video/mp4',
-            'uploadTypes' => 'external links',
-            'userId' => $user->id,
-            'jobOwner' => 'liveStream',
+        // $hlsInfo = [
+        //     'link' => $request->link,
+        //     'fileType' => 'video/mp4',
+        //     'uploadTypes' => 'external links',
+        //     'userId' => $user->id,
+        //     'jobOwner' => 'liveStream',
+        //     'lhash' => $request->lhash,
+        //     'channels' => $request->channel
+        // ];
+        
+        // dispatch(new ConvertHLSMp4($hlsInfo))->delay(2);
+
+        dispatch(new M3u8ToMp4([
+            'link'      => $request->link,
+            'user_id'    => $user->id,
+            'jobOwner'  => 'liveStream',
             'lhash' => $request->lhash,
-            'channels' => $request->channel
-        ];
-        
-        dispatch(new ConvertHLSMp4($hlsInfo))->delay(2);
-
-        // save to upload table
-        // $link = $converter->convertm3u8($request->link);
-        // $thumbnail = $converter->generateThumbnail($link);
-        // $linkArr = explode('/', $request->link);
-        // $arrLen = count($linkArr) -1;
-        
-        // $fileType = explode('.', $linkArr[$arrLen]);
-        // $fileSize = filesize($link);
-        // $duration = $converter->getDuration($link);
-
-        // $video = FileUploads::create([
-        //     'file_name' => 'Live '. Carbon::now()->toDateTimeString(),
-        //     'file_hash' => $link,
-        //     'file_size' => $fileSize,
-        //     'file_type' => 'video/mp4',
-        //     'media_length' => $duration['duration'],
-        //     'duration_seconds' => $duration['durationInSec'],
-        //     'upload_types' => 'hosted video',
-        //     'vhash' => strtolower(Str::random(32)),
-        //     'thumbnail' => $thumbnail,
-        //     'external_video_link' => $request->link,
-        //     'user_id' => $user->id
-        // ]);
-
-        // save to livestream videos
-        // if($video){
-        //     LivestreamVideos::create([
-        //         'lhash' => $request->lhash,
-        //         'video_id' => $video->id,
-        //     ]);
-        // }
-
-        // save to channel playlist if channel isset
-        // $channels = $request->channel;
-        
-        // if(count($channels) > 0) {
-        //     foreach ($channels as $ch) {
-        //         ChannelPlaylist::create([
-        //             'channel_hash' => $ch->channel_hash,
-        //             'video_id' => $video->id,
-        //             'video_thumbnail' => $thumbnail,
-        //         ]);
-        //     }
-        // }
-
-        // call existing videos associated to this lhash limit 5
-        // $latestStreams = LivestreamVideos::select('fu.*', 'livestream_videos.lhash', 'livestream_videos.video_id')
-        //     ->join('file_uploads as fu', 'fu.id', '=', 'livestream_videos.video_id')
-        //     ->where('lhash', $request->lhash)
-        //     ->orderBy('fu.created_at', 'desc')
-        //     ->limit(5)
-        //     ->get();
+            'channels' => $request->channel,
+            'webhook'   => URL::to('ytube/webhook')
+        ]))->delay(5);
 
         return response([
             'message' => 'Adding live video to list',

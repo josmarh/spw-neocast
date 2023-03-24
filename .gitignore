@@ -1,6 +1,13 @@
 /node_modules
 /public/hot
 /public/storage
+/public/uploads/*
+/public/m3u8/*
+/public/customs/*
+/public/channel_logos/*
+/public/samples/*
+/public/video_thumbnail/*
+/public/website_logos/*
 /storage/*.key
 /vendor
 .env

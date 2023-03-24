@@ -51,12 +51,12 @@ class Helpers
     {
         $dir = 'uploads/';
         $video = $this->generateToken().'.mp4';
-        $absolutePath = public_path($dir) . $video;
+        $absolutePath = public_path($dir . $video);
         $relativePath = $dir . $video;
 
         try {
 
-            shell_exec('C:\ffmpeg\bin\ffmpeg.exe -i "'.$file.'" -bsf:a aac_adtstoasc -vcodec copy -c copy -crf 50 '.$relativePath);
+            shell_exec('ffmpeg -i "'.$file.'" -bsf:a aac_adtstoasc -vcodec copy -c copy -crf 50 '.$absolutePath);
 
         } catch (\Throwable $th) {
             

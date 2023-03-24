@@ -17,6 +17,7 @@ use Spatie\Permission\Models\Permission;
 use App\Http\Resources\UsersResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\PermissionResource;
+use Illuminate\Validation\Rules\Password;
 use DB;
 
 

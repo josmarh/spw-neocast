@@ -207,6 +207,7 @@ const navigation = [
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },
+  { name: 'Tutorials', to: {name: 'Tutorials'} },
 ]
 const userManagerNav = [
   { name: 'Users', to: {name: 'Users'} },
