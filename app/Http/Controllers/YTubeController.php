@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\YtubeService;
@@ -11,12 +12,13 @@ use URL;
 
 class YTubeController extends Controller
 {
-    public function index(YtubeService $youtube)
+    public function index()
     {
         if (Cache::has('videos')) {
             return Cache::get('videos');
         }
 
+        $youtube = new YtubeService(config('services.youtube.key'));
         $response = $youtube->getTrendingVidoes();
 
         if(!$response->ok()) {
@@ -30,9 +32,24 @@ class YTubeController extends Controller
         return Cache::get('videos');
     }
 
-    public function search(Request $request, YtubeService $youtube, $videoId)
+    public function search(Request $request, $videoId)
     {
-        $response = $youtube->searchVideo($videoId);
+        $searchType = $request->query('type'); // link or keyword
+        $user = User::find($request->user()->id);
+
+        if (!$user->youtube_api_key) {
+            return response([
+                'error'=>'Please add your youtube API key'
+            ],422);
+        }
+
+        $youtube = new YtubeService($user->youtube_api_key);
+
+        if($searchType == 'keyword') {
+            $response = $youtube->searchVideoWithKeyword($videoId);
+        }else {
+            $response = $youtube->searchVideo($videoId);
+        }
         
         if(!$response->ok()) {
             return response([

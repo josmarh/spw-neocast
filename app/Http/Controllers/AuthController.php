@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\ForgotPasswordNotification;
 use App\Notifications\ResetPasswordNotification;
 use Carbon\Carbon;
+use App\Http\Resources\UsersResource;
 
 use Auth;
 
@@ -89,7 +90,8 @@ class AuthController extends Controller
 
         $user->update([
             'name' => $request->name,
-            'email' => $request->email
+            'email' => $request->email,
+            'youtube_api_key' => $request->youtube
         ]);
 
         return response([
@@ -187,6 +189,13 @@ class AuthController extends Controller
         return response([
             'message' => 'Password reset successfully.'
         ]);
+    }
+
+    public function me(Request $request)
+    {
+        $user = User::find($request->user()->id);
+
+        return new UsersResource($user);
     }
 
     public function logout()

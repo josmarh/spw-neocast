@@ -50,6 +50,9 @@ const store = createStore({
             data: [],
             links: {},
             meta: {}
+        },
+        profile: {
+            data: {}
         }
     },
     getters: {},
@@ -77,6 +80,13 @@ const store = createStore({
         forgotPassword({ }, user){
             return axiosClient.post('/forgot-password', user)
                 .then(({data}) => {
+                    return data;
+                })
+        },
+        profile({ commit }){
+            return axiosClient.get('/profile/me')
+                .then(({data}) => {
+                    commit('setProfile', data)
                     return data;
                 })
         },
@@ -614,7 +624,10 @@ const store = createStore({
             localStorage.setItem('userInfo', JSON.stringify(userData.user));
             localStorage.setItem('TOKEN', userData.token);
             localStorage.setItem('can', userData.permissions);
-        }
+        },
+        setProfile: (state, data) => {
+            state.profile = data.data
+        },
     },
     modules: {}
 })

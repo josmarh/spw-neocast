@@ -31,6 +31,7 @@ class User extends Authenticatable
         'is_active',
         'created_by',
         'verification_code',
+        'youtube_api_key'
     ];
 
     /**

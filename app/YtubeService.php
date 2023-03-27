@@ -10,10 +10,10 @@ class YtubeService
     public $converterApi;
     private $apiKey;
 
-    public function __construct()
+    public function __construct($apiKey)
     {
         $this->api = config('services.youtube.api');
-        $this->apiKey = config('services.youtube.key');
+        $this->apiKey = $apiKey;
         $this->converterApi = config('services.youtube.converter_api');
     }
 
@@ -42,6 +42,24 @@ class YtubeService
                 'key'   =>  $this->apiKey,
                 'part'  =>  'snippet',
                 'id'    =>  $videoId,
+            ]);
+        } catch (Exception $e) {
+            throw $e->getMessage();
+        }
+
+        return $response;
+    }
+
+    public function searchVideoWithKeyword($keyword)
+    {
+        try {
+            $response = Http::get($this->api.'/search', [
+                'key' =>  $this->apiKey,
+                'q'   =>  $keyword,
+                'part'  =>  'snippet',
+                'type'  =>  'video',
+                'maxResults'    =>  '50',
+                'videoLicense'  =>  'creativeCommon'
             ]);
         } catch (Exception $e) {
             throw $e->getMessage();

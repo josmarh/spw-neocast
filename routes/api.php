@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/personal-info', [AuthController::class, 'updateUser']);
     Route::put('/password/update', [AuthController::class, 'updatePassword']);
+    Route::get('profile/me', [AuthController::class, 'me']);
     Route::post('/uploads', [UploadsController::class, 'fileUpload']);
 
     Route::get('videos', [VideoController::class, 'index']);
@@ -119,7 +120,6 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::delete('delete/{id}', [ArticleController::class, 'delete']);
         });
     });
-   
 });
 
 Route::post('login', [AuthController::class, 'login']);

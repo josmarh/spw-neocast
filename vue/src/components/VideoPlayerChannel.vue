@@ -194,7 +194,7 @@ export default {
       setTimeout(() => {
         document.getElementsByClassName('vjs-watermark-content')[0].style.position = 'absolute';
         document.getElementsByClassName('vjs-watermark-content')[0].style.top = 0;
-      }, 1200)
+      }, 1500)
     }
 
   },

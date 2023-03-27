@@ -16,10 +16,11 @@ class UsersResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->username,
-            'email' => $this->uemail,
+            'name' => $this->username ? $this->username : $this->name,
+            'email' => $this->uemail ? $this->uemail : $this->email,
             'role' => $this->role,
             'active' => $this->is_active,
+            'youtube' => $this->youtube_api_key,
             'created_by' => new UsersResource($this->whenLoaded('user')),
             'created_at' => $this->joined_date,
         ];

@@ -21,8 +21,12 @@ const ytubeStore = createStore({
                     return data;
                 })
         },
-        searchVideo({ commit }, videoId) {
-            return axiosClient.get(`/video/ytube/search/${videoId}`)
+        searchVideo({ commit }, payload) {
+            return axiosClient.get(`/video/ytube/search/${payload.video}`, {
+                params: {
+                    type: payload.type
+                }
+            })
                 .then(({data}) => {
                     commit('setVideos', data)
                     return data;

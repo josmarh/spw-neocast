@@ -25,7 +25,7 @@ function getTrendingVideos() {
     ytubeStore
         .dispatch('getTrendingVideos')
         .then(res => {
-            internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+            internalInstance.appContext.config.globalProperties.$Progress.finish();
         })
         .catch(err => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -42,12 +42,12 @@ function getTrendingVideos() {
         })
 }
 
-function searchVideo(videoId) {
+function searchVideo(video) {
     internalInstance.appContext.config.globalProperties.$Progress.start();
     ytubeStore
-        .dispatch('searchVideo', videoId)
+        .dispatch('searchVideo', video)
         .then(res => {
-            internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+            internalInstance.appContext.config.globalProperties.$Progress.finish();
         })
         .catch(err => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();
@@ -73,7 +73,7 @@ function saveVideo(videoId, videoTitle) {
         })
         .then(res => {
             store.dispatch("setSuccessNotification", res.message);
-            internalInstance.appContext.config.globalProperties.$Progress.decrease(40);
+            internalInstance.appContext.config.globalProperties.$Progress.finish();
         })
         .catch(err => {
             internalInstance.appContext.config.globalProperties.$Progress.fail();

@@ -344,7 +344,7 @@
                                                                 </svg>
                                                             </div>
                                                             <input
-                                                                type="url"
+                                                                type="text"
                                                                 id="twitter_id"
                                                                 class="block pl-10 py-2 px-0 w-full
                                                                 text-sm text-gray-900 bg-transparent
