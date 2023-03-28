@@ -25,7 +25,7 @@ class YtubeService
                 'part'  =>  'snippet',
                 'type'  =>  'video',
                 'chart' =>  'mostPopular',
-                'maxResults'    =>  '12',
+                'maxResults'    =>  '20',
                 'videoLicense'  =>  'creativeCommon'
             ]);
         } catch (Exception $e) {

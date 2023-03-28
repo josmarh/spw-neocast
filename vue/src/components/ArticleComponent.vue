@@ -8,7 +8,7 @@
             :class="{'relative -translate-x-0' : showSidebar}">
             <a href="#" class="flex items-center justify-center">
                 <div class="flex-shrink-0">
-                    <img class="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow" />
+                    <img class="h-8 " src="/neocast-brand-logo.png" alt="Workflow" />
                 </div>
                 <!-- <span class="text-1xl font-extrabold text-bl ml-3">TubeAdsInsights</span> -->
             </a>
@@ -51,6 +51,7 @@ import { ref } from 'vue';
 const navigation = [
     // { name: 'Getting Started', href: '2-App-TV'},
     { name: 'TV App', href: '1-App-TV'},
+    { name: 'Generate Youtube API Key', href: '2-Generate-Youtube-API-Key'},
 ]
 
 export default {

@@ -33,11 +33,11 @@ import { Fancybox, Carousel, Panzoom } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox.css";
 
 const videos = [
-    {label:'Add Video', imgSrc:'#', href:'#'},
-    {label:'Ondemand Channel', imgSrc:'#', href:'#'},
-    {label:'Linear Channel', imgSrc:'#', href:'#'},
+    {label:'Add Video', imgSrc:'https://i.vimeocdn.com/video/1642142356-ab0203a7c12a1fb1edc6d18084286a51fb071db4b67490cd5e8eff5bab0672a8-d_236x133', href:'https://vimeo.com/812185811'},
+    {label:'Ondemand Channel', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/812188214'},
+    {label:'Linear Channel', imgSrc:'https://i.vimeocdn.com/video/1642146032-04460ef3f52fa5f9e787ebcfcde5e021cdd7274d95c92ee0178f419a5b009a9d-d_236x133', href:'https://vimeo.com/812187671'},
     {label:'Live Stream', imgSrc:'#', href:'#'},
-    {label:'Website', imgSrc:'#', href:'#'},
+    {label:'Website', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/812188776'},
     {label:'Publish to Roku', imgSrc:'#', href:'#'},
     {label:'Publish to Amazon FireTv', imgSrc:'#', href:'#'},
     {label:'Ads Monetization', imgSrc:'#', href:'#'}

@@ -108,7 +108,7 @@ class ChannelController extends Controller
                 $message = 'success';
             }else {
                 $channelInfo = [];
-                $message = 'This channel is not available at the moment, please check beck later.';
+                $message = 'This channel is not available at the moment, please check back later.';
             }
 
         } elseif ($channel->channel_type == 'Scheduled (Linear)') {

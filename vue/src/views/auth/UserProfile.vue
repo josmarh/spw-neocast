@@ -53,6 +53,14 @@
                 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 
                 peer-focus:-translate-y-6">Youtube API Key
               </label>
+              <p class="text-gray-500 bg-gray-100 p-2 mt-2">
+                Generate Youtube API Key 
+                <router-link :to="{name: 'Article', params: {name: '2-Generate-Youtube-API-Key'}}"
+                  class="text-extrabold font-medium text-blue-500 underline"
+                  target="_blank">
+                  Learn More
+                </router-link>
+              </p>
             </div>
             <button type="submit" class="group relative flex justify-center py-2 px-4 
               border border-transparent text-sm font-medium text-white float-right

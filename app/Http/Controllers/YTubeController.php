@@ -27,7 +27,7 @@ class YTubeController extends Controller
             ], 422);
         }
 
-        $videos = Cache::put('videos', $response->json(), now()->addHour(24));
+        $videos = Cache::put('videos', $response->json(), now()->addHour(12));
 
         return Cache::get('videos');
     }
