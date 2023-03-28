@@ -100,7 +100,7 @@ const share = ref({
   image: 'https://dummyimage.com/1200x630',
 
   // required for Facebook and Messenger
-  fbAppId: '74883939828939939900',
+  fbAppId: import.meta.env.VITE_FB_APP_ID,
   // optional for Facebook
   redirectUri: window.location.href + '#close',
 
