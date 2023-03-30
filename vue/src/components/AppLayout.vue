@@ -10,13 +10,15 @@
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
-                <router-link v-for="item in navigation" 
-                  :key="item.name"
-                  :to="item.to"
-                  active-class="bg-gray-900 text-white"
-                  :class="[this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
-                  'px-3 py-2 rounded-md text-sm font-medium']">{{ item.name }}
-                </router-link>
+                <div v-for="item in navigation" :key="item.name">
+                  <router-link 
+                    v-if="userPermissions.includes(item.permission)"
+                    :to="item.to"
+                    active-class="bg-gray-900 text-white"
+                    :class="[this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+                    'px-3 py-2 rounded-md text-sm font-medium']">{{ item.name }}
+                  </router-link>
+                </div>
 
                 <Menu as="div" class="" v-if="userPermissions.includes('view_user_manager')">
                   <div>
@@ -54,6 +56,14 @@
                     </MenuItems>
                   </transition>
                 </Menu>
+
+                <router-link v-if="userPermissions.includes('reseller')"
+                  :to="{name: 'Reseller'}"
+                  active-class="bg-gray-900 text-white"
+                  :class="[this.$router.name === 'Reseller' ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+                  'px-3 py-2 rounded-md text-sm font-medium']">
+                  Reseller
+                </router-link>
               </div>
             </div>
           </div>
@@ -162,6 +172,12 @@
               :to="item.to" 
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.name }}
             </router-link>
+            <router-link v-if="userPermissions.includes('reseller')"
+              :to="{name: 'Reseller'}"
+              active-class="bg-gray-900 text-white"
+              class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">
+              Reseller
+            </router-link>
             <DisclosureButton
               @click="logout"
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
@@ -197,13 +213,13 @@ import store from '../store'
 
 const userPermissions = computed(() => store.state.user.permissions)
 const navigation = [
-  { name: 'Dashboard', to: {name: 'Dashboard'} },
-  { name: 'Channels', to: {name: 'Channels'} },
-  { name: 'Videos', to: {name: 'Videos'} },
-  { name: 'Uploads', to: {name: 'Uploads'} },
-  { name: 'Live Streams', to: {name: 'LiveStream'} },
-  { name: 'Websites', to: {name: 'Website'} },
-  { name: 'Analytics', to: {name: 'Analytics'} },
+  { name: 'Dashboard', to: {name: 'Dashboard'}, permission: 'dashboard' },
+  { name: 'Channels', to: {name: 'Channels'}, permission: 'channels' },
+  { name: 'Videos', to: {name: 'Videos'}, permission: 'videos' },
+  { name: 'Uploads', to: {name: 'Uploads'}, permission: 'uploads' },
+  { name: 'Live Streams', to: {name: 'LiveStream'}, permission: 'live stream' },
+  { name: 'Websites', to: {name: 'Website'}, permission: 'websites' },
+  { name: 'Analytics', to: {name: 'Analytics'}, permission: 'analytics' },
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },

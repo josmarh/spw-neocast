@@ -237,7 +237,7 @@ class UserManagerController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
         }else {
-            $roles = Role::orderBy('created_at', 'desc')->paginate(12);
+            $roles = Role::whereNotIn('id',[1,2,3])->orderBy('created_at', 'desc')->paginate(12);
         }
 
         return RoleResource::collection($roles);
