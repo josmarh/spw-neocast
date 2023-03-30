@@ -41,7 +41,7 @@
               </button>
             </div>
           </div>
-          <div v-if="upload.files.length > 0" class="flex justify-center items-center w-full mt-3">
+          <div v-if="upload.files.length" class="flex justify-center items-center w-full mt-3">
             <button type="submit" 
               class="group relative w-96 flex justify-center py-2 px-4 border 
               border-transparent text-sm font-medium text-white 
@@ -49,10 +49,20 @@
               Upload {{upload.files.length == 1 ? upload.files.length +' file' : upload.files.length +' files'}} 
             </button>
           </div>
+          <!-- progress bar -->
+          <div class="flex justify-center" v-if="upload.files.length && progress > 0">
+            <div class="w-96 bg-gray-300 rounded-full dark:bg-gray-700 mt-3">
+              <div class="bg-indigo-600 text-xs font-medium text-indigo-100 
+              text-center p-0.5 leading-none rounded-full" id="progress-bg"
+              :style="{width: Math.round(progress) + '%'}"> 
+                {{ Math.round(progress) + '%' }}
+              </div>
+            </div>
+          </div>
         </form>
       </div>
       <!-- view content button -->
-      <div v-if="upload.files.length == 0" class="flex justify-center items-center w-full mt-3 mb-5">
+      <div v-if="!upload.files.length" class="flex justify-center items-center w-full mt-3 mb-5">
         <router-link :to="{name: 'Videos'}">
           <div class="flex items-center w-full w-96 p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
             <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-blue-500 bg-blue-100 rounded-lg dark:bg-blue-800 dark:text-blue-200">
@@ -75,9 +85,10 @@
 import PageComponent from '../../components/PageComponent.vue'
 import Notification from '../../components/Notification.vue';
 import store from '../../store'
-import { ref, getCurrentInstance, onMounted } from 'vue'
+import { ref, getCurrentInstance, onMounted, computed } from 'vue'
 
 const internalInstance = getCurrentInstance();
+const progress = computed(() => store.state.uploadProgress)
 const upload = ref({
   files: [],
   dragAndDropCapable: false,
@@ -152,10 +163,20 @@ const uploadFiles = (ev) => {
   store
     .dispatch('uploadFiles', f)
     .then((res) => {
-      upload.value.files = []; 
+      let progBg = document.getElementById('progress-bg');
+      progBg.classList.remove('bg-indigo-600');
+      progBg.classList.add('bg-green-500');
+
       isDisabled.value = false;
       store.dispatch("setSuccessNotification", res.status);
       internalInstance.appContext.config.globalProperties.$Progress.finish();
+
+      setTimeout(() => {
+        upload.value.files = []; 
+        store.state.uploadProgress = 0;
+        progBg.classList.remove('bg-green-500');
+        progBg.classList.add('bg-indigo-600');
+      },1500);
     })
     .catch(err => {
       internalInstance.appContext.config.globalProperties.$Progress.fail();

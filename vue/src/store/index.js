@@ -53,7 +53,8 @@ const store = createStore({
         },
         profile: {
             data: {}
-        }
+        },
+        uploadProgress: 0
     },
     getters: {},
     actions: {
@@ -119,7 +120,13 @@ const store = createStore({
                 })
         },
         uploadFiles({ }, files){
-            return axiosClient.post(`/uploads`, files)
+            return axiosClient.post(`/uploads`, files, {
+                onUploadProgress: e => {
+                    if(e.lengthComputable) {
+                        this.state.uploadProgress = (e.loaded / e.total) * 100
+                    }
+                }
+            })
                 .then(({data}) => {
                     return data;
                 })

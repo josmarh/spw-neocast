@@ -83,11 +83,11 @@ class UploadLocalVideo implements ShouldQueue
             // get file extension 
             $type = strtolower($type[1]);
             $file = str_replace(' ', '+', $file);
-            $file = base64_decode($file);
+            // $file = base64_decode($file);
 
-            if($file === false) {
-                throw new Exception("base64_decode failed");
-            }
+            // if($file === false) {
+            //     throw new Exception("base64_decode failed");
+            // }
         } else {
             throw new Exception("Did not match data URI with file data");
         }
@@ -100,7 +100,12 @@ class UploadLocalVideo implements ShouldQueue
         if (!File::exists($absolutePath)) {
             File::makeDirectory($absolutePath, 0755, true);
         }
-        file_put_contents($addPath, $file);
+
+        // file_put_contents($addPath, $file);
+        $whandle = fopen($addPath,'w');
+        stream_filter_append($whandle,'convert.base64-decode',STREAM_FILTER_WRITE);
+        fwrite($whandle,$file);
+        fclose($whandle);
 
         return $relativePath;
     }
