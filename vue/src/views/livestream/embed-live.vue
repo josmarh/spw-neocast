@@ -158,7 +158,7 @@ let saveLiveVideo = ref(0) // 0: default, 1: ready to save, 2: save is ongoing, 
 const checkStreamUri = () => {
     let lopper = () => {
         timeoutStream = setTimeout( async () => {
-            await fetch(`${import.meta.env.VITE_STREAM_URI}/hls/${model['_rawValue'].streamKey}.m3u8`)
+            await fetch(`${import.meta.env.VITE_STREAM_URI}/hls/${model['_rawValue'].streamKey}/index.m3u8`)
             .then(res => res)
             .then(data => {
                 if(data.status) {

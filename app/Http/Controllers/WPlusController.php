@@ -25,12 +25,14 @@ use App\Models\Products;
 use App\Models\ProductTransactions;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Log;
 
 class WPlusController extends Controller
 {
     public function WPlus(Request $request)
     {
         $data = $request->all();
+        Log::debug(json_encode($data));
 
         if(isset($data['WP_SECURITYKEY']) && $data['WP_SECURITYKEY'] === '90cb79f5b3f07d0c9b835fe405cbaab') {
             if(!$data['WP_ITEM_NUMBER'] || !$data['WP_BUYER_EMAIL'] || !$data['WP_BUYER_NAME'] || !$data['WP_TXNID'] || !$data['WP_ACTION']) {

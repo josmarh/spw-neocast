@@ -42,6 +42,12 @@ import ArticleCreate from '../views/article/Create.vue'
 import ArticleEdit from '../views/article/Edit.vue'
 import Article from '../views/article/Articles.vue'
 import Tutorials from '../views/Tutorials.vue'
+import AffiliateCoach from '../views/bonus/AffiliateCoach.vue'
+import AppBundle from '../views/bonus/AppBundle.vue'
+import DfyAgency from '../views/bonus/DfyAgency.vue'
+import DfyAutomation from '../views/bonus/DfyAutomation.vue'
+import DfyCampaign from '../views/bonus/DfyCampaign.vue'
+import DfyTraffic from '../views/bonus/DfyTraffic.vue'
 import store from "../store"
 
 const routes = [
@@ -90,6 +96,19 @@ const routes = [
             {path: '/article/create', name: 'ArticleCreate', component: ArticleCreate},
             {path: '/article/edit/:id', name: 'ArticleEdit', component: ArticleEdit},
             {path: 'tutorials', name: 'Tutorials', component: Tutorials},
+        ] 
+    },
+    {
+        path: '/bonus',
+        component: AppLayout,
+        meta: {requiresAuth: true},
+        children: [
+            {path: 'coaching', name: 'AffiliateCoach', component: AffiliateCoach},
+            {path: 'appbundle', name: 'AppBundle', component: AppBundle},
+            {path: 'agency', name: 'DfyAgency', component: DfyAgency},
+            {path: 'automation', name: 'DfyAutomation', component: DfyAutomation},
+            {path: 'campaign', name: 'DfyCampaign', component: DfyCampaign},
+            {path: 'traffic', name: 'DfyTraffic', component: DfyTraffic},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },

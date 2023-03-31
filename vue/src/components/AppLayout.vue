@@ -57,13 +57,50 @@
                   </transition>
                 </Menu>
 
-                <router-link v-if="userPermissions.includes('reseller')"
+                <router-link v-if="userPermissions.includes('oto8_reseller')"
                   :to="{name: 'Reseller'}"
                   active-class="bg-gray-900 text-white"
                   :class="[this.$router.name === 'Reseller' ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
                   'px-3 py-2 rounded-md text-sm font-medium']">
                   Reseller
                 </router-link>
+
+                <Menu as="div" class="" v-if="userPermissions.includes('bonus_menu')">
+                  <div>
+                    <MenuButton class="">
+                      <span class="sr-only">Open user menu</span>
+                      <div
+                        active-class="bg-gray-900 text-white"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                        >Bonus</div>
+                    </MenuButton>
+                  </div>
+                  <transition 
+                    enter-active-class="transition ease-out duration-100" 
+                    enter-from-class="transform opacity-0 scale-95" 
+                    enter-to-class="transform opacity-100 scale-100" 
+                    leave-active-class="transition ease-in duration-75" 
+                    leave-from-class="transform opacity-100 scale-100" 
+                    leave-to-class="transform opacity-0 scale-95">
+                    <MenuItems 
+                      class="origin-top-left absolute mt-2 w-48 
+                      rounded-md shadow-lg py-1 bg-white ring-1 ring-black 
+                      ring-opacity-5 focus:outline-none z-10"
+                    >
+                      <MenuItem 
+                        v-for="item in bonusNav" 
+                        :key="item.name" v-slot="{ active }">
+                          <router-link 
+                            v-if="userPermissions.includes(item.permission)"
+                            :to="item.to" 
+                            active-class="bg-gray-100"
+                            :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">
+                            {{ item.name }}
+                          </router-link>
+                      </MenuItem>
+                    </MenuItems>
+                  </transition>
+                </Menu>
               </div>
             </div>
           </div>
@@ -109,6 +146,14 @@
                         :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">{{ item.name }}
                       </router-link>
                     </MenuItem>
+                    <MenuItem>
+                      <a href="https://supremewebcustomercare.freshdesk.com" target="_blank"
+                          :class="{'bg-gray-100': active}" 
+                          class="block py-2 px-4 text-sm text-gray-700 
+                          cursor-pointer inline-flex w-full">
+                          Support
+                      </a>
+                  </MenuItem>
                     <MenuItem >
                       <a
                         @click="logout"
@@ -132,17 +177,18 @@
         </div>
       </div>
 
+      <!-- mobile navs -->
       <DisclosurePanel class="md:hidden">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <router-link 
-            v-for="item in navigation" 
-            :key="item.name" 
-            :to="item.to" 
-            active-class="bg-gray-900 text-white"
-            :class="[ this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
-              'block px-3 py-2 rounded-md text-base font-medium']">{{ item.name }}
-          </router-link>
-          
+          <div v-for="item in navigation" :key="item.name" >
+            <router-link 
+              v-if="userPermissions.includes(item.permission)"
+              :to="item.to" 
+              active-class="bg-gray-900 text-white"
+              :class="[ this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+                'block px-3 py-2 rounded-md text-base font-medium']">{{ item.name }}
+            </router-link>
+          </div>
         </div>
         <div class="pt-4 pb-3 border-t border-gray-700">
           <div class="flex items-center px-5">
@@ -165,6 +211,7 @@
               <BellIcon class="h-6 w-6" aria-hidden="true" /> -->
             </button>
           </div>
+          <!-- mobile navs -->
           <div class="mt-3 px-2 space-y-1">
             <router-link 
               v-for="item in userNavigation" 
@@ -172,7 +219,7 @@
               :to="item.to" 
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.name }}
             </router-link>
-            <router-link v-if="userPermissions.includes('reseller')"
+            <router-link v-if="userPermissions.includes('oto8_reseller')"
               :to="{name: 'Reseller'}"
               active-class="bg-gray-900 text-white"
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">
@@ -233,6 +280,15 @@ const userManagerNav = [
   { name: 'Articles', to: {name: 'Articles'} },
 ]
 
+const bonusNav = [
+  { name: 'DFY Campaigns', to: {name: 'DfyCampaign'}, permission: 'oto2_dfy_campaigns'},
+  { name: 'DFY Traffic', to: {name: 'DfyTraffic'}, permission: 'oto3_dfy_traffic' },
+  { name: 'DFY Automation', to: {name: 'DfyAutomation'}, permission: 'oto4_dfy_automation' },
+  { name: 'App Bundle', to: {name: 'AppBundle'}, permission: 'oto5_dfy_app_bundle' },
+  { name: 'DFY Agency', to: {name: 'DfyAgency'}, permission: 'oto6_dfy_agency' },
+  { name: 'Affiliate Coaching', to: {name: 'AffiliateCoach'}, permission: 'oto7_affiliate_coaching' },
+]
+
 export default {
   components: {
     Disclosure,
@@ -265,6 +321,7 @@ export default {
       userNavigation,
       userManagerNav,
       userPermissions,
+      bonusNav,
       logout
     }
   },
