@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
+use Illuminate\Support\Facades\Http;
 
 class DeleteHLSVideos implements ShouldQueue
 {
@@ -34,7 +35,13 @@ class DeleteHLSVideos implements ShouldQueue
     {
         $this->queueProgress(20);
 
-        shell_exec('cd '.$this->streamInfo['filePath']. '; rm '.$this->streamInfo['fileName'].'*.ts; rm '.$this->streamInfo['fileName'].'.m3u8');
+        $response = Http::post(config('services.youtube.m3u8_converter_api').'/mp4/convert',[
+            'action'   => 'deleteHLS',
+            'filePath' => $this->streamInfo['filePath'].'/',
+            'fileName' => $this->streamInfo['fileName']
+        ]);
+
+        // shell_exec('cd '.$this->streamInfo['filePath']. '; rm '.$this->streamInfo['fileName'].'*.ts; rm '.$this->streamInfo['fileName'].'.m3u8');
         
         $this->queueProgress(100);
     }

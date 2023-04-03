@@ -34,7 +34,7 @@ class WPlusController extends Controller
         $data = $request->all();
         Log::debug(json_encode($data));
 
-        if(isset($data['WP_SECURITYKEY']) && $data['WP_SECURITYKEY'] === '90cb79f5b3f07d0c9b835fe405cbaab') {
+        if(isset($data['WP_SECURITYKEY']) && $data['WP_SECURITYKEY'] === '2f15682b56ffc89178fc269e0c1317b') {
             if(!$data['WP_ITEM_NUMBER'] || !$data['WP_BUYER_EMAIL'] || !$data['WP_BUYER_NAME'] || !$data['WP_TXNID'] || !$data['WP_ACTION']) {
                 return response(['message' => 'Incorrect fields!'], 422);
             }
@@ -111,7 +111,7 @@ class WPlusController extends Controller
 
             ProductTransactions::create([
                 'user_id'           => $userId ,
-                'product_id'        => $data['productId'],
+                'product_id'        => $role->id,
                 'transaction_id'    => $data['transactionId'],
                 'transaction_type'  => 'sale'
             ]);
@@ -138,7 +138,7 @@ class WPlusController extends Controller
 
                 ProductTransactions::create([
                     'user_id'           => $userId ,
-                    'product_id'        => $data['productId'],
+                    'product_id'        => $role->id,
                     'transaction_id'    => $data['transactionId'],
                     'transaction_type'  => 'sale'
                 ]);
@@ -205,7 +205,7 @@ class WPlusController extends Controller
 
                 ProductTransactions::create([
                     'user_id'           => $id,
-                    'product_id'        => $d['productId'],
+                    'product_id'        => $role->id,
                     'transaction_id'    => $d['transactionId'],
                     'transaction_type'  => 'refund'
                 ]);

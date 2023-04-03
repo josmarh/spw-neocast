@@ -66,6 +66,11 @@ return [
             'driver' => 'local',
             'root' => public_path('uploads'),
             'throw' => false,
+        ],
+        'hls' => [
+            'driver' => 'local',
+            'root' => '/home/tubetargeterapp/',
+            'throw' => false,
         ]
 
     ],

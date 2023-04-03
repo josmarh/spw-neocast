@@ -45,7 +45,7 @@ class YoutubeToMP4 implements ShouldQueue
         *   save
         */
         $this->queueProgress(0);
-        $response = Http::post(config('services.youtube.converter_api').'/mp4/convert',[
+        $response = Http::post(config('services.youtube.m3u8_converter_api').'/ytube/convert',[
             'videoId' => $this->videoInfo['video_id'],
             'webhook' => $this->videoInfo['webhook'],
             'user'    => $this->videoInfo['user_id']
@@ -80,7 +80,7 @@ class YoutubeToMP4 implements ShouldQueue
             $this->queueProgress(90);
 
             // send request to delete file on server
-            $response = Http::post(config('services.youtube.converter_api').'/mp4/delete',[
+            $response = Http::post(config('services.youtube.m3u8_converter_api').'/mp4/delete/v2',[
                 'videoId' => $this->videoInfo['video_id']
             ]);
             $this->queueProgress(100);
