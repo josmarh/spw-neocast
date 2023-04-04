@@ -44,45 +44,15 @@ class YoutubeToMP4 implements ShouldQueue
         *   get other required mp4 info
         *   save
         */
-        $this->queueProgress(0);
-        $response = Http::post(config('services.youtube.m3u8_converter_api').'/ytube/convert',[
+        $this->queueProgress(30);
+        $response = Http::post(config('services.youtube.m3u8_converter_api').'/youtube/convert',[
             'videoId' => $this->videoInfo['video_id'],
             'webhook' => $this->videoInfo['webhook'],
-            'user'    => $this->videoInfo['user_id']
+            'user'    => $this->videoInfo['user_id'],
+            'webhookReferer' => 'YoutubeToMp4',
         ]);
 
-        if($response->status() == 201) {
-            $this->queueProgress(40);
-
-            $dir = 'uploads/';
-            $filename = $this->videoInfo['video_id'].'.mp4';
-            $absolutePath = public_path($dir . $filename);
-            $relativePath = $dir . $filename;
-
-            // file_put_contents($absolutePath, file_get_contents($response->json()['downloadPath']));
-
-            $helpers = new Helpers();
-            $thumbnail = $helpers->generateThumbnail($relativePath);
-
-            $this->queueProgress(70);
-            FileUploads::create([
-                'file_name' => $this->videoInfo['video_name'],
-                'file_hash' => $relativePath,
-                'file_size' => $response->json()['fileSize'],
-                'file_type' => 'video/mp4',
-                'media_length'      => $response->json()['duration'],
-                'duration_seconds'  => $response->json()['durationInSec'],
-                'upload_types'  => 'hosted video',
-                'vhash'         => $helpers->generateToken(),
-                'thumbnail'     => $thumbnail,
-                'user_id'       => $this->videoInfo['user_id']
-            ]);
-            $this->queueProgress(90);
-
-            // send request to delete file on server
-            $response = Http::post(config('services.youtube.m3u8_converter_api').'/mp4/delete/v2',[
-                'videoId' => $this->videoInfo['video_id']
-            ]);
+        if($response->ok()) {
             $this->queueProgress(100);
         } 
     }

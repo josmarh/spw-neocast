@@ -68,7 +68,7 @@ class YTubeController extends Controller
             'user_id'       => $user->id,
             'video_id'      => $request->videoId,
             'video_name'    => $request->videoTitle,
-            'webhook'       => URL::to('ytube/webhook')
+            'webhook'       => URL::to('media/webhook')
         ];
 
         dispatch(new YoutubeToMP4($data))->delay(5);
@@ -78,29 +78,5 @@ class YTubeController extends Controller
         ]);
     }
 
-    public function webhook(Request $request)
-    {
-        $data = $request->all();
-        $helpers = new Helpers();
-
-        // add file to path
-        // create thumbnail
-
-        FileUploads::create([
-            'file_name' => $data['videoTitle'],
-            'file_hash' => $relativePath,
-            'file_size' => $data['fileSize'],
-            'file_type' => 'video/mp4',
-            'media_length'      => $data['duration'],
-            'duration_seconds'  => $data['durationInSec'],
-            'upload_types'  => 'hosted video',
-            'vhash'         => $helpers->generateToken(),
-            'thumbnail'     => $thumbnail,
-            'user_id'       => $data['user']
-        ]);
-
-        // send delete file request
-        // push notification
-
-    }
+    
 }

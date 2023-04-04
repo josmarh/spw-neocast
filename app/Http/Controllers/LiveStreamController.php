@@ -14,6 +14,7 @@ use App\Models\FileUploads;
 use Carbon\Carbon;
 use App\Helpers;
 use App\Jobs\ConvertHLSMp4;
+use App\Jobs\HLSToMp4Job;
 use App\Jobs\M3u8ToMp4;
 use URL;
 
@@ -119,27 +120,13 @@ class LiveStreamController extends Controller
     {
         $user = $request->user();
 
-        $helpers = new Helpers();
-
-        // $hlsInfo = [
-        //     'link' => $request->link,
-        //     'fileType' => 'video/mp4',
-        //     'uploadTypes' => 'external links',
-        //     'userId' => $user->id,
-        //     'jobOwner' => 'liveStream',
-        //     'lhash' => $request->lhash,
-        //     'channels' => $request->channel
-        // ];
-        
-        // dispatch(new ConvertHLSMp4($hlsInfo))->delay(2);
-
-        dispatch(new M3u8ToMp4([
+        dispatch(new HLSToMp4Job([
             'link'      => $request->link,
-            'user_id'    => $user->id,
+            'user_id'   => $user->id,
             'jobOwner'  => 'liveStream',
-            'lhash' => $request->lhash,
-            'channels' => $request->channel,
-            'webhook'   => URL::to('ytube/webhook')
+            'lhash'     => $request->lhash,
+            'channels'  => $request->channel,
+            'webhook'   => URL::to('media/webhook')
         ]))->delay(5);
 
         return response([

@@ -15,26 +15,26 @@ class HookerController extends Controller
     {
         $helpers = new Helpers();
 
+        $dir = 'uploads/';
+        $filename = $request->webhookReferer == 'M3u8ToMp4' ? $request->videoTitle.'.mp4' : $request->filename;
+        $absolutePath = public_path($dir . $filename);
+        $relativePath = $dir . $filename;
+        $thumbnail = $helpers->generateThumbnail($relativePath);
+
+        $video = FileUploads::create([
+            'file_name' => $request->videoTitle,
+            'file_hash' => $relativePath,
+            'file_size' => $request->fileSize,
+            'file_type' => 'video/mp4',
+            'media_length'      => $request->duration,
+            'duration_seconds'  => $request->durationInSec,
+            'upload_types'  => 'external video',
+            'vhash'         => $helpers->generateToken(),
+            'thumbnail'     => $thumbnail,
+            'user_id'       => $request->user
+        ]);
+
         if($request->webhookReferer === 'M3u8ToMp4') {
-            $dir = 'uploads/';
-            $filename = $request->videoTitle.'.mp4';
-            $absolutePath = public_path($dir . $filename);
-            $relativePath = $dir . $filename;
-            $thumbnail = $helpers->generateThumbnail($relativePath);
-
-            $video = FileUploads::create([
-                'file_name' => $request->videoTitle,
-                'file_hash' => $relativePath,
-                'file_size' => $request->fileSize,
-                'file_type' => 'video/mp4',
-                'media_length'      => $request->duration,
-                'duration_seconds'  => $request->durationInSec,
-                'upload_types'  => 'external video',
-                'vhash'         => $helpers->generateToken(),
-                'thumbnail'     => $thumbnail,
-                'user_id'       => $request->user
-            ]);
-
             // save to livestream videos
             if($request->jobOwner === 'liveStream') {
                 // save to livestream videos
