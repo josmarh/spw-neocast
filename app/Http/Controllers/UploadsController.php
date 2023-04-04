@@ -11,6 +11,7 @@ use Validator;
 use App\Helpers;
 use App\Jobs\ConvertHLSMp4;
 use App\Jobs\M3u8ToMp4;
+use App\Jobs\HLSToMp4Job;
 use App\Jobs\UploadLocalVideo;
 
 class UploadsController extends Controller
@@ -39,20 +40,11 @@ class UploadsController extends Controller
             'link' => 'required|url'
         ]);
 
-        $helpers = new Helpers();
-
-        // dispatch(new ConvertHLSMp4([
-        //     'link' => $request->link,
-        //     'fileType' => 'video/mp4',
-        //     'uploadTypes' => 'external links',
-        //     'userId' => $user->id,
-        //     'jobOwner' => 'uploads'
-        // ]))->delay(5);
-        dispatch(new M3u8ToMp4([
+        dispatch(new HLSToMp4Job([
             'link'      => $request->link,
-            'user_id'    => $user->id,
+            'user_id'   => $user->id,
             'jobOwner'  => 'uploads',
-            'webhook'   => URL::to('ytube/webhook')
+            'webhook'   => URL::to('media/webhook')
         ]))->delay(5);
 
         return response([

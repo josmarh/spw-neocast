@@ -59,7 +59,7 @@ class YoutubeToMP4 implements ShouldQueue
             $absolutePath = public_path($dir . $filename);
             $relativePath = $dir . $filename;
 
-            file_put_contents($absolutePath, file_get_contents($response->json()['downloadPath']));
+            // file_put_contents($absolutePath, file_get_contents($response->json()['downloadPath']));
 
             $helpers = new Helpers();
             $thumbnail = $helpers->generateThumbnail($relativePath);

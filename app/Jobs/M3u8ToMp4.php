@@ -97,7 +97,7 @@ class M3u8ToMp4 implements ShouldQueue
             }
 
             // send request to delete file on server
-            $response = Http::post(config('services.youtube.m3u8_converter_api').'/mp4/delete/v2',[
+            $response = Http::post(config('services.youtube.converter_api').'/mp4/delete/v2',[
                 'videoId' => $response->json()['videoTitle']
             ]);
             $this->queueProgress(100);

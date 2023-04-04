@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/ipn/*',
-        '/ytube/webhook'
+        '/ytube/webhook',
+        '/media/webhook'
     ];
 }
