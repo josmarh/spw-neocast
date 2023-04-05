@@ -213,12 +213,12 @@ class ChannelPlaylistController extends Controller
             ->orderBy('file_uploads.created_at', 'desc')
             ->get();
         
-        if($videos) {
+        if(count($videos) > 0) {
             // delete file if exist and creat new file        
             $dir = 'uploads/';
             $absolutePath = public_path($dir);
             if(File::exists($absolutePath.$channelId.".txt")){
-                unlink($absolutePath.$channelId.".txt");
+                File::delete($absolutePath.$channelId.".txt");
             }
 
             $channelFile = fopen($absolutePath.$channelId.".txt", "a") or die("Unable to open file!");
@@ -238,21 +238,22 @@ class ChannelPlaylistController extends Controller
                 'filePath' => $absolutePath,
                 'fileName' => $channelId.".txt",
                 'streamPath' => '/nginx/channels/'.$linearCheck->stream_name,
+                // 'streamPath' => public_path('channels/'.$linearCheck->stream_name),
                 'type' => 'createHLS'
             ];
 
             return $streamInfo;
-
         }else {
             // delete all ${channel} .ts .m3u8 
             $dir = 'uploads/';
             $absolutePath = public_path($dir);
             if(File::exists($absolutePath.$channelId.".txt")){
-                unlink($absolutePath.$channelId.".txt");
+                File::delete($absolutePath.$channelId.".txt");
             }
 
             $streamInfo = [
                 'filePath' => '/nginx/channels',
+                // 'filePath' => public_path('channels/'),
                 'fileName' => $linearCheck->stream_name,
                 'type' => 'deleteHLS'
             ];

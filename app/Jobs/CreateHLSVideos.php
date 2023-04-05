@@ -36,7 +36,7 @@ class CreateHLSVideos implements ShouldQueue
     {
         $this->queueProgress(20);
 
-        $response = Http::post(config('services.youtube.m3u8_converter_api').'/mp4/convert',[
+        $response = Http::post(config('services.youtube.m3u8_converter_api').'/mp4/convert/hls',[
             'action'   => 'createHLS',
             'filePath' => $this->streamInfo['filePath'],
             'fileName' => $this->streamInfo['fileName'],
