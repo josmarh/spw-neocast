@@ -48,6 +48,7 @@ import DfyAgency from '../views/bonus/DfyAgency.vue'
 import DfyAutomation from '../views/bonus/DfyAutomation.vue'
 import DfyCampaign from '../views/bonus/DfyCampaign.vue'
 import DfyTraffic from '../views/bonus/DfyTraffic.vue'
+import ResellerRegister from '../views/auth/Reseller.vue'
 import store from "../store"
 
 const routes = [
@@ -62,6 +63,7 @@ const routes = [
             // { path: '/register', name: 'Register', component: Register },
             { path: '/forgot-password', name: 'ForgetPassword', component: ForgetPassword },
             { path: '/reset-password/:email', name: 'ResetPassword', component: ResetPassword },
+            { path: '/reseller/signup', name: 'ResellerRegister', component: ResellerRegister },
         ]
     },
     {

@@ -236,7 +236,15 @@ class ChannelController extends Controller
     {
         $channel = Channels::findOrFail($id);
 
-        File::delete(public_path().'/'.$channel->logo);
+        /**
+         * Delete:
+         * channel logo
+         * channel playlist (linear or ondemand) 
+         * if linear, delete all associated hls file in /nginx/channels
+         */
+        if(File::exists(public_path($channel->logo))) {
+            File::delete(public_path($channel->logo));
+        }
 
         $channel->delete();
 

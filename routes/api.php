@@ -14,6 +14,7 @@ use App\Http\Controllers\FFmpegConverter;
 use App\Http\Controllers\UserManagerController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\YTubeController;
+use App\Http\Controllers\AuthResellerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,7 +89,6 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::middleware('can:view_user_manager')->group(function(){
         Route::get('users', [UserManagerController::class, 'index'])->middleware(['can:view_users']);
-        Route::get('reseller', [UserManagerController::class, 'resellerIndex'])->middleware(['can:create_user']);
         Route::group(['prefix' => 'user', 'middleware' => ['can:create_user', 'can:view_users']], function () {
             Route::put('update/{id}', [UserManagerController::class, 'update']);
             Route::put('block/{id}', [UserManagerController::class, 'blockUser']);
@@ -96,7 +96,7 @@ Route::middleware('auth:sanctum')->group(function(){
         });
 
         Route::get('permissions', [UserManagerController::class, 'permissions'])->middleware(['can:view_permissions']);
-        Route::get('roles', [UserManagerController::class, 'roles'])->middleware(['can:view_roles']);
+        
         Route::group(['prefix' => 'guard'], function () {
             Route::post('permission/store', [UserManagerController::class, 'permissionStore'])->middleware(['can:view_permissions']);
             Route::put('permission/update/{id}', [UserManagerController::class, 'permissionUpdate'])->middleware(['can:view_permissions']);
@@ -110,8 +110,10 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::post('assign-permissions', [UserManagerController::class, 'permissionAssignRole'])->middleware(['can:view_permissions']);
         });
     });
+    Route::get('roles', [UserManagerController::class, 'roles']);
+    Route::get('reseller', [UserManagerController::class, 'resellerIndex']);
 
-    Route::middleware('can:view_articles')->group(function(){
+    Route::middleware('can:view_articles')->group(function() {
         Route::get('articles', [ArticleController::class, 'index']);
         Route::group(['prefix' => 'article'], function () {
             Route::post('store', [ArticleController::class, 'store']);
@@ -125,6 +127,7 @@ Route::middleware('auth:sanctum')->group(function(){
 Route::post('login', [AuthController::class, 'login']);
 Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
+Route::post('reseller/register', [AuthResellerController::class, 'register']);
 Route::get('video/show/{str}', [VideoController::class, 'show']);
 Route::get('channel/show/{cId}', [ChannelPlaylistController::class, 'playlistVidoes']);
 Route::get('channel/info/{chash}', [ChannelController::class, 'external']);
