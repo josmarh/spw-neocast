@@ -201,6 +201,13 @@
     "vpaid-flash-client" "^1.0.2"
     "vpaid-html5-client" "^0.1.14"
 
+"@tinymce/tinymce-vue@^5.1.0":
+  "integrity" "sha512-Z4R8zaOKrAXBhHWsq+qUlwHY+rvze2RgxHDrZ5+qTYkGvRofW5880HLG9gvv6TRPVsNSQBNMdsaOjJ/eueccgA=="
+  "resolved" "https://registry.npmjs.org/@tinymce/tinymce-vue/-/tinymce-vue-5.1.0.tgz"
+  "version" "5.1.0"
+  dependencies:
+    "tinymce" "^6.0.0 || ^5.5.1"
+
 "@types/json-schema@^7.0.8":
   "integrity" "sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ=="
   "resolved" "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.11.tgz"
@@ -3511,6 +3518,11 @@
   "integrity" "sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA=="
   "resolved" "https://registry.npmjs.org/tinycolor2/-/tinycolor2-1.4.2.tgz"
   "version" "1.4.2"
+
+"tinymce@^6.0.0 || ^5.5.1":
+  "integrity" "sha512-+/cS2AM9l6p72IBs2uolHbGsBUztLs0WslqNgFaTXtmMksTNUOhh8p08xtA/fa03UGlWEC6/EJoeV95/QDXa2A=="
+  "resolved" "https://registry.npmjs.org/tinymce/-/tinymce-6.4.1.tgz"
+  "version" "6.4.1"
 
 "to-arraybuffer@^1.0.0":
   "integrity" "sha512-okFlQcoGTi4LQBG/PgSYblw9VOyptsz2KJZqc6qtgGdes8VktzUQkj4BI2blit072iS8VODNcMA+tvnS9dnuMA=="

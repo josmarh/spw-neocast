@@ -12,6 +12,7 @@ class Websites extends Model
 
     protected $fillable = [
         'title',
+        'description',
         'channel',
         'url_path',
         'logo',

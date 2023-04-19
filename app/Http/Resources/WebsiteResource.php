@@ -18,6 +18,7 @@ class WebsiteResource extends JsonResource
         return [
             'id'            => $this->id,
             'title'         => $this->title,
+            'description'   => $this->description,
             'channel'       => $this->channel,
             'url_path'      => $this->url_path,
             'logo'          => $this->logo ? URL::to($this->logo) : null,

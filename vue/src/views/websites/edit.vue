@@ -289,6 +289,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Site description -->
+                            <div class="mt-6">
+                                <label for="from" class="block text-sm font-medium leading-6 text-gray-900">
+                                    Site Description
+                                </label>
+                                <editor
+                                    api-key="nz91pgequ1i4nogj6arnwzcz01gd4h5d43gbnj6pdvyfdzzx"
+                                    v-model="model.description"
+                                    :init="init"
+                                />
+                            </div>
                             <!-- player options -->
                             <div class="mt-10">
                                 <h5 class="mb-4 text-2md font-bold text-gray-900 dark:text-white">Player options</h5>
@@ -499,11 +510,12 @@
 import WebsiteComponent from '../../components/WebsiteComponent.vue';
 import Notification from '../../components/Notification.vue';
 import store from '../../store';
-import { ref, getCurrentInstance, computed, watch, onMounted } from 'vue';
+import { ref, reactive, getCurrentInstance, computed, watch, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { ColorPicker } from 'vue-color-kit';
 import 'vue-color-kit/dist/vue-color-kit.css';
+import Editor from '@tinymce/tinymce-vue'
 
 const router = useRouter();
 const route = useRoute();
@@ -512,6 +524,18 @@ const channelList  = computed(() => store.state.channels);
 const isChannelSet = ref(0);
 const openChannelList = ref(false);
 const isDisabled = ref(false);
+
+const plugins = 'quickbars emoticons table image media autolink link code anchor wordcount insertdatetime';
+const toolbar = ' bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify|bullist numlist |outdent indent blockquote | undo redo | axupimgs | removeformat | table | emoticons | image | media'
+const init = reactive({
+    height: 300,
+    menubar: true,
+    plugins: plugins,
+    toolbar: toolbar,
+    branding: false,
+    a11y_advanced_options: true,
+    file_picker_types: 'file image media'
+});
 
 let bgPicker = ref({
   color: '#f3f3f3',
@@ -535,6 +559,7 @@ let model = ref({
     id: null,
     channel: [],
     title: 'Untitled website',
+    description: '',
     urlPath: (Math.random() + 1).toString(36).substring(2),
     domain: `https://${window.location.host}/w/`, // for preview purpose
     logo: null,
@@ -639,6 +664,7 @@ const setWebsiteInfo = (data) => {
     model.value.id = data.id;
     model.value.channel = JSON.parse(data.channel);
     model.value.title = data.title;
+    model.value.description = data.description;
     model.value.urlPath = data.url_path;
     model.value.logo = data.logo;
     model.value.logoUrl = data.logo; // for preview purpose

@@ -53,6 +53,7 @@ class WebsiteController extends Controller
 
         $website = Websites::create([
             'title'         => $request->title,
+            'description'   => $request->description,
             'channel'       => json_encode($request->channel),
             'url_path'      => $request->urlPath,
             'logo'          => $relativePath,
@@ -125,6 +126,7 @@ class WebsiteController extends Controller
 
         $website->update([
             'title'         => $request->title,
+            'description'   => $request->description,
             'channel'       => json_encode($request->channel),
             'url_path'      => $request->urlPath,
             'logo'          => $relativePath,

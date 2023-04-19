@@ -13,6 +13,7 @@
                 </div>
             </div>
             <div v-if="isContentSet == 2">
+                <div class="mt-4 mb-6 text-center text-lg" v-html="model.description"></div>
                 <div>
                     <video-player
                         v-if="channelType.includes('Playlist (On demand)')"
@@ -109,6 +110,7 @@ const internalInstance = getCurrentInstance();
 let isContentSet = ref(0);
 let model = ref({
     title: '',
+    description: '',
     showHeader: '',
     pageLayout: '',
     logo: null,
@@ -200,6 +202,7 @@ const _getContent = async () => {
                 let data = res.data;
                 
                 model.value.title = data.title
+                model.value.description = data.description;
                 model.value.showHeader = data.header
                 model.value.pageLayout = data.page_layout
                 model.value.logo = data.logo
