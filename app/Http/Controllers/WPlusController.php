@@ -34,7 +34,7 @@ class WPlusController extends Controller
         $data = $request->all();
         Log::debug(json_encode($data));
 
-        if(isset($data['WP_SECURITYKEY']) && $data['WP_SECURITYKEY'] === '2f15682b56ffc89178fc269e0c1317b') {
+        if(isset($data['WP_SECURITYKEY']) && $data['WP_SECURITYKEY'] === '2f15682b56ffc89178fc269e0c1317b' || $data['WP_SECURITYKEY'] === 'ded33f196ae01c00aeb5c9800263d39') {
             if(!$data['WP_ITEM_NUMBER'] || !$data['WP_BUYER_EMAIL'] || !$data['WP_BUYER_NAME'] || !$data['WP_TXNID'] || !$data['WP_ACTION']) {
                 return response(['message' => 'Incorrect fields!'], 422);
             }

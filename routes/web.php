@@ -25,6 +25,7 @@ Route::get('channel/{chash}', [ChannelController::class, 'roku']);
 Route::post('media/webhook', [HookerController::class, 'webhook'])->name('media.webhook');
 Route::post('ipn/jvzoo', [IPNController::class, 'JVZoo'])->name('jvzoo');
 Route::post('ipn/wplus', [WPlusController::class, 'WPlus'])->name('wplus');
+Route::post('ipn/client/wplus', [WPlusController::class, 'WPlus']);
 Route::prefix('monitor/jobs')->group(function () {
     Route::queueMonitor();
 });

@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <page-component title="Channels">
         <notification />
