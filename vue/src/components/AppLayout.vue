@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <img class="h-8 " src="/neocast-brand-logo.png" alt="Workflow" />
+              <img class="h-8 " :src="appUrl + '/smatflix-brand-logo.png'" alt="Workflow" />
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
@@ -258,6 +258,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import store from '../store'
 
+const appUrl = import.meta.env.VITE_APP_URI
 const userPermissions = computed(() => store.state.user.permissions)
 const navigation = [
   { name: 'Dashboard', to: {name: 'Dashboard'}, permission: 'dashboard' },
@@ -270,7 +271,7 @@ const navigation = [
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },
-  { name: 'Tutorials', to: {name: 'Tutorials'} },
+  // { name: 'Tutorials', to: {name: 'Tutorials'} },
 ]
 const userManagerNav = [
   { name: 'Users', to: {name: 'Users'} },
