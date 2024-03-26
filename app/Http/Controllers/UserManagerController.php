@@ -277,9 +277,9 @@ class UserManagerController extends Controller
 
     public function rolePermissions(Request $request, $roleId)
     {
-        $permissions =  DB::select( DB::raw("SELECT p.id, p.name, rp.role_id FROM permissions p
+        $permissions =  $this->rawQuery("SELECT p.id, p.name, rp.role_id FROM permissions p
             left join role_has_permissions rp on p.id=rp.permission_id and rp.role_id = '$roleId'
-            order by 1") );
+            order by 1");
 
         return response([
             'data' => $permissions,

@@ -10,4 +10,9 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function rawQuery($query)
+    {
+        return DB::select(DB::raw($query)->getValue(DB::getQueryGrammar()));
+    }
 }
