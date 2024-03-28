@@ -2,32 +2,62 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\FileUploads;
-use Log;
-use URL;
-use Validator;
 use App\Helpers;
 use App\Jobs\ConvertHLSMp4;
 use App\Jobs\M3u8ToMp4;
 use App\Jobs\HLSToMp4Job;
 use App\Jobs\UploadLocalVideo;
+use App\Services\FileHandler;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Log;
+use URL;
+use Validator;
 
 class UploadsController extends Controller
 {
-    public function fileUpload(Request $request)
+    public function fileUpload(FileHandler $fileHandler, Request $request)
     {
-        $data = json_encode($request->all());
         $user = $request->user();
+        $data = $request->validate([
+            'url'  => ['required','string'],
+            'name' => ['required','string'],
+            'type' => ['required','string'],
+            'size' => ['required'],
+            'calSize' => ['required','string'],
+        ]);
 
-        dispatch(new UploadLocalVideo([
-            'data'    => $data,
-            'user_id' => $user->id
-        ]))->delay(5);
+        try {
+            $file = substr($data['url'], strpos($data['url'], ',') +1);
+            $file = str_replace(' ', '+', $file);
+            $file = base64_decode($file);
+
+            $response = $fileHandler->saveFile(
+                explode('/', $data['type'])[1],
+                $file,
+            );
+        } catch (\Throwable $th) {
+            return response([
+                'error' => $th->getMessage()
+            ],422);
+        }
+
+        FileUploads::create([
+            'file_name' => $data['name'],
+            'file_hash' => $response['filePath'],
+            'file_size' => $data['size'],
+            'file_type' => $data['type'],
+            'media_length'     => $request->duration,
+            'duration_seconds' => $request->durationInSec,
+            'upload_types'     => 'hosted video',
+            'vhash'     => bin2hex(random_bytes(16)),
+            'thumbnail' => $response['thumbnail'],
+            'user_id'   => $user->id
+        ]);
 
         return response([
-            'status' => 'Video will be ready shortly',
+            'status' => 'Upload successful.',
             'status_code' => 201
         ]);
     }
