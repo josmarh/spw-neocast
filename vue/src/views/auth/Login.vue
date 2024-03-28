@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+    <div>
       <div>
         <img class="mx-auto h-20 w-40" :src="appUrl + '/smatflix-brand-logo.png'" alt="Workflow" />
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in </h2>
@@ -8,13 +8,13 @@
       </div>
       <form class="mt-8 space-y-6" @submit="login">
         <div v-if="errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
-          {{errorMsg}}
-          <span @click="errorMsg = ''" 
-            class="w-8 h-8 flex items-center justify-center rounded-full transition-color cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </span>
+            {{errorMsg}}
+            <span @click="errorMsg = ''" 
+                class="w-8 h-8 flex items-center justify-center rounded-full transition-color cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </span>
         </div>
         <input type="hidden" name="remember" value="true" />
         <div class="shadow-sm">

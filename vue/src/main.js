@@ -9,6 +9,7 @@ import './index.css';
 import 'flowbite';
 import 'vue-plyr/dist/vue-plyr.css';
 import "vue3-colorpicker/style.css";
+// import "./assets/custom-tailwind.css"
 
 const options = {
   color: "#0E9F6E",
