@@ -49,6 +49,7 @@ import DfyAutomation from '../views/bonus/DfyAutomation.vue'
 import DfyCampaign from '../views/bonus/DfyCampaign.vue'
 import DfyTraffic from '../views/bonus/DfyTraffic.vue'
 import ResellerRegister from '../views/auth/Reseller.vue'
+import AiVideoGenerator from '../views/videos/AiVideoGenerator.vue'
 import store from "../store"
 
 const routes = [
@@ -82,6 +83,7 @@ const routes = [
             {path: '/edit-channel/:hash', name: 'EditChannel', component: EditChannel},
             {path: '/contents', name: 'Videos', component: Videos},
             {path: '/uploads', name: 'Uploads', component: Uploads},
+            {path: '/ai-video-generator', name: 'AiVideoGenerator', component: AiVideoGenerator},
             {path: '/livestream', name: 'LiveStream', component: LiveStream},
             {path: '/livestream/:hash', name: 'LiveStreamEdit', component: LiveStreamEdit},
             {path: '/website', name: 'Website', component: Website},

@@ -15,8 +15,11 @@
                     v-if="userPermissions.includes(item.permission)"
                     :to="item.to"
                     active-class="bg-gray-900 text-white"
-                    :class="[this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
-                    'px-3 py-2 rounded-md text-sm font-medium']">{{ item.name }}
+                    :class="[item.other.includes($router.name) 
+                      ? 'bg-gray-900 text-white' 
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+                      'px-3 py-2 rounded-md text-sm font-medium']">
+                    {{ item.name }}
                   </router-link>
                 </div>
 
@@ -185,7 +188,8 @@
               v-if="userPermissions.includes(item.permission)"
               :to="item.to" 
               active-class="bg-gray-900 text-white"
-              :class="[ this.$router.name === item.to.name ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+              :class="[ item.other.includes(this.$router.name)
+                ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
                 'block px-3 py-2 rounded-md text-base font-medium']">{{ item.name }}
             </router-link>
           </div>
@@ -261,13 +265,13 @@ import store from '../store'
 const appUrl = import.meta.env.VITE_APP_URI
 const userPermissions = computed(() => store.state.user.permissions)
 const navigation = [
-  { name: 'Dashboard', to: {name: 'Dashboard'}, permission: 'dashboard' },
-  { name: 'Channels', to: {name: 'Channels'}, permission: 'channels' },
-  { name: 'Videos', to: {name: 'Videos'}, permission: 'videos' },
-  { name: 'Uploads', to: {name: 'Uploads'}, permission: 'uploads' },
-  { name: 'Live Streams', to: {name: 'LiveStream'}, permission: 'live stream' },
-  { name: 'Websites', to: {name: 'Website'}, permission: 'websites' },
-  { name: 'Analytics', to: {name: 'Analytics'}, permission: 'analytics' },
+  { name: 'Dashboard', to: {name: 'Dashboard'}, other: ['Dashboard'], permission: 'dashboard' },
+  { name: 'Channels', to: {name: 'Channels'}, other: ['Channels'], permission: 'channels' },
+  { name: 'Videos', to: {name: 'Videos'}, other: ['AiVideoGenerator','Videos'], permission: 'videos' },
+  { name: 'Uploads', to: {name: 'Uploads'}, other: ['Uploads'], permission: 'uploads' },
+  { name: 'Live Streams', to: {name: 'LiveStream'}, other: ['LiveStream'], permission: 'live stream' },
+  { name: 'Websites', to: {name: 'Website'}, other: ['Website'], permission: 'websites' },
+  { name: 'Analytics', to: {name: 'Analytics'}, other: ['Analytics'], permission: 'analytics' },
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },

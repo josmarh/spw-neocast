@@ -67,7 +67,7 @@
                         </button>
                     </div>
                     <!-- progress bar -->
-                    <div class="flex justify-center" v-if="upload.files.length && progress > 0">
+                    <!-- <div class="flex justify-center" v-if="upload.files.length && progress > 0">
                         <div class="w-96 bg-gray-300 rounded-full dark:bg-gray-700 mt-3">
                         <div class="bg-indigo-600 text-xs font-medium text-indigo-100 
                         text-center p-0.5 leading-none rounded-full" id="progress-bg"
@@ -75,7 +75,7 @@
                             {{ Math.round(progress) + '%' }}
                         </div>
                         </div>
-                    </div>
+                    </div> -->
                 </form>
             </div>
             <!-- view content button -->
