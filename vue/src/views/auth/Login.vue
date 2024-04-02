@@ -2,8 +2,7 @@
 <template>
     <div>
         <div>
-            <img class="mx-auto h-20 w-40" :src="appUrl + '/smatflix-brand-logo.png'" alt="brand-logo" />
-            <!-- <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in </h2> -->
+            <GuestLogo />
         </div>
         <form class="mt-12 space-y-6" @submit="login">
             <div v-if="errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
@@ -69,11 +68,11 @@
 
 <script setup>
 import { LockClosedIcon } from '@heroicons/vue/solid'
-import store from '../../store';
 import { useRouter } from 'vue-router';
 import { ref, getCurrentInstance } from 'vue';
+import GuestLogo from '../../components/layouts/GuestLogo.vue';
+import store from '../../store';
 
-const appUrl = import.meta.env.VITE_APP_URI
 const router = useRouter();
 const internalInstance = getCurrentInstance();
 const user = {

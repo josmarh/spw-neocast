@@ -20,7 +20,7 @@ library.add( faRobot, faArrowUpFromBracket )
 const options = {
     color: "#0E9F6E",
     failedColor: "red",
-    thickness: "5px",
+    thickness: "3px",
     transition: {
         speed: "0.2s",
         opacity: "0.6s",

@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <img class="h-8 " :src="appUrl + '/smatflix-brand-logo.png'" alt="SmatFlix" />
+              <AuthLogo/>
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
@@ -23,6 +23,46 @@
                   </router-link>
                 </div>
 
+                <!-- Library menu -->
+                <Menu as="div" class="">
+                  <div>
+                    <MenuButton class="">
+                      <span class="sr-only">Open user menu</span>
+                      <div 
+                        active-class="bg-gray-900 text-white"
+                        class="text-gray-300 hover:bg-gray-700 hover:text-white 
+                        px-3 py-2 rounded-md text-sm font-medium">
+                        Library
+                      </div>
+                    </MenuButton>
+                  </div>
+                  <transition 
+                    enter-active-class="transition ease-out duration-100" 
+                    enter-from-class="transform opacity-0 scale-95" 
+                    enter-to-class="transform opacity-100 scale-100" 
+                    leave-active-class="transition ease-in duration-75" 
+                    leave-from-class="transform opacity-100 scale-100" 
+                    leave-to-class="transform opacity-0 scale-95">
+                    <MenuItems 
+                      class="origin-top-left absolute mt-2 w-48 
+                      rounded-md shadow-lg py-1 bg-white ring-1 ring-black 
+                      ring-opacity-5 focus:outline-none z-10"
+                    >
+                      <MenuItem 
+                        v-for="item in libraryNavigation" 
+                        :key="item.name" v-slot="{ active }">
+                          <router-link 
+                            :to="item.to" 
+                            active-class="bg-gray-100"
+                            :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">
+                            {{ item.name }}
+                          </router-link>
+                      </MenuItem>
+                    </MenuItems>
+                  </transition>
+                </Menu>
+
+                <!-- User manager menu -->
                 <Menu as="div" class="" v-if="userPermissions.includes('view_user_manager')">
                   <div>
                     <MenuButton class="">
@@ -60,6 +100,7 @@
                   </transition>
                 </Menu>
 
+                <!-- Reseller menu -->
                 <router-link v-if="userPermissions.includes('oto8_reseller')"
                   :to="{name: 'Reseller'}"
                   active-class="bg-gray-900 text-white"
@@ -68,6 +109,7 @@
                   Reseller
                 </router-link>
 
+                <!-- Bonus menu -->
                 <Menu as="div" class="" v-if="userPermissions.includes('bonus_menu')">
                   <div>
                     <MenuButton class="">
@@ -246,7 +288,7 @@
       <footer class="bg-gray-800">
         <div class="py-6 px-4 bg-gray-700 md:flex md:items-center md:justify-between">
           <span class="text-sm text-gray-300 sm:text-center">
-            &copy; {{new Date().getFullYear()}} <a href="#" class="hover:underline">SmatFlix</a>.  All Rights Reserved.
+            &copy; {{new Date().getFullYear()}} <a href="#" class="hover:underline">{{ appname }}</a>.  All Rights Reserved.
           </span>
         </div>
       </footer>
@@ -260,18 +302,24 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import AuthLogo from './layouts/AuthLogo.vue'
 import store from '../store'
 
-const appUrl = import.meta.env.VITE_APP_URI
+const appname = import.meta.env.VITE_APP_NAME
 const userPermissions = computed(() => store.state.user.permissions)
 const navigation = [
   { name: 'Dashboard', to: {name: 'Dashboard'}, other: ['Dashboard'], permission: 'dashboard' },
   { name: 'Channels', to: {name: 'Channels'}, other: ['Channels'], permission: 'channels' },
-  { name: 'Videos', to: {name: 'Videos'}, other: ['AiVideoGenerator','Videos'], permission: 'videos' },
-  { name: 'Uploads', to: {name: 'Uploads'}, other: ['Uploads'], permission: 'uploads' },
+  // { name: 'Videos', to: {name: 'Videos'}, other: ['AiVideoGenerator','Videos'], permission: 'videos' },
+  // { name: 'Uploads', to: {name: 'Uploads'}, other: ['Uploads'], permission: 'uploads' },
   { name: 'Live Streams', to: {name: 'LiveStream'}, other: ['LiveStream'], permission: 'live stream' },
   { name: 'Websites', to: {name: 'Website'}, other: ['Website'], permission: 'websites' },
   { name: 'Analytics', to: {name: 'Analytics'}, other: ['Analytics'], permission: 'analytics' },
+]
+const libraryNavigation = [
+  { name: 'Videos', to: {name: 'Videos'} },
+  { name: 'Uploads', to: {name: 'Uploads'} },
+  { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },
@@ -306,6 +354,7 @@ export default {
     BellIcon,
     MenuIcon,
     XIcon,
+    AuthLogo,
   },
   setup() {
     const store = useStore();
@@ -325,9 +374,10 @@ export default {
       navigation,
       userNavigation,
       userManagerNav,
+      libraryNavigation,
       userPermissions,
-      appUrl,
       bonusNav,
+      appname,
       logout
     }
   },

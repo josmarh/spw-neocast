@@ -2,8 +2,8 @@
 <template>
   <div>
     <div>
-      <img class="mx-auto h-12 w-auto" :src="appUrl + '/smatflix-brand-logo.png'" alt="Workflow" />
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Forgot Password</h2>
+      <GuestLogo />
+      <h4 class="mt-6 text-center text-lg font-extrabold text-gray-900">Forgot Password</h4>
       <p class="mt-2 text-center text-sm text-gray-600">
         <!-- Or
         {{ ' ' }}
@@ -72,11 +72,11 @@
 </template>
 
 <script setup>
-import store from '../../store';
 import { ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
+import GuestLogo from '../../components/layouts/GuestLogo.vue';
+import store from '../../store';
 
-const appUrl = import.meta.env.VITE_APP_URI
 const router = useRouter();
 let email = ref('');
 

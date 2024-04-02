@@ -2,9 +2,9 @@
 <template>
   <div>
     <div>
-      <img class="mx-auto h-12 w-auto" :src="appUrl + '/smatflix-brand-logo.png'" alt="Workflow" />
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Reset Password</h2>
-      <p class="mt-2 text-center text-sm text-gray-600"></p>
+        <GuestLogo />
+        <h2 class="mt-6 text-center text-lg font-extrabold text-gray-900">Reset Password</h2>
+        <p class="mt-2 text-center text-sm text-gray-600"></p>
     </div>
     <form class="mt-12 space-y-6" @submit.prevent="resetPassword">
         <div v-if="config.errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
@@ -125,11 +125,11 @@
 </template>
 
 <script setup>
-import store from '../../store';
 import { ref, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import GuestLogo from '../../components/layouts/GuestLogo.vue';
+import store from '../../store';
 
-const appUrl = import.meta.env.VITE_APP_URI
 const route = useRoute();
 const router = useRouter();
 
