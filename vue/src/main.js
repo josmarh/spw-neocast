@@ -14,8 +14,13 @@ import "vue3-colorpicker/style.css";
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faRobot, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons'
-library.add( faRobot, faArrowUpFromBracket )
+import { faCalendarDays, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import { faRobot, faArrowUpFromBracket, faDownload, faCode, faPen,
+    faVideo 
+} from '@fortawesome/free-solid-svg-icons'
+library.add( faRobot, faArrowUpFromBracket, faCalendarDays, faTrashCan, 
+    faDownload, faCode, faPen, faVideo 
+    )
 
 const options = {
     color: "#0E9F6E",

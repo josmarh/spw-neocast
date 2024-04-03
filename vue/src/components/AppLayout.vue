@@ -300,7 +300,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AuthLogo from './layouts/AuthLogo.vue'
 import store from '../store'
@@ -319,7 +319,7 @@ const navigation = [
 const libraryNavigation = [
   { name: 'Videos', to: {name: 'Videos'} },
   { name: 'Uploads', to: {name: 'Uploads'} },
-  { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
+  // { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },
@@ -360,6 +360,10 @@ export default {
     const store = useStore();
     const router = useRouter();
 
+    onMounted(() => {
+      store.dispatch('getChannelList')
+    })
+
     function logout() {
       store.dispatch('logout')
       .then(() => {
@@ -381,5 +385,6 @@ export default {
       logout
     }
   },
+  
 }
 </script>
