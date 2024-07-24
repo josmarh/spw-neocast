@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timezones', function (Blueprint $table) {
+        Schema::create('iptv_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('country_code', 2);
-            $table->string('country_name');
-            $table->string('time_zone');
-            $table->string('gmt_offset', 15);
-            $table->string('timezone_link');
+            $table->string('category');
+            $table->bigInteger('channels')->default(0);
+            $table->string('playlist');
+            $table->string('thumbnail')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('timezones');
+        Schema::dropIfExists('iptv_categories');
     }
 };
