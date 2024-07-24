@@ -357,14 +357,14 @@
                                 </span>
                             </div>
                             <!-- Schedule -->
-                            <div class="rounded-full transition-color cursor-pointer 
+                            <!-- <div class="rounded-full transition-color cursor-pointer 
                                 bg-[rgb(88,80,236)] hover:bg-gray-900 px-2 py-1 tooltip"
                                 @click.prevent="setContentItems(cont)">
                                 <span class="text-white">
                                     <span class="tooltiptext">Schedule</span>
                                     <font-awesome-icon icon="fa-regular fa-calendar-days" />
                                 </span>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- tags section -->
                         <div class="flex mt-2">
