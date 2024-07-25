@@ -7,7 +7,7 @@
                 <VideoList :data="ytubeVideos.items" @saveVideo="saveVideo"/>
             </div>
             <div :class="[currentView === 'iptv' ? 'block':'hidden']">
-                <Iptv/>
+                <Iptv :data="iptvChannels.data" :meta="iptvChannels.meta"/>
             </div>
         </page-component>
     </div>
@@ -25,6 +25,7 @@ import store from '../store';
 
 const internalInstance = getCurrentInstance();
 const ytubeVideos = computed(() => ytubeStore.state.videos)
+const iptvChannels = computed(() => ytubeStore.state.iptvChannels)
 
 let currentView = ref('youtube')
 
@@ -104,6 +105,7 @@ function saveVideo(videoId, videoTitle) {
 
 onMounted(() => {
     getTrendingVideos();
+    ytubeStore.dispatch('getIptvChannels')
 })
 
 </script>
