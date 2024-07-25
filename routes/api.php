@@ -15,6 +15,7 @@ use App\Http\Controllers\UserManagerController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\YTubeController;
 use App\Http\Controllers\AuthResellerController;
+use App\Http\Controllers\IptvController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('video/ytube/trending', [YTubeController::class, 'index']);
     Route::get('video/ytube/search/{videoId}', [YTubeController::class, 'search']);
     Route::post('video/ytube/add', [YTubeController::class, 'saveVideo']);
+
+    Route::get('video/iptv/channels', [IptvController::class, 'index']);
+    Route::get('video/iptv/categories', [IptvController::class, 'getIptvCategory']);
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);

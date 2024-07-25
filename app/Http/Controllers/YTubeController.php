@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use App\YtubeService;
 use App\Jobs\YoutubeToMP4;
 use App\Helpers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use URL;
 
 class YTubeController extends Controller
@@ -77,6 +77,4 @@ class YTubeController extends Controller
             'message' => 'Your video would be added to your collections shortly.'
         ]);
     }
-
-    
 }
