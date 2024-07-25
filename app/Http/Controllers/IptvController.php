@@ -14,10 +14,19 @@ class IptvController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $channels = IptvChannel::join('iptv_streams','iptv_streams.channel','=','iptv_channels.channel_id')
-            ->paginate(20);
+        $category = $request->query('category');
+
+        if($category){
+            $channels = IptvChannel::join('iptv_streams','iptv_streams.channel','=','iptv_channels.channel_id')
+                ->where('iptv_channels.categories','like','%'.$category.'%')
+                ->paginate(20)
+                ->withQueryString();
+        }else{
+            $channels = IptvChannel::join('iptv_streams','iptv_streams.channel','=','iptv_channels.channel_id')
+                ->paginate(20);
+        }
         return IptvChannelResource::collection($channels);
     }
 

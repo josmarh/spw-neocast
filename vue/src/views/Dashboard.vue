@@ -7,7 +7,12 @@
                 <VideoList :data="ytubeVideos.items" @saveVideo="saveVideo"/>
             </div>
             <div :class="[currentView === 'iptv' ? 'block':'hidden']">
-                <Iptv :data="iptvChannels.data" :meta="iptvChannels.meta"/>
+                <Iptv 
+                :data="iptvChannels.data"
+                :meta="iptvChannels.meta"
+                :categories="iptvCategories.data"
+                @paginate="paginateIptvChannel"
+                @categoryFilter="iptvCategoryFilter"/>
             </div>
         </page-component>
     </div>
@@ -26,6 +31,7 @@ import store from '../store';
 const internalInstance = getCurrentInstance();
 const ytubeVideos = computed(() => ytubeStore.state.videos)
 const iptvChannels = computed(() => ytubeStore.state.iptvChannels)
+const iptvCategories = computed(() => ytubeStore.state.iptvCategories)
 
 let currentView = ref('youtube')
 
@@ -103,9 +109,32 @@ function saveVideo(videoId, videoTitle) {
         })
 }
 
+function iptvCategoryFilter(category){
+    ytubeStore
+        .dispatch('filterIptvChannelCategory', {category: category})
+        .then(() => {})
+        .catch(err => {
+            if(err.response) {
+                if (err.response.data) {
+                    if (err.response.data.hasOwnProperty("message")) {
+                        store.dispatch("setErrorNotification", err.response.data.message);
+                    } else {
+                        store.dispatch("setErrorNotification", err.response.data.error);
+                    }
+                }
+            }
+        })
+}
+
+function paginateIptvChannel(url){
+    ytubeStore.dispatch("getIptvChannels", url)
+    window.scroll(0,0)
+}
+
 onMounted(() => {
     getTrendingVideos();
     ytubeStore.dispatch('getIptvChannels')
+    ytubeStore.dispatch('getIptvCategories')
 })
 
 </script>

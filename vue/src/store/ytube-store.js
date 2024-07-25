@@ -47,14 +47,22 @@ const ytubeStore = createStore({
                 })
         },
         getIptvCategories({ commit }) {
-            return axiosClient.get(`video/iptv/categories`)
+            return axiosClient.get(`/video/iptv/categories`)
                 .then(({data}) => {
                     commit('setIptvCategories', data)
                     return data;
                 })
         },
-        getIptvChannels({ commit }) {
-            return axiosClient.get(`video/iptv/channels`)
+        getIptvChannels({ commit }, {url = null} = {}) {
+            url = url || '/video/iptv/channels'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setIptvChannels', data)
+                    return data;
+                })
+        },
+        filterIptvChannelCategory({ commit }, filter) {
+            return axiosClient.get(`/video/iptv/channels?category=${filter.category}`)
                 .then(({data}) => {
                     commit('setIptvChannels', data)
                     return data;
