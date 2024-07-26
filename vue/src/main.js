@@ -9,6 +9,8 @@ import './index.css';
 import 'flowbite';
 import 'vue-plyr/dist/vue-plyr.css';
 import "vue3-colorpicker/style.css";
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 // import "./assets/custom-tailwind.css"
 
 /* import the fontawesome core */
@@ -16,11 +18,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCalendarDays, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faRobot, faArrowUpFromBracket, faDownload, faCode, faPen,
-    faVideo 
+    faVideo, faLink, faTv
 } from '@fortawesome/free-solid-svg-icons'
 library.add( faRobot, faArrowUpFromBracket, faCalendarDays, faTrashCan, 
-    faDownload, faCode, faPen, faVideo 
-    )
+    faDownload, faCode, faPen, faVideo, faLink, faTv
+)
 
 const options = {
     color: "#0E9F6E",
@@ -45,4 +47,5 @@ createApp(App)
     .use(router)
     .use(store)
     .use(Vue3ColorPicker)
+    .use(ElementPlus)
     .mount('#app')

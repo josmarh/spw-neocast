@@ -6,6 +6,7 @@
             bg-transparent border-0 border-b-2 border-gray-300
             appearance-none dark:text-gray-400 dark:border-gray-600
             focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+            <option value="">All</option>
             <option v-for="(item, i) in categories" :key="i" :value="item.category">
                 {{ item.category }}
             </option>
@@ -27,10 +28,48 @@
                 </a>
                 <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 flex flex-warp gap-2">
                     <span v-for="(cat, i) in item.categories" :key="i"
-                    class="capitalize inline-flex items-center rounded-md bg-purple-50 px-2 py-1 text-xs font-medium text-purple-700 ring-1 ring-inset ring-purple-700/10">
+                    class="capitalize inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                         {{cat}}
                     </span>
                 </p>
+                <div class="flex gap-2">
+                    <el-tooltip
+                    class="box-item"
+                    effect="dark"
+                    :content="copyText"
+                    placement="top">
+                        <button
+                            class="inline-flex items-center px-3 
+                            py-2 text-sm font-medium text-center 
+                            text-white bg-blue-700 
+                            hover:bg-blue-800 focus:ring-0 
+                            focus:outline-none focus:ring-blue-300 
+                            dark:bg-blue-600 dark:hover:bg-blue-700 
+                            dark:focus:ring-blue-800"
+                            @click="getStreamLink(item.stream.url)">
+                            <font-awesome-icon icon="fa-solid fa-link" class="mr-1"/>
+                            Stream link
+                        </button>
+                    </el-tooltip>
+                    <el-tooltip
+                    class="box-item"
+                    effect="dark"
+                    content="Stream"
+                    placement="top">
+                        <button
+                            class="inline-flex items-center px-3 
+                            py-2 text-sm font-medium text-center 
+                            text-white bg-blue-700 
+                            hover:bg-blue-800 focus:ring-0 
+                            focus:outline-none focus:ring-blue-300 
+                            dark:bg-blue-600 dark:hover:bg-blue-700 
+                            dark:focus:ring-blue-800"
+                            @click="watchTv(item.stream.url, item.name)">
+                            <font-awesome-icon icon="fa-solid fa-tv" class="mr-1"/>
+                            Watch
+                        </button>
+                    </el-tooltip>
+                </div>
             </div>
         </div>
     </div>
@@ -58,10 +97,16 @@
         </a>
         </nav>
     </div>
+    <PreviewLiveTv 
+    :streamLink="streamLink" 
+    :channelName="channelName"
+    :openPreview="openPreview"
+    @updateOpenPreview="updateOpenPreview"/>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
+import PreviewLiveTv from './PreviewLiveTv.vue';
 
 const props = defineProps({
     data: Array,
@@ -70,20 +115,69 @@ const props = defineProps({
 })
 const emit = defineEmits(['paginate','categoryFilter'])
 const categoryFilter = ref('')
+let copyText = ref('Copy')
+let streamLink = ref('')
+let channelName = ref('')
+let openPreview = ref(false)
 
 watch(categoryFilter, (newVal,oldVal) => {
     emit('categoryFilter', newVal)
 })
 
-const paginate = (ev,link) => {
+function paginate(ev,link){
     ev.preventDefault();
     if(!link.url || link.active) {
         return;
     }
     emit("paginate", {url: link.url})
 }
+
+function getStreamLink(data){
+    navigator.clipboard.writeText(data);
+    copyText.value = 'Copied'
+    setTimeout(() => copyText.value = 'Copy',700)
+}
+
+function watchTv(channelLink, name){
+    streamLink.value = channelLink
+    channelName.value = name
+    openPreview.value = true
+}
+
+function updateOpenPreview(state){
+    openPreview.value = state
+}
 </script>
 
-<style>
-
+<style scoped>
+.tooltip .tooltiptext {
+  visibility: hidden;
+  min-width: 40px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 160%;
+  margin-left: -68px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
 </style>

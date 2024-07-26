@@ -32,7 +32,7 @@ class IptvController extends Controller
 
     public function getIptvCategory()
     {
-        return IptvCategoryResource::collection(IptvCategory::all());
+        return IptvCategoryResource::collection(IptvCategory::whereNotIn('category',['XXX','Undefined'])->get());
     }
 
     /**
