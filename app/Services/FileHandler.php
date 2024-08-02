@@ -30,6 +30,23 @@ class FileHandler
         ];
     }
 
+    public static function saveFromUrl($file, $dir, $filename)
+    {
+        try {
+            $absolutePath = public_path($dir);
+            $relativePath = $dir . $filename;
+            if (!File::exists($absolutePath)) {
+                File::makeDirectory($absolutePath, 0755, true);
+            }
+            $file = file_get_contents($file);
+            file_put_contents($relativePath, $file);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        return $relativePath;
+    }
+
     public function deleteFile()
     {
 

@@ -16,12 +16,14 @@ import 'element-plus/dist/index.css'
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faCalendarDays, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import { faCalendarDays, faLightbulb, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faRobot, faArrowUpFromBracket, faDownload, faCode, faPen,
-    faVideo, faLink, faTv
+    faVideo, faLink, faTv, faCircleExclamation, faLightbulb as SolidLightbulb,
+    faArrowRight, faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
 library.add( faRobot, faArrowUpFromBracket, faCalendarDays, faTrashCan, 
-    faDownload, faCode, faPen, faVideo, faLink, faTv
+    faDownload, faCode, faPen, faVideo, faLink, faTv, faCircleExclamation, 
+    faLightbulb, SolidLightbulb, faArrowRight, faArrowLeft
 )
 
 const options = {

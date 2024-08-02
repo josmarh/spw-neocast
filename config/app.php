@@ -30,6 +30,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'video_generator_provider' => env('VIDEO_GENERATOR_PROVIDER'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

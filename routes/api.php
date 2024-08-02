@@ -16,6 +16,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\YTubeController;
 use App\Http\Controllers\AuthResellerController;
 use App\Http\Controllers\IptvController;
+use App\Http\Controllers\AiVideoGeneratorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,11 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('video/iptv/channels', [IptvController::class, 'index']);
     Route::get('video/iptv/categories', [IptvController::class, 'getIptvCategory']);
+
+    Route::post('video/ai/content', [AiVideoGeneratorController::class, 'generateAiScript']);
+    Route::get('video/ai/actors', [AiVideoGeneratorController::class, 'getAiActors']);
+    Route::post('video/ai/generate-video', [AiVideoGeneratorController::class, 'generateAiVideo']);
+    Route::get('video/ai/video-status', [AiVideoGeneratorController::class, 'checkAiVideoStatus']);
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);

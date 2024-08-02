@@ -47,6 +47,16 @@ class Helpers
         return 'video_thumbnail/'.$thumbnail;
     }
 
+    public function size()
+    {
+
+    }
+
+    public function mimetype()
+    {
+        
+    }
+
     public function convertm3u8($file)
     {
         $dir = 'uploads/';

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('upload_types', ['hosted video', 'external links'])->after('vhash')->nullable();
             $table->string('thumbnail', 100)->after('upload_types')->nullable();
             $table->integer('duration_seconds')->after('media_length')->nullable();
+            $table->string('ai_video')->after('thumbnail')->nullable();
         });
     }
 

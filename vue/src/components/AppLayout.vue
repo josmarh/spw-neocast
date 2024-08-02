@@ -319,7 +319,7 @@ const navigation = [
 const libraryNavigation = [
   { name: 'Videos', to: {name: 'Videos'} },
   { name: 'Uploads', to: {name: 'Uploads'} },
-  // { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
+  { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
 ]
 const userNavigation = [
   { name: 'Your Profile', to: {name: 'Profile'} },
