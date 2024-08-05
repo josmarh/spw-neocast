@@ -5,6 +5,7 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\IPNController;
 use App\Http\Controllers\WPlusController;
 use App\Http\Controllers\HookerController;
+use App\Http\Controllers\ArticleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('terms', [ArticleController::class, 'terms']);
 Route::get('channel/{chash}', [ChannelController::class, 'roku']);
 Route::post('media/webhook', [HookerController::class, 'webhook'])->name('media.webhook');
 Route::post('ipn/jvzoo', [IPNController::class, 'JVZoo'])->name('jvzoo');

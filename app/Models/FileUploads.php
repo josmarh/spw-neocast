@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\ChannelPlaylist;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class FileUploads extends Model
 {
@@ -24,6 +24,8 @@ class FileUploads extends Model
         'user_id',
         'vhash',
         'thumbnail',
+        'ai_video',
+        'ai_video_status'
     ];
 
     public function users()

@@ -8,7 +8,7 @@
             :class="{'relative -translate-x-0' : showSidebar}">
             <a href="#" class="flex items-center justify-center">
                 <div class="flex-shrink-0">
-                    <img class="h-8 " src="/neocast-brand-logo.png" alt="Workflow" />
+                    <img class="h-8 " :src="appUrl + '/smatflix-brand-logo.png'" alt="Workflow" />
                 </div>
                 <!-- <span class="text-1xl font-extrabold text-bl ml-3">TubeAdsInsights</span> -->
             </a>
@@ -48,6 +48,7 @@
 <script>
 import { ref } from 'vue';
 
+const appUrl = import.meta.env.VITE_APP_URI
 const navigation = [
     // { name: 'Getting Started', href: '2-App-TV'},
     { name: 'TV App', href: '1-App-TV'},
@@ -60,7 +61,8 @@ export default {
 
         return {
             showSidebar,
-            navigation
+            navigation,
+            appUrl
         }
     }
 }

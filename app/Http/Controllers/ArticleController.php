@@ -79,4 +79,9 @@ class ArticleController extends Controller
             'data' => new ArticleResource($article)
         ]);
     }
+
+    public function terms()
+    {
+        return view('terms');
+    }
 }

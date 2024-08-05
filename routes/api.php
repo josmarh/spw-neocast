@@ -15,6 +15,9 @@ use App\Http\Controllers\UserManagerController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\YTubeController;
 use App\Http\Controllers\AuthResellerController;
+use App\Http\Controllers\IptvController;
+use App\Http\Controllers\AiVideoGeneratorController;
+use App\Http\Controllers\VideoScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +38,24 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('video/ytube/trending', [YTubeController::class, 'index']);
     Route::get('video/ytube/search/{videoId}', [YTubeController::class, 'search']);
     Route::post('video/ytube/add', [YTubeController::class, 'saveVideo']);
+
+    Route::get('video/iptv/channels', [IptvController::class, 'index']);
+    Route::get('video/iptv/categories', [IptvController::class, 'getIptvCategory']);
+
+    Route::post('video/ai/content', [AiVideoGeneratorController::class, 'generateAiScript']);
+    Route::get('video/ai/languages', [AiVideoGeneratorController::class, 'pipioVideoLanguage']);
+    Route::get('video/ai/script', [AiVideoGeneratorController::class, 'lastVideoScript']);
+    Route::get('video/ai/actors', [AiVideoGeneratorController::class, 'getAiActors']);
+    Route::post('video/ai/generate-video', [AiVideoGeneratorController::class, 'generateAiVideo']);
+    Route::get('video/ai/video-status/{videoId}', [AiVideoGeneratorController::class, 'checkAiVideoStatus']);
+    Route::get('video/ai/save-status/{videoId}', [AiVideoGeneratorController::class, 'checkAiVideoSaveStatus']);
+
+    Route::get('timezones', [VideoScheduleController::class, 'timezones']);
+    Route::get('channel/select', [ChannelController::class, 'selectList']);
+    Route::get('video/select', [VideoController::class, 'selectList']);
+
+    Route::post('schedule/store', [VideoScheduleController::class, 'store']);
+    Route::get('video/schedules', [VideoScheduleController::class, 'index']);
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);

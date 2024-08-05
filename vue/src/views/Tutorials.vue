@@ -33,15 +33,15 @@ import { Fancybox, Carousel, Panzoom } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox.css";
 
 const videos = [
-    {label:'Add Video', imgSrc:'https://i.vimeocdn.com/video/1642142356-ab0203a7c12a1fb1edc6d18084286a51fb071db4b67490cd5e8eff5bab0672a8-d_236x133', href:'https://vimeo.com/812185811'},
-    {label:'Ondemand Channel', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/812188214'},
-    {label:'Linear Channel', imgSrc:'https://i.vimeocdn.com/video/1642146032-04460ef3f52fa5f9e787ebcfcde5e021cdd7274d95c92ee0178f419a5b009a9d-d_236x133', href:'https://vimeo.com/812187671'},
-    {label:'Live Stream', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/813597810'},
+    {label:'Add Video', imgSrc:'https://i.vimeocdn.com/video/1726557798-7e299ed5a076012bfdba7b577756266c3d609583f0c252af103b099e929e8ee3-d_236x133', href:'https://vimeo.com/866327918'},
+    {label:'Ondemand Channel', imgSrc:'https://i.vimeocdn.com/video/1726559505-946dba20e8a1a52b4fd3b13b7592831135feeacc4132efadccc21be8fe0de5de-d_236x133', href:'https://vimeo.com/866329340'},
+    {label:'Linear Channel', imgSrc:'https://i.vimeocdn.com/video/1726560829-98592a245ec9200c45f89d2e360691d1ad200c6cbf7ae538d7a4676128767934-d_236x133', href:'https://vimeo.com/866329030'},
+    {label:'Live Stream', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/866329278'},
     {label:'Live Stream OBS Setup', imgSrc:'https://i.vimeocdn.com/video/1645364963-dd1b9a1b5e49410756f5b862f8bd0482bff79b6cc1b4a8f30f9cc3bacc986776-d_236x133', href:'https://vimeo.com/813598333'},
-    {label:'Website', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/812188776'},
-    {label:'Publish on Roku', imgSrc:'https://i.vimeocdn.com/video/1643109999-795068c41f06fe17b9786592f22c8bbc18805249ba7e5490a08b39a1de210caa-d_236x133', href:'https://vimeo.com/812619591'},
-    {label:'Publish on Amazon FireTv', imgSrc:'https://i.vimeocdn.com/video/1643121500-89346cbd872c8efa7382bdeea97608ef14bc39a1549dfc12d1ff92ab4e431388-d_236x133', href:'https://vimeo.com/812624131'},
-    {label:'Channel Ads Monetization', imgSrc:'https://i.vimeocdn.com/video/1643108362-3e255867f3ac56e4b19112a4922be464375b6a4018d31afc988b5d8d9310f2d5-d_236x133', href:'https://vimeo.com/812619002'},
+    {label:'Website', imgSrc:'https://i.vimeocdn.com/video/1726559505-946dba20e8a1a52b4fd3b13b7592831135feeacc4132efadccc21be8fe0de5de-d_236x133', href:'https://vimeo.com/866329434'},
+    // {label:'Publish on Roku', imgSrc:'https://i.vimeocdn.com/video/1643109999-795068c41f06fe17b9786592f22c8bbc18805249ba7e5490a08b39a1de210caa-d_236x133', href:'https://vimeo.com/'},
+    // {label:'Publish on Amazon FireTv', imgSrc:'https://i.vimeocdn.com/video/1643121500-89346cbd872c8efa7382bdeea97608ef14bc39a1549dfc12d1ff92ab4e431388-d_236x133', href:'https://vimeo.com/'},
+    {label:'Channel Ads Monetization', imgSrc:'https://i.vimeocdn.com/video/1726557798-7e299ed5a076012bfdba7b577756266c3d609583f0c252af103b099e929e8ee3-d_236x133', href:'https://vimeo.com/866329000'},
     {label:'Generate Video Ads Tag', imgSrc:'/ads_tag.png', href:'https://www.youtube.com/watch?v=ICh-g5w8yzY'}
 ]
 </script>

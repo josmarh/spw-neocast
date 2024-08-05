@@ -10,7 +10,7 @@
                         Thank you for your patronage.
                     </p>
                     <p class="font-normal text-gray-700 dark:text-gray-400 mt-4">
-                        Kindly provide us with your login details to NeoCast to enable us setup everything for you. Send the details here 
+                        Kindly provide us with your login details to SmatFlix to enable us setup everything for you. Send the details here 
                         <a href="mailto:support@supremewebcustomercare.freshdesk.com"
                             class="text-indigo-500 underline">
                             Support desk

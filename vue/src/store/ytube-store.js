@@ -11,6 +11,14 @@ const ytubeStore = createStore({
             pageInfo: {},
             items: []
         },
+        iptvCategories: {
+            data: []
+        },
+        iptvChannels: {
+            data: [],
+            meta: {},
+            links: {}
+        },
     },
     getters: {},
     actions: {
@@ -38,10 +46,38 @@ const ytubeStore = createStore({
                     return data;
                 })
         },
+        getIptvCategories({ commit }) {
+            return axiosClient.get(`/video/iptv/categories`)
+                .then(({data}) => {
+                    commit('setIptvCategories', data)
+                    return data;
+                })
+        },
+        getIptvChannels({ commit }, {url = null} = {}) {
+            url = url || '/video/iptv/channels'
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setIptvChannels', data)
+                    return data;
+                })
+        },
+        filterIptvChannelCategory({ commit }, filter) {
+            return axiosClient.get(`/video/iptv/channels?category=${filter.category}`)
+                .then(({data}) => {
+                    commit('setIptvChannels', data)
+                    return data;
+                })
+        },
     },
     mutations: {
         setVideos: (state, data) => {
             state.videos = data;
+        },
+        setIptvCategories: (state, data) => {
+            state.iptvCategories = data;
+        },
+        setIptvChannels: (state, data) => {
+            state.iptvChannels = data;
         },
     },
     modules: {}

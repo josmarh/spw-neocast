@@ -9,27 +9,46 @@ import './index.css';
 import 'flowbite';
 import 'vue-plyr/dist/vue-plyr.css';
 import "vue3-colorpicker/style.css";
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+// import "./assets/custom-tailwind.css"
+
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faCalendarDays, faLightbulb, faTrashCan } from '@fortawesome/free-regular-svg-icons'
+import { faRobot, faArrowUpFromBracket, faDownload, faCode, faPen,
+    faVideo, faLink, faTv, faCircleExclamation, faLightbulb as SolidLightbulb,
+    faArrowRight, faArrowLeft, faPlus, faTrash, faClock, faCircleCheck
+} from '@fortawesome/free-solid-svg-icons'
+library.add( faRobot, faArrowUpFromBracket, faCalendarDays, faTrashCan, 
+    faDownload, faCode, faPen, faVideo, faLink, faTv, faCircleExclamation, 
+    faLightbulb, SolidLightbulb, faArrowRight, faArrowLeft, faPlus, faTrash,
+    faClock, faCircleCheck
+)
 
 const options = {
-  color: "#0E9F6E",
-  failedColor: "red",
-  thickness: "5px",
-  transition: {
-    speed: "0.2s",
-    opacity: "0.6s",
-    termination: 300,
-  },
-  autoRevert: true,
-  location: "top",
-  inverse: false,
+    color: "#0E9F6E",
+    failedColor: "red",
+    thickness: "3px",
+    transition: {
+        speed: "0.2s",
+        opacity: "0.6s",
+        termination: 300,
+    },
+    autoRevert: true,
+    location: "top",
+    inverse: false,
 };
 
 createApp(App)
-  .use(VuePlyr, {
-    plyr: {}
-  })
-  .use(VueProgressBar, options)
-  .use(router)
-  .use(store)
-  .use(Vue3ColorPicker)
-  .mount('#app')
+    .component('font-awesome-icon', FontAwesomeIcon)
+    .use(VuePlyr, {
+        plyr: {}
+    })
+    .use(VueProgressBar, options)
+    .use(router)
+    .use(store)
+    .use(Vue3ColorPicker)
+    .use(ElementPlus)
+    .mount('#app')

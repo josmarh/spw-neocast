@@ -38,4 +38,15 @@ return [
         'm3u8_converter_api' => env('M3U8_CONVERTER_API')
     ],
 
+    'pipio' => [
+        'key' => env('PIPIO_APIKEY'),
+        'video_url' => env('PIPIO_VIDEO_URL'),
+        'asset_url' => env('PIPIO_ASSETS_URL')
+    ],
+
+    'openai' => [
+        'api' => env('OPENAI_API'),
+        'token' => env('OPENAI_TOKEN')
+    ],
+
 ];

@@ -59,6 +59,14 @@ class VideoController extends Controller
         return ContentResource::collection($getContents);
     }
 
+    public function selectList(Request $request)
+    {
+        $user = $request->user();
+        return FileUploads::select('id','file_name')
+            ->where('user_id', $user->id)
+            ->get();
+    }
+
     public function update(Request $request)
     {
         $id = $request->contentId;

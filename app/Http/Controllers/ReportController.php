@@ -72,7 +72,7 @@ class ReportController extends Controller
             //     ->orderBy(DB::raw('date(created_at)'))
             //     ->pluck('dates','total')
             //     ->all();
-            $data = DB::select(DB::raw("
+            $data = $this->rawQuery("
                 WITH RECURSIVE abc AS
                 (
                     select CAST((select DATE_SUB(current_date, INTERVAL 7 DAY)) as DATE) as dates
@@ -81,10 +81,11 @@ class ReportController extends Controller
                     from abc 
                     where dates < current_date
                 )
-                SELECT date_format(x.created_date, '%a, %b %e') dates, sum(x.views) total FROM (
+                SELECT date_format(x.created_date, '%a, %b %e') dates, sum(x.views) total FROM 
+                (
                     select date(created_at) as created_date, sum(views) as views
                     from channel_reports
-                    where channel_hash = :chash
+                    where channel_hash = '{$chash}'
                     and date(created_at) between DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY) and CURRENT_DATE
                     group by date(created_at)
                     union all
@@ -92,7 +93,7 @@ class ReportController extends Controller
                 ) x
                 group by date(x.created_date)
                 order by date(x.created_date)
-            "), array('chash' => $chash));
+            ");
 
             foreach($data as $date) {
                 array_push($dates, $date->dates);
@@ -126,7 +127,7 @@ class ReportController extends Controller
             // $chart->total = (array_keys($data));
             // $chart->dates = (array_values($data));
 
-            $data = DB::select(DB::raw("
+            $data = $this->rawQuery("
                 WITH RECURSIVE abc AS
                 (
                     select CAST((select DATE_SUB(current_date, INTERVAL 1 MONTH)) as DATE) as dates
@@ -138,14 +139,14 @@ class ReportController extends Controller
                 SELECT date_format(x.created_date, '%b %e') dates, sum(x.views) total FROM (
                     select date(created_at) as created_date, sum(views) as views
                     from channel_reports
-                    where channel_hash= :chash
+                    where channel_hash= '{$chash}'
                     and date(created_at) between DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH) and CURRENT_DATE
                     group by date(created_at)
                     union all
                     select dates, 0 from abc
                 ) x 
                 group by date(x.created_date)
-            "), array('chash' => $chash));
+            ");
 
             foreach($data as $date) {
                 array_push($dates, $date->dates);
@@ -176,7 +177,7 @@ class ReportController extends Controller
             // $chart->total = (array_keys($data));
             // $chart->dates = (array_values($data));
 
-            $data = DB::select(DB::raw("
+            $data = $this->rawQuery("
                 WITH RECURSIVE abc AS
                 (
                     select CAST((select DATE_SUB(current_date, INTERVAL 1 YEAR)) as DATE) as dates
@@ -188,7 +189,7 @@ class ReportController extends Controller
                 SELECT date_format(x.created_date, '%b %y') dates, sum(x.views) total FROM (
                     select date(created_at) as created_date, sum(views) as views
                     from channel_reports
-                    where channel_hash=:chash
+                    where channel_hash='{$chash}'
                     and date(created_at) between DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR) and CURRENT_DATE
                     group by monthname(created_at)
                     union all
@@ -197,7 +198,7 @@ class ReportController extends Controller
                 group by monthname(x.created_date)
                 order by year(x.created_date), 
                 FIELD(monthname(x.created_date), 'January','February','March','April','May','June','July','August','September','October','November','December')
-            "), array('chash' => $chash));
+            ");
 
             foreach($data as $date) {
                 array_push($dates, $date->dates);
