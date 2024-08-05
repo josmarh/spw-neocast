@@ -42,9 +42,12 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('video/iptv/categories', [IptvController::class, 'getIptvCategory']);
 
     Route::post('video/ai/content', [AiVideoGeneratorController::class, 'generateAiScript']);
+    Route::get('video/ai/languages', [AiVideoGeneratorController::class, 'pipioVideoLanguage']);
+    Route::get('video/ai/script', [AiVideoGeneratorController::class, 'lastVideoScript']);
     Route::get('video/ai/actors', [AiVideoGeneratorController::class, 'getAiActors']);
     Route::post('video/ai/generate-video', [AiVideoGeneratorController::class, 'generateAiVideo']);
-    Route::get('video/ai/video-status', [AiVideoGeneratorController::class, 'checkAiVideoStatus']);
+    Route::get('video/ai/video-status/{videoId}', [AiVideoGeneratorController::class, 'checkAiVideoStatus']);
+    Route::get('video/ai/save-status/{videoId}', [AiVideoGeneratorController::class, 'checkAiVideoSaveStatus']);
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);

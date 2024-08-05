@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers;
 use Illuminate\Support\Facades\File;
+use Log;
 
 class FileHandler
 {
@@ -34,16 +35,20 @@ class FileHandler
     {
         try {
             $absolutePath = public_path($dir);
+            $addPath = public_path($dir . $filename);
             $relativePath = $dir . $filename;
+
             if (!File::exists($absolutePath)) {
                 File::makeDirectory($absolutePath, 0755, true);
             }
+            Log::debug('Get file content from url... ');
             $file = file_get_contents($file);
-            file_put_contents($relativePath, $file);
+
+            Log::debug('Add file content from url to path... ');
+            file_put_contents($addPath, $file);
         } catch (\Throwable $th) {
             throw $th;
         }
-
         return $relativePath;
     }
 

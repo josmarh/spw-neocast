@@ -12,6 +12,10 @@ export default createStore({
             prevPage: 0,
             currentPage: 0,
             total: 0
+        },
+        aiVideoLanguages: [],
+        aiVideoScript: {
+            data: {}
         }
     },
     getters: {},
@@ -35,6 +39,20 @@ export default createStore({
                     return data;
                 })
         },
+        getAiVideoLanguages({ commit }){
+            return axiosClient.get(`/video/ai/languages`)
+                .then(({data}) => {
+                    commit('setAiVideoLanguages', data)
+                    return data;
+                })
+        },
+        lastVideoScript({ commit }){
+            return axiosClient.get(`/video/ai/script`)
+                .then(({data}) => {
+                    commit('setAiVideoScript', data)
+                    return data;
+                })
+        },
         getAiActors({ commit }, query){
             return axiosClient.get(`/video/ai/actors`, {
                 params: {
@@ -47,6 +65,24 @@ export default createStore({
                     return data;
                 })
         },
+        generateAiVideo({ }, payload){
+            return axiosClient.post(`/video/ai/generate-video`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        checkAiVideoStatus({ }, videoId){
+            return axiosClient.get(`/video/ai/video-status/${videoId}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        checkVideoSaveStatus({ }, videoId){
+            return axiosClient.get(`/video/ai/save-status/${videoId}`)
+                .then(({data}) => {
+                    return data;
+                })
+        },
     },
     mutations: {
         setVideoSchedule: (state, data) => {
@@ -54,7 +90,13 @@ export default createStore({
         },
         setAiActors: (state, data) => {
             state.aiActors = data
-        }
+        },
+        setAiVideoLanguages: (state, data) => {
+            state.aiVideoLanguages = data
+        },
+        setAiVideoScript: (state, data) => {
+            state.aiVideoScript = data
+        },
     },
     modules: {}
 })

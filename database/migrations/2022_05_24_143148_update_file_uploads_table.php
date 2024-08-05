@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('thumbnail', 100)->after('upload_types')->nullable();
             $table->integer('duration_seconds')->after('media_length')->nullable();
             $table->string('ai_video')->after('thumbnail')->nullable();
+            $table->string('ai_video_status')->after('ai_video')->nullable();
         });
     }
 

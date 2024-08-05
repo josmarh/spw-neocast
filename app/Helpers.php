@@ -24,12 +24,10 @@ class Helpers
             $duration = gmdate("i:s", $durationInSec);
         }
 
-        $durations = [
+        return [
             'duration' => $duration,
             'durationInSec' => $durationInSec,
         ];
-
-        return $durations;
     }
 
     public function generateThumbnail($filePath)
@@ -47,14 +45,14 @@ class Helpers
         return 'video_thumbnail/'.$thumbnail;
     }
 
-    public function size()
+    public function size($file)
     {
-
+        return filesize(public_path($file));
     }
 
-    public function mimetype()
+    public function mimetype($file)
     {
-        
+        return mime_content_type(public_path($file));
     }
 
     public function convertm3u8($file)

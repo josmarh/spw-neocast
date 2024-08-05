@@ -24,7 +24,8 @@ class FileUploads extends Model
         'user_id',
         'vhash',
         'thumbnail',
-        'ai_video'
+        'ai_video',
+        'ai_video_status'
     ];
 
     public function users()

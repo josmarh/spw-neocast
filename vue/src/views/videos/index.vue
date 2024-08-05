@@ -291,19 +291,18 @@
                 <div>
                 <!-- main content display -->
                 <div class="grid xl:grid-cols-4 md:grid-cols-2 xl:grid-gap-3 md:grid-gap-2 place-content-center">
-                    <div v-for="cont in contents.data" :key="cont.id">
-                    <div
+                    <div v-for="(cont,i) in contents.data" :key="i">
+                    <div v-if="cont"
                         class="w-72 bg-white rounded-lg border border-gray-200
                         shadow-md dark:bg-gray-800 dark:border-gray-700 mb-3"
                     >
-                        <span v-if="cont.file_name.includes('.mp3')" style="height: 170px; background-color:gray">
+                        <span v-if="cont.file_name && cont.file_name.includes('.mp3')" style="height: 170px; background-color:gray">
                             <a class="cursor-pointer" @click="playContent(cont)">
                                 <div class="rounded-t-lg bg-gray-900" style="height: 170px;"></div>
                             </a>
                         </span>
                         <span v-else class="flex">
-                            <a :href="cont.file_hash"
-                                class="item-center cursor-pointer" data-fancybox>
+                            <a :href="cont.file_hash" class="item-center cursor-pointer" data-fancybox>
                                 <!-- <video
                                 :src="cont.file_hash"
                                 class="rounded-t-lg"
