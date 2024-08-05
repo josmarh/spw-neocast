@@ -44,6 +44,14 @@ class ChannelController extends Controller
         return ChannelResource::collection($channels);
     }
 
+    public function selectList(Request $request)
+    {
+        $user = $request->user();
+        return Channels::select('id','title','channel_type')
+            ->where('user_id', $user->id)
+            ->get();
+    }
+
     public function store(Request $request)
     {
         $user = $request->user();

@@ -23,7 +23,7 @@
                   </router-link>
                 </div>
 
-                <!-- Library menu -->
+                <!-- Content menu -->
                 <Menu as="div" class="">
                   <div>
                     <MenuButton class="">
@@ -32,7 +32,7 @@
                         active-class="bg-gray-900 text-white"
                         class="text-gray-300 hover:bg-gray-700 hover:text-white 
                         px-3 py-2 rounded-md text-sm font-medium">
-                        Library
+                        Content
                       </div>
                     </MenuButton>
                   </div>
@@ -319,6 +319,7 @@ const navigation = [
 const libraryNavigation = [
   { name: 'Videos', to: {name: 'Videos'} },
   { name: 'Uploads', to: {name: 'Uploads'} },
+  { name: 'Schedule', to: {name: 'ScheduleVideoIndex'} },
   { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
 ]
 const userNavigation = [

@@ -6,30 +6,60 @@
             <!-- upload or import via link section -->
             <div class="w-full mb-10">
                 <!-- <div class="grid xl:grid-cols-5 xl:gap-2"> -->
-                <div class="flex justify-between gap-6 mx-16">
-                    <div class="flex gap-2">
-                        <router-link
-                            :to="{ name: 'Uploads' }"
-                            class="group relative flex justify-center
-                            py-3 px-4 border border-transparent
-                            text-sm font-medium text-white
-                            bg-indigo-600 hover:bg-indigo-700
-                            focus:outline-none w-full">
-                            <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket" class="pr-2 pt-0.5"/> 
-                            Upload Video
-                        </router-link>
-                        <!-- <router-link :to="{name: 'AiVideoGenerator'}"
-                            class="group relative flex justify-center
-                            py-3 px-4 border border-transparent
-                            text-sm font-medium text-white
-                            bg-indigo-600 hover:bg-indigo-700
-                            focus:outline-none w-full">
-                            <font-awesome-icon icon="fa-solid fa-robot" class="pr-2 pt-0.5"/>
-                            Generate Ai Video
-                        </router-link> -->
+                <div class="flex justify-between">
+                    <div class="flex gap-2 w-[20rem]">
+                        <el-tooltip
+                            class="box-item"
+                            effect="dark"
+                            content="Upload content from storage"
+                            placement="top"
+                        >
+                            <router-link
+                                :to="{ name: 'Uploads' }"
+                                class="group relative flex justify-center
+                                py-3 px-2 border border-transparent
+                                text-sm font-medium text-white
+                                bg-indigo-600 hover:bg-indigo-700
+                                focus:outline-none w-full">
+                                Upload content
+                            </router-link>
+                        </el-tooltip>
+                        <el-tooltip
+                            class="box-item"
+                            effect="dark"
+                            content="Generate video with Ai"
+                            placement="top"
+                        >
+                            <router-link :to="{name: 'AiVideoGenerator'}"
+                                class="group relative flex justify-center
+                                py-3 px-2 border border-transparent
+                                text-sm font-medium text-white
+                                bg-indigo-600 hover:bg-indigo-700
+                                focus:outline-none w-full">
+                                AI video
+                            </router-link>
+                        </el-tooltip>
+                        
+                    </div>
+                    <div class="mr-2 w-[10rem]">
+                        <el-tooltip
+                            class="box-item"
+                            effect="dark"
+                            content="Schedule videos to channel"
+                            placement="top"
+                        >
+                            <router-link :to="{name: 'ScheduleVideo'}"
+                                class="group relative flex justify-center
+                                py-3 px-2 border border-transparent
+                                text-sm font-medium text-white
+                                bg-indigo-600 hover:bg-indigo-700
+                                focus:outline-none w-full">
+                                Schedule
+                            </router-link>
+                        </el-tooltip>
                     </div>
                     <!-- <div class="py-3 px-16">or</div> -->
-                    <div class="flex w-96">
+                    <!-- <div class="flex w-full">
                         <div class="w-full">
                             <div class="relative z-0">
                             <input
@@ -76,7 +106,7 @@
                             Add Video URL
                             </button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- filter contents section -->

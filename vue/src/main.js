@@ -19,11 +19,12 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faCalendarDays, faLightbulb, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faRobot, faArrowUpFromBracket, faDownload, faCode, faPen,
     faVideo, faLink, faTv, faCircleExclamation, faLightbulb as SolidLightbulb,
-    faArrowRight, faArrowLeft
+    faArrowRight, faArrowLeft, faPlus, faTrash, faClock, faCircleCheck
 } from '@fortawesome/free-solid-svg-icons'
 library.add( faRobot, faArrowUpFromBracket, faCalendarDays, faTrashCan, 
     faDownload, faCode, faPen, faVideo, faLink, faTv, faCircleExclamation, 
-    faLightbulb, SolidLightbulb, faArrowRight, faArrowLeft
+    faLightbulb, SolidLightbulb, faArrowRight, faArrowLeft, faPlus, faTrash,
+    faClock, faCircleCheck
 )
 
 const options = {

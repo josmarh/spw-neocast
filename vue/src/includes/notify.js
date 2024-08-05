@@ -23,6 +23,13 @@ const notifyError = err => {
     return message;
 }
 
+const notifyError2 = message => {
+    store.dispatch("setErrorNotification", message);
+    setTimeout(() => {
+        store.dispatch("setErrorNotification", "");
+    }, 5000);
+}
+
 const notifySuccess = message => {
     store.dispatch("setSuccessNotification", message);
     setTimeout(() => {
@@ -31,6 +38,7 @@ const notifySuccess = message => {
 }
 
 export default { 
-    notifyError, 
+    notifyError,
+    notifyError2,
     notifySuccess 
 }

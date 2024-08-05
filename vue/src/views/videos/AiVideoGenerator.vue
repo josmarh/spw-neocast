@@ -1,5 +1,5 @@
 <template>
-    <PageComponent title="Ai Video Generator" >
+    <PageComponent title="Ai Video Generator">
         <NotificationCard/>
         <div class="ml-[26rem]" style="">
             <form @submit.prevent="generateVideoScript" class="">

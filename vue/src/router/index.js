@@ -50,6 +50,8 @@ import DfyCampaign from '../views/bonus/DfyCampaign.vue'
 import DfyTraffic from '../views/bonus/DfyTraffic.vue'
 import ResellerRegister from '../views/auth/Reseller.vue'
 import AiVideoGenerator from '../views/videos/AiVideoGenerator.vue'
+import ScheduleVideo from '../views/videos/ScheduleVideo.vue'
+import ScheduleVideoIndex from '../views/videos/ScheduleVideoIndex.vue'
 import store from "../store"
 
 const routes = [
@@ -81,9 +83,11 @@ const routes = [
             {path: '/create-channel/scheduled', name: 'Scheduled', component: Scheduled},
             {path: '/create-channel/ondemand', name: 'Ondemand', component: Ondemand},
             {path: '/edit-channel/:hash', name: 'EditChannel', component: EditChannel},
-            {path: '/contents', name: 'Videos', component: Videos},
-            {path: '/uploads', name: 'Uploads', component: Uploads},
-            {path: '/ai-video-generator', name: 'AiVideoGenerator', component: AiVideoGenerator},
+            {path: 'contents', name: 'Videos', component: Videos},
+            {path: 'content/uploads', name: 'Uploads', component: Uploads},
+            {path: 'content/video-generator', name: 'AiVideoGenerator', component: AiVideoGenerator},
+            {path: 'content/schedule', name: 'ScheduleVideo', component: ScheduleVideo},
+            {path: 'content/schedules', name: 'ScheduleVideoIndex', component: ScheduleVideoIndex},
             {path: '/livestream', name: 'LiveStream', component: LiveStream},
             {path: '/livestream/:hash', name: 'LiveStreamEdit', component: LiveStreamEdit},
             {path: '/website', name: 'Website', component: Website},

@@ -16,6 +16,14 @@ export default createStore({
         aiVideoLanguages: [],
         aiVideoScript: {
             data: {}
+        },
+        timezones: [],
+        channels: [],
+        videos: [],
+        videoSchedules: {
+            data: [],
+            meta: {},
+            links: {}
         }
     },
     getters: {},
@@ -83,6 +91,47 @@ export default createStore({
                     return data;
                 })
         },
+        getTimezones({ commit }){
+            return axiosClient.get(`/timezones`)
+                .then(({data}) => {
+                    commit('setTimezones', data)
+                    return data;
+                })
+        },
+        getChannelSelect({ commit }){
+            return axiosClient.get(`/channel/select`)
+                .then(({data}) => {
+                    commit('setChannels', data)
+                    return data;
+                })
+        },
+        getVideoSelect({ commit }){
+            return axiosClient.get(`/video/select`)
+                .then(({data}) => {
+                    commit('setVideos', data)
+                    return data;
+                })
+        },
+        storeSchedule({}, payload){
+            return axiosClient.post(`/schedule/store`, payload)
+                .then(({data}) => {
+                    return data;
+                })
+        },
+        getVideoSchedules({ commit }){
+            return axiosClient.get(`/video/schedules`)
+                .then(({data}) => {
+                    commit('setVideoSchedules', data)
+                    return data;
+                })
+        },
+        paginateVideoSchedule({ commit }, url){
+            return axiosClient.get(url)
+                .then(({data}) => {
+                    commit('setVideoSchedules', data)
+                    return data;
+                })
+        }
     },
     mutations: {
         setVideoSchedule: (state, data) => {
@@ -97,6 +146,18 @@ export default createStore({
         setAiVideoScript: (state, data) => {
             state.aiVideoScript = data
         },
+        setTimezones: (state, data) => {
+            state.timezones = data
+        },
+        setChannels: (state, data) => {
+            state.channels = data
+        },
+        setVideos: (state, data) => {
+            state.videos = data
+        },
+        setVideoSchedules: (state, data) => {
+            state.videoSchedules = data
+        }
     },
     modules: {}
 })
