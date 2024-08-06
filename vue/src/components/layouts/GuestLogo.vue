@@ -1,5 +1,5 @@
 <template>
-    <img class="mx-auto h-20" :src="appUrl + '/mystreambuzz-Logo-2-dark.png'" alt="brand-logo" />
+    <img class="mx-auto h-20" :src="appUrl + '/TVEngager-Logo-Main.png'" alt="brand-logo" />
 </template>
 
 <script setup>

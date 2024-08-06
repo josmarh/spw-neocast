@@ -49,9 +49,10 @@ class VideoController extends Controller
                 $contents = $content->where('file_hash', 'uploads/'.$videoInfo);
             }
 
-            $getContents = $contents->paginate(12);
+            $getContents = $contents->whereNotNull('file_hash')->paginate(12);
         }else {
             $getContents = FileUploads::where('user_id', $user->id)
+                ->whereNotNull('file_name')
                 ->orderBy('created_at', 'desc')
                 ->paginate(12);
         }     
@@ -64,6 +65,7 @@ class VideoController extends Controller
         $user = $request->user();
         return FileUploads::select('id','file_name')
             ->where('user_id', $user->id)
+            ->whereNotNull('file_name')
             ->get();
     }
 

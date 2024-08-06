@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timezone;
+use App\Models\FileUploads;
 use App\Models\VideoSchedule;
 use App\Http\Resources\VideoScheduleResource;
+use App\Services\PipioVideoService;
 use Illuminate\Http\Request;
+use Log;
 
 class VideoScheduleController extends Controller
 {
@@ -42,7 +45,7 @@ class VideoScheduleController extends Controller
             'scheduleVideoSource' => ['required','string'],
         ]);
 
-        VideoSchedule::create([
+        $videoSchedule = VideoSchedule::create([
             'batch_id' => $data['batchId'],
             'timezone' => $data['timezone'],
             'scheduled_at' => $data['scheduleTime'],
@@ -52,9 +55,41 @@ class VideoScheduleController extends Controller
             'ai_keyword' => $request->scheduleKeyword,
             'ai_content' => $request->scheduleContent,
             'ai_actor_id' => $request->scheduleActorId,
+            'language' => $request->language,
             'status' => 'scheduled',
             'user_id' => $user->id
         ]);
+
+        if($data['scheduleVideoSource'] == 'ai-content'){
+            $pipioVideoService = new PipioVideoService();
+            try {
+                $response = $pipioVideoService->generateVideo([
+                    'actorId' => $request->scheduleActorId,
+                    'language' => $request->language,
+                    'script' => $request->scheduleContent
+                ]);
+            } catch (\Throwable $th) {
+                Log::debug($th);
+                return response()->json([
+                    'message' => $th->getMessage()
+                ],422);
+            }
+
+            VideoSchedule::where('id', $videoSchedule->id)
+                ->update([
+                    'ai_video_id' => $response['id'],
+                    'ai_video_status' => 'ongoing'
+                ]);
+
+            // Save video response id to check video status
+            FileUploads::create([
+                'upload_types' => 'hosted video',
+                'vhash' => bin2hex(random_bytes(16)),
+                'user_id'  => $user->id,
+                'ai_video' => $response['id'],
+                'ai_video_status' => 'ongoing'
+            ]);
+        }
 
         return response()->json([
             'message' => 'Schedule created.'

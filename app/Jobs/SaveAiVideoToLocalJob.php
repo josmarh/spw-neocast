@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\VideoSchedule;
 use App\Models\FileUploads;
 use App\Helpers;
 use App\Services\FileHandler;
@@ -58,6 +59,11 @@ class SaveAiVideoToLocalJob implements ShouldQueue
                 'duration_seconds' => $duration['durationInSec'],
                 'thumbnail' => $thumbnail,
                 'external_video_link' => $this->video['videoUrl'],
+                'ai_video_status' => 'completed'
+            ]);
+
+        VideoSchedule::where('ai_video_id', $this->video['videoId'])
+            ->update([
                 'ai_video_status' => 'completed'
             ]);
         Log::info('Video info saved... ');

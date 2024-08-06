@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         //     ->withoutOverlapping();
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:run-video-schedule')->hourly();
+        $schedule->command('app:check-ai-video-status')->hourly();
     }
 
     /**

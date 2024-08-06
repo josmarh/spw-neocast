@@ -14,7 +14,7 @@ class ScrapeIptvGithub extends Command
      *
      * @var string
      */
-    protected $signature = 'app:scrape-iptv-github';
+    protected $signature = 'app:scrape-iptv-categories';
 
     /**
      * The console command description.
