@@ -75,20 +75,24 @@ class VideoScheduleController extends Controller
                 ],422);
             }
 
-            VideoSchedule::where('id', $videoSchedule->id)
-                ->update([
-                    'ai_video_id' => $response['id'],
-                    'ai_video_status' => 'ongoing'
-                ]);
-
             // Save video response id to check video status
-            FileUploads::create([
+            $fileUpload = FileUploads::create([
                 'upload_types' => 'hosted video',
                 'vhash' => bin2hex(random_bytes(16)),
                 'user_id'  => $user->id,
                 'ai_video' => $response['id'],
                 'ai_video_status' => 'ongoing'
             ]);
+
+            $request->scheduleVideos = json_decode($request->scheduleVideos);
+            array_push($request->scheduleVideos, $fileUpload->id);
+
+            VideoSchedule::where('id', $videoSchedule->id)
+                ->update([
+                    'ai_video_id' => $response['id'],
+                    'ai_video_status' => 'ongoing',
+                    'scheduled_videos' => json_encode($request->scheduleVideos),
+                ]);
         }
 
         return response()->json([
