@@ -38,7 +38,7 @@ class RunVideoSchedule extends Command
                 $timezone = $schedule->timezone;
                 $scheduledAt = $schedule->scheduled_at;
                 $channel = $schedule->channel;
-                $videos = json_decode($this->scheduled_videos);
+                $videos = json_decode($schedule->scheduled_videos);
 
                 if($timezone && $scheduledAt && $channel && count($videos)>0){
                     $utcTime = $this->getUTC($timezone);
