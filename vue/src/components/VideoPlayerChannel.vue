@@ -189,7 +189,7 @@ export default {
     videoList.style.paddingTop = '4px';
 
     // water mark customization
-    if(this.logoOptions.show == true) {
+    if(this.logoOptions.show && this.logoOptions.image) {
       this.player.awesomeWatermark(this.logoOptions);
       setTimeout(() => {
         document.getElementsByClassName('vjs-watermark-content')[0].style.position = 'absolute';

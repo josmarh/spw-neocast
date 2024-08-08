@@ -107,7 +107,7 @@
                                 :value="item.value"
                             />
                         </el-select>
-                        <div class="mt-2" v-if="model.schedules[i].content">
+                        <div class="mt-2" v-if="model.schedules[i].content && model.schedules[i].videoSource == 'ai-content'">
                             <textarea v-model="model.schedules[i].content" id="video-script" rows="6" class="w-full block p-2.5 w-full text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Video script..."></textarea>
                             <el-tooltip
                                 class="box-item"
@@ -280,7 +280,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, getCurrentInstance } from 'vue';
+import { reactive, computed, onMounted, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router'
 import videoScheduleStore from '../../store/videoSchedule-store';
 import PageComponent from '../../components/PageComponent.vue';
@@ -330,21 +330,20 @@ function addSchedule(){
         return;
     }
     model.schedules.push({
-            datetime: '',
-            channel: null,
-            videoSource: 'content',
-            videos: [],
-            keyword: '',
-            content: '',
-            actorId: null,
-            language: 'en-US'
+        datetime: '',
+        channel: null,
+        videoSource: 'content',
+        videos: [],
+        keyword: '',
+        content: '',
+        actorId: null,
+        language: 'en-US'
     })
 }
 
 function removeSchedule(){
-    for(let item of model.removeScheduleIds){
-        model.schedules.splice(item, 1);
-    }
+    const newArray = model.schedules.filter((item,i) => !model.removeScheduleIds.includes(i))
+    model.schedules = newArray
     model.removeScheduleIds = []
 }
 

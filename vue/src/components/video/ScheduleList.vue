@@ -73,7 +73,7 @@
             </table>
         </div>
         <!-- pagination -->
-        <div class="flex justify-center mt-5 mb-5">
+        <div class="flex justify-center mt-5 mb-5" v-if="data.length">
             <nav class="relative z-0 inline-flex justify-center rounded-md shadow-sm" aria-label="Pagination">
                 <a 
                     v-for="(link, i) of meta.links" 

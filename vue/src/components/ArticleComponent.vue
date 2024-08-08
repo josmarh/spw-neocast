@@ -8,7 +8,7 @@
             :class="{'relative -translate-x-0' : showSidebar}">
             <a href="#" class="flex items-center justify-center">
                 <div class="flex-shrink-0">
-                    <img class="h-8 " :src="appUrl + '/smatflix-brand-logo.png'" alt="Workflow" />
+                    <img class="h-8 " :src="appUrl + '/TVEngager-Logo-Main.png'" alt="Workflow" />
                 </div>
                 <!-- <span class="text-1xl font-extrabold text-bl ml-3">TubeAdsInsights</span> -->
             </a>

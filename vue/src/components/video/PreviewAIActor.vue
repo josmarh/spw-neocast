@@ -12,7 +12,7 @@
                         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <div class="sm:flex sm:items-start">
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                                <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">Preview Actore</DialogTitle>
+                                <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">Preview Actor</DialogTitle>
                                 <div class="mt-2" v-if="actorInfo.previewVideoPath">
                                     <iframe :src="actorInfo.previewVideoPath" frameborder="0" width="100%" height="300" class="previewVideoIframe"></iframe>
                                 </div>
