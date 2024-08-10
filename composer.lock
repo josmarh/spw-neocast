@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "70c064bc7b4907b480bec67f24c364a6",
+    "content-hash": "e7f8f34a587f2e9205493675a2eea5e1",
     "packages": [
         {
             "name": "brick/math",
@@ -2682,6 +2682,44 @@
                 }
             ],
             "time": "2023-11-12T21:59:55+00:00"
+        },
+        {
+            "name": "pira/ytdl",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/code3-dev/ytdl-php.git",
+                "reference": "9ce6a6c6bb0cec39b32d3e70bcbf5134d01897ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/code3-dev/ytdl-php/zipball/9ce6a6c6bb0cec39b32d3e70bcbf5134d01897ad",
+                "reference": "9ce6a6c6bb0cec39b32d3e70bcbf5134d01897ad",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "pira\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hossein Pira",
+                    "email": "h3dev.pira@gmail.com"
+                }
+            ],
+            "description": "A simple PHP library for Download Videos from YouTube, Instagram, X and etc.",
+            "homepage": "https://github.com/code3-dev/ytdl-php",
+            "support": {
+                "issues": "https://github.com/code3-dev/ytdl-php/issues",
+                "source": "https://github.com/code3-dev/ytdl-php/tree/1.7.0"
+            },
+            "time": "2024-08-01T08:47:32+00:00"
         },
         {
             "name": "psr/cache",

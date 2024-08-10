@@ -71,7 +71,7 @@ class YTubeController extends Controller
             'webhook'       => URL::to('media/webhook')
         ];
 
-        dispatch(new YoutubeToMP4($data))->delay(5);
+        dispatch(new YoutubeToMP4($data));
 
         return response([
             'message' => 'Your video would be added to your collections shortly.'
