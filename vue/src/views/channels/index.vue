@@ -1193,6 +1193,7 @@ import { ExclamationIcon } from '@heroicons/vue/outline';
 import { useRouter, useRoute } from 'vue-router';
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { MenuIcon } from '@heroicons/vue/outline'
+import channelSeeder from '../../includes/channel-seeder';
 
 const router = useRouter();
 const route = useRoute();
