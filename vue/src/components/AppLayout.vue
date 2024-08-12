@@ -12,7 +12,6 @@
               <div class="ml-10 flex items-baseline space-x-4">
                 <div v-for="item in navigation" :key="item.name">
                   <router-link 
-                    v-if="userPermissions.includes(item.permission)"
                     :to="item.to"
                     active-class="bg-gray-900 text-white"
                     :class="[item.other.includes($router.name) 
@@ -101,7 +100,7 @@
                 </Menu>
 
                 <!-- Reseller menu -->
-                <router-link v-if="userPermissions.includes('oto8_reseller')"
+                <router-link v-if="userPermissions.includes('reseller')"
                   :to="{name: 'Reseller'}"
                   active-class="bg-gray-900 text-white"
                   :class="[this.$router.name === 'Reseller' ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
@@ -265,7 +264,7 @@
               :to="item.to" 
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.name }}
             </router-link>
-            <router-link v-if="userPermissions.includes('oto8_reseller')"
+            <router-link v-if="userPermissions.includes('reseller')"
               :to="{name: 'Reseller'}"
               active-class="bg-gray-900 text-white"
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">
@@ -335,12 +334,10 @@ const userManagerNav = [
 ]
 
 const bonusNav = [
-  { name: 'DFY Campaigns', to: {name: 'DfyCampaign'}, permission: 'oto2_dfy_campaigns'},
-  { name: 'DFY Traffic', to: {name: 'DfyTraffic'}, permission: 'oto3_dfy_traffic' },
-  { name: 'DFY Automation', to: {name: 'DfyAutomation'}, permission: 'oto4_dfy_automation' },
-  { name: 'App Bundle', to: {name: 'AppBundle'}, permission: 'oto5_dfy_app_bundle' },
-  { name: 'DFY Agency', to: {name: 'DfyAgency'}, permission: 'oto6_dfy_agency' },
-  { name: 'Affiliate Coaching', to: {name: 'AffiliateCoach'}, permission: 'oto7_affiliate_coaching' },
+  { name: 'DFY Traffic Booster', to: {name: 'DfyTraffic'}, permission: 'traffic_booster'},
+  { name: 'DFY Online TV Channel Agency Setup', to: {name: 'DfyAgency'}, permission: 'agency_setup'},
+  { name: '10 DFY TV Channel Setup', to: {name: 'DfyChannelSetup'}, permission: 'channel_setup' },
+  { name: 'Affiliate Marketing Coaching Program', to: {name: 'AffiliateCoach'}, permission: 'affiliate_marketing' },
 ]
 
 export default {

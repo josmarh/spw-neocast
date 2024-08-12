@@ -48,6 +48,7 @@ import DfyAgency from '../views/bonus/DfyAgency.vue'
 import DfyAutomation from '../views/bonus/DfyAutomation.vue'
 import DfyCampaign from '../views/bonus/DfyCampaign.vue'
 import DfyTraffic from '../views/bonus/DfyTraffic.vue'
+import DfyChannelSetup from '../views/bonus/DfyChannelSetup.vue'
 import ResellerRegister from '../views/auth/Reseller.vue'
 import AiVideoGenerator from '../views/videos/AiVideoGenerator.vue'
 import ScheduleVideo from '../views/videos/ScheduleVideo.vue'
@@ -117,6 +118,7 @@ const routes = [
             {path: 'automation', name: 'DfyAutomation', component: DfyAutomation},
             {path: 'campaign', name: 'DfyCampaign', component: DfyCampaign},
             {path: 'traffic', name: 'DfyTraffic', component: DfyTraffic},
+            {path: 'channel-setup', name: 'DfyChannelSetup', component: DfyChannelSetup},
         ] 
     },
     { path: '/watch/video/:str', name: 'ShareVideo', component: ShareVideo },

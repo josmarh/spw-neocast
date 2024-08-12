@@ -150,13 +150,27 @@ class UserManagerController extends Controller
     {
         $name = $request->query('name');
 
-        if(isset($name)) {
-            $permissions = Permission::where('name', 'like', '%'.$name.'%')
-                ->orderBy('created_at', 'desc')
-                ->paginate(12);
-        }else {
-            $permissions = Permission::orderBy('created_at', 'desc')->paginate(12);
-        }
+        // if(isset($name)) {
+        //     $permissions = Permission::where('name', 'like', '%'.$name.'%')
+        //         ->orderBy('created_at', 'desc')
+        //         ->paginate(12);
+        // }else {
+        //     $permissions = Permission::orderBy('created_at', 'desc')->paginate(12);
+        // }
+        $permissions = Permission::whereIn('name', [
+            'front_end',
+            'traffic_booster', 
+            'agency_setup',
+            'channel_setup',
+            'bundle',
+            'reseller',
+            'fass_pass',
+            'affiliate_marketing',
+            'unlimited_edition',
+            'bonus_menu'
+        ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
         return PermissionResource::collection($permissions);
     }
@@ -232,13 +246,25 @@ class UserManagerController extends Controller
     {
         $name = $request->query('name');
 
-        if(isset($name)) {
-            $roles = Role::where('name', 'like', '%'.$name.'%')
-                ->orderBy('created_at', 'desc')
-                ->paginate(12);
-        }else {
-            $roles = Role::whereNotIn('id',[1,2,3])->orderBy('created_at', 'desc')->paginate(12);
-        }
+        // if(isset($name)) {
+        //     $roles = Role::where('name', 'like', '%'.$name.'%')
+        //         ->orderBy('created_at', 'desc')
+        //         ->paginate(12);
+        // }else {
+        $roles = Role::whereIn('name',[
+            'FE',
+            'Fast-Pass Deal',
+            'DFY Traffic Booster',
+            'DFY Online TV Channel Agency Setup',
+            '10 DFY TV Channel Setup',
+            'Reseller',
+            'Affiliate Marketing Coaching Program',
+            'Unlimited Edition',
+            'Bundle'
+        ])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+        // }
 
         return RoleResource::collection($roles);
     }
@@ -279,6 +305,16 @@ class UserManagerController extends Controller
     {
         $permissions =  $this->rawQuery("SELECT p.id, p.name, rp.role_id FROM permissions p
             left join role_has_permissions rp on p.id=rp.permission_id and rp.role_id = '$roleId'
+            where p.name in ('front_end',
+            'traffic_booster', 
+            'agency_setup',
+            'channel_setup',
+            'bundle',
+            'reseller',
+            'fass_pass',
+            'affiliate_marketing',
+            'unlimited_edition',
+            'bonus_menu')
             order by 1");
 
         return response([
