@@ -77,7 +77,7 @@
                 </span>
             </span>
             <span class="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0">
-                <p>Powered by SmatFlix</p>
+                <p>{{ appName }}</p>
             </span>
             
         </footer>
@@ -91,6 +91,7 @@ import { MenuIcon } from '@heroicons/vue/outline'
 const props = defineProps({
     config: Object,
 });
+const appName = import.meta.env.VITE_APP_NAME
 
 
 
