@@ -1,5 +1,5 @@
 <template>
-    <page-component title="Affiliate Marketing Coaching">
+    <page-component title="Affiliate Marketing Training">
         <div class="flex mt-4 gap-10 w-full">
             <div class="w-full">
                 <div class="block p-6 w-full bg-white border border-gray-200 shadow-md">
@@ -10,9 +10,11 @@
                         Thank you for your patronage.
                     </p>
                     <p class="font-normal text-gray-700 dark:text-gray-400 mt-4">
-                        Kindly send us an email here with the title "Coaching" to enable 
-                        us create an account for you on the training platform and deliver 
-                        the login details to you.
+                        To get access to the affiliate marketing training platform, kindly submit a ticket here 
+                        <a href="https://supremewebcustomercare.freshdesk.com/" target="_blank" rel="noopener noreferrer">
+                            https://supremewebcustomercare.freshdesk.com
+                        </a>
+                        or send us an email with the subject "Affiliate Marketing Program Access" to
                     </p>
                     <p class="font-normal text-gray-700 dark:text-gray-400 mt-4">
                         <a href="mailto:support@supremewebcustomercare.freshdesk.com"
