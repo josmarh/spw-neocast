@@ -61,6 +61,15 @@
                   </transition>
                 </Menu>
 
+                <!-- Tutorial menu -->
+                <router-link
+                  :to="{name: 'Tutorials'}"
+                  active-class="bg-gray-900 text-white"
+                  :class="[this.$router.name === 'Tutorials' ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+                  'px-3 py-2 rounded-md text-sm font-medium']">
+                  Tutorials
+                </router-link>
+
                 <!-- User manager menu -->
                 <Menu as="div" class="" v-if="userPermissions.includes('view_user_manager')">
                   <div>
@@ -264,6 +273,13 @@
               :to="item.to" 
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.name }}
             </router-link>
+            <router-link
+              :to="{name: 'Tutorials'}"
+              active-class="bg-gray-900 text-white"
+              :class="[this.$router.name === 'Tutorials' ? '' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 
+              'px-3 py-2 rounded-md text-sm font-medium']">
+              Tutorials
+            </router-link>
             <router-link v-if="userPermissions.includes('reseller')"
               :to="{name: 'Reseller'}"
               active-class="bg-gray-900 text-white"
@@ -322,8 +338,8 @@ const libraryNavigation = [
   { name: 'Generate Ai video', to: {name: 'AiVideoGenerator'} },
 ]
 const userNavigation = [
-  { name: 'Your Profile', to: {name: 'Profile'} },
-  { name: 'Tutorials', to: {name: 'Tutorials'} },
+  { name: 'Profile', to: {name: 'Profile'} },
+  // { name: 'Tutorials', to: {name: 'Tutorials'} },
 ]
 const userManagerNav = [
   { name: 'Users', to: {name: 'Users'} },
