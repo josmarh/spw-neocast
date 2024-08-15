@@ -1,7 +1,7 @@
 <template>
     <div>
         <header class="bg-white drop-shadow-xl ">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between">
+            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between">
                 <h4 class="text-2xl font-bold text-gray-900">
                     {{ title }}
                 </h4>
@@ -29,6 +29,7 @@
                 </div>
             </div>
         </header>
+        <AdsBanner/>
         <main class="bg-gray-100">
             <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
                 <!-- Replace with your content -->
@@ -44,6 +45,8 @@
 </template>
 
 <script setup>
+import AdsBanner from './AdsBanner.vue';
+
 const props = defineProps({
     title: String,
 });
