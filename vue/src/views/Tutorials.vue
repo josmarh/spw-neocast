@@ -54,14 +54,22 @@ const videos = [
         href:'https://vimeo.com/997685456'
     },
     // {label:'Live Stream', imgSrc:'https://i.vimeocdn.com/video/1642148135-85b7197ca88ba6b61e9e6e33e0153d271894ec0261ec2084c66441f5603a162c-d_236x133', href:'https://vimeo.com/866329278'},
-    {label:'Live Stream OBS Setup', imgSrc:'https://i.vimeocdn.com/video/1645364963-dd1b9a1b5e49410756f5b862f8bd0482bff79b6cc1b4a8f30f9cc3bacc986776-d_236x133', href:'https://vimeo.com/813598333'},
+    {
+        label:'Live Stream OBS Setup', 
+        imgSrc:'https://i.vimeocdn.com/video/1645364963-dd1b9a1b5e49410756f5b862f8bd0482bff79b6cc1b4a8f30f9cc3bacc986776-d_236x133', 
+        href:'https://vimeo.com/813598333'
+    },
     {
         label:'Website', 
         imgSrc:'https://i.vimeocdn.com/video/1913811941-7bf252ced224afb44676dd4f5ba781444277f2d2b1868d04994b008960ce5cec-d_640x360', 
         href:'https://vimeo.com/997685554'
     },
     // {label:'Publish on Roku', imgSrc:'https://i.vimeocdn.com/video/1643109999-795068c41f06fe17b9786592f22c8bbc18805249ba7e5490a08b39a1de210caa-d_236x133', href:'https://vimeo.com/'},
-    // {label:'Publish on Amazon FireTv', imgSrc:'https://i.vimeocdn.com/video/1643121500-89346cbd872c8efa7382bdeea97608ef14bc39a1549dfc12d1ff92ab4e431388-d_236x133', href:'https://vimeo.com/'},
+    {
+        label:'Publish on Amazon FireTv', 
+        imgSrc:'https://i.vimeocdn.com/video/1921065681-168d1a14b26800401e0db7765102ed98cf1a541d873a899e4a4648167151b3fd-d_640x360', 
+        href:'https://vimeo.com/1004516364'
+    },
     // {label:'Channel Ads Monetization', imgSrc:'https://i.vimeocdn.com/video/1726557798-7e299ed5a076012bfdba7b577756266c3d609583f0c252af103b099e929e8ee3-d_236x133', href:'https://vimeo.com/866329000'},
     {label:'Generate Video Ads Tag', imgSrc:'/ads_tag.png', href:'https://www.youtube.com/watch?v=ICh-g5w8yzY'}
 ]
