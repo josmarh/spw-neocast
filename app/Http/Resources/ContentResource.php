@@ -15,9 +15,13 @@ class ContentResource extends JsonResource
      */
     public function toArray($request)
     {
-        $splitLink = explode('/', $this->file_hash);
-        $externalLink = explode('.', $splitLink[1]);
-
+        if($this->file_hash){
+            $splitLink = explode('/', $this->file_hash);
+            $externalLink = explode('.', $splitLink[1]);
+        }else{
+            $externalLink = null;
+        }
+        
         return [
             'id'            => $this->id,
             'file_name'     => $this->file_name,

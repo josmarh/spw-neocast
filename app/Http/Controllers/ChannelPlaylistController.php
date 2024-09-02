@@ -30,6 +30,7 @@ class ChannelPlaylistController extends Controller
                     ->from('channel_playlists')
                     ->where('channel_hash', $chash);
             })
+            ->whereNotNull('file_name')
             ->orderBy('created_at', 'desc')
             ->paginate(7);
 
